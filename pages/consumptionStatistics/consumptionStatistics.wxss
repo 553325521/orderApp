@@ -1,0 +1,33 @@
+/* pages/consumptionStatistics/consumptionStatistics.wxss */
+@import "../indent/indent.wxss";
+page{
+  padding-top: 100rpx
+}
+.type-parameter{
+  position: fixed;
+  top: 0;left: 0;
+  width: 100%;
+  line-height: 86rpx;
+  border-bottom: 1px solid #D4D3D3;
+  z-index: 9999 
+}
+.type-parameter>view{
+  padding-right: 16rpx;
+  border-right: 1px solid #E4E4E4 
+}
+.type-parameter>view:last-child{
+  border-right: none
+}
+.type-parameter image{
+  width: 42rpx;
+  height: 20rpx;
+  margin-top: 43rpx;
+  transform: translateY(-50%)
+}
+.indent-list{
+  margin-top: 22rpx;
+  border-top: 1px solid #D4D3D3;
+}
+.head{
+  padding: 50rpx 26rpx 20rpx 26rpx;
+}

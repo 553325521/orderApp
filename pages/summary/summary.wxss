@@ -1,0 +1,78 @@
+/* pages/summary/summary.wxss */
+page{
+  padding-top: 100rpx
+}
+.type-parameter{
+  position: fixed;
+  top: 0;left: 0;
+  width: 100%;
+  line-height: 86rpx;
+  border-bottom: 1px solid #D4D3D3;
+  z-index: 9999 
+}
+.type-parameter>view{
+  padding-right: 16rpx;
+  border-right: 1px solid #E4E4E4 
+}
+.type-parameter>view:last-child{
+  border-right: none
+}
+.type-parameter image{
+  width: 42rpx;
+  height: 20rpx;
+  margin-top: 43rpx;
+  transform: translateY(-50%)
+}
+.summary-list{
+  margin-top: 22rpx;
+  border-top: 1px solid #D4D3D3;
+  padding:36rpx 50rpx 0  
+}
+.summary-list .item{
+  margin-bottom: 50rpx
+}
+/*  */
+.consume{
+  padding-left: 50rpx;
+  padding-right: 30rpx
+}
+.consume-head{
+  
+}
+.consume-head .number{
+  margin-left: 266rpx
+}
+.consume-dateils{
+  padding: 36rpx 0 0 28rpx;
+  margin-top: 16rpx;
+  position: relative
+}
+.consume-dateils::after{
+  display: block;
+  content: "";
+  width: 1px;
+  height: 338rpx;
+  background-color: #949291;
+  position: absolute;
+  left: 28rpx;top: 0
+}
+.consume-dateils .item{
+  margin-bottom: 56rpx
+}
+.consume-dateils .item .pay-way{
+  padding-left: 80rpx;
+  position: relative;
+  width: 230rpx
+}
+.consume-dateils .item .pay-way::after{
+  display: block;
+  content: "";
+  width: 56rpx;
+  height: 1px;
+  background-color: #949291;
+  position: absolute;
+  left: 0;top: 18rpx
+}
+.consume-dateils .item .pay-number{
+  width: 127rpx
+}

@@ -1,0 +1,136 @@
+/* pages/takeOut/takeOut.wxss */
+page{
+  background-color: #fff;
+  padding-top: 186rpx
+}
+.header{
+  position: fixed;
+  top: 0;left: 0;
+  z-index: 999;
+  padding-bottom: 20rpx
+}
+.swiper-tab{
+  line-height: 84rpx;
+  border: 1px solid #E4E4E4
+}
+.swiper-tab>view.on{
+  border-bottom: 1px solid #DA2725;
+}
+.swiper-tab .icon{
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 0;height: 0;
+  border-width:0 10rpx 10rpx;
+  border-style:solid;
+  border-color:transparent transparent #DA2725;/*透明 透明  灰*/
+}
+.swiper-tab .num{
+  top: 10rpx;right: 33rpx;
+  width: 40rpx;
+  line-height: 40rpx;
+}
+/*  */
+.sele-time>image{
+  width:25rpx;
+  height:20rpx;
+  position: relative;
+  top: 8rpx;
+  margin-left: 10rpx
+}
+.sele-time>picker>view{
+  letter-spacing: 3rpx
+}
+/*  */
+.time-sec,.delivery-type{
+  padding: 0 30rpx;
+  margin-top: 10rpx
+}
+.delivery-type text{
+  line-height: 42rpx
+}
+.delivery-list{
+  margin-left: 18rpx;
+}
+.delivery-list view{
+  width: 134rpx;
+  line-height: 42rpx;
+  margin-right: 18rpx;
+  background-color: #EF9BA0;
+  border-radius: 42rpx
+}
+.delivery-list view.on{
+  background-color: #969594
+}
+.delivery-type view:last-child{
+  margin-right: 0rpx;
+}
+/*  */
+.indent-item{
+  border-bottom: 1px #EAD5D7 solid;
+}
+.indent-list{
+  margin-top: 20rpx;
+  border-top: 1px #EAD5D7 solid;
+}
+.item-head{
+  
+  border-bottom: 1px #EAD5D7 solid;
+  background-color: #FEFAFA;
+  line-height: 40rpx;
+  padding: 0 30rpx
+}
+.item-list{
+  padding: 0 16rpx
+}
+.item{
+  border-bottom: 1px solid #E9E8E8;
+  line-height: 98rpx;
+  padding: 0 26rpx 0 38rpx 
+}
+.item:last-child{border-bottom: none}
+.item .platform{
+  width: 120rpx
+}
+.item .time{
+  width: 100rpx;
+}
+.item .money{
+  width: 183rpx
+}
+.item .horseman{
+  width: 171rpx
+}
+.item .label{
+  top: -1rpx;
+  left: 30rpx
+}
+.item text{
+  position: absolute;
+  top: -1rpx;
+  right: 118rpx
+}
+/*  */
+.item1{
+  border-bottom: 1px solid #E9E8E8;
+  padding: 34rpx 26rpx 15rpx 38rpx 
+}
+.item1:last-child{border-bottom: none}
+.item1>view:last-child{
+    margin-top: 24rpx
+}
+.item1>view .horseman{
+  width: 164rpx
+}
+.item1>view .phone{
+  width: 336rpx
+}
+.item1>view .platform{
+  width: 126rpx
+}
+.item1>view .weight{
+  width: 220rpx
+}
+.item1>view .money{
+  width: 306rpx;
+}

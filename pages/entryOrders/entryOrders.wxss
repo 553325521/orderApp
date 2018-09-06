@@ -1,0 +1,13 @@
+/* pages/entryOrders/entryOrders.wxss */
+@import "../indent/indent.wxss";
+page{
+  padding-top: 0
+}
+.delete-btn{
+  width: 100rpx;
+  margin-left: 20rpx
+}
+.item{
+  width: 116%;
+  position: relative;
+}

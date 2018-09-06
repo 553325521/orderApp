@@ -1,0 +1,134 @@
+<!--pages/couponList/couponList.wxml-->
+<view class='type-parameter dp-flex font-28 c6 bg-fff w100'>
+  <view class='flex-1 dp-flex pr'>
+    <picker class='w100' value="{{typeIndex}}" range="{{typeArr}}" bindchange="bindShopChange">
+      <view class="picker">
+        {{typeArr[typeIndex]}}
+      </view>
+    </picker>
+    <image src='../../images/icon/down-icon.png'></image>
+  </view>
+  <view class='flex-1 pr'>
+    <picker class='w100' value="{{stateIndex}}" range="{{stateArr}}" bindchange="bindShopChange">
+      <view class="picker">
+        {{stateArr[stateIndex]}}
+      </view>
+    </picker>
+    <image src='../../images/icon/down-icon.png'></image> 
+  </view>
+</view>
+<!--  -->
+<view class='couponList'>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+  <view class='item dp-flex'>
+    <view class='coupon-type'>
+      <view class='tc font-30'>代金券</view>
+      <view class='tc font-20'>限本店使用</view>
+    </view>
+    <view class='coupon-info flex-1 font-24'>
+      <view class='dp-flex flex-jc-sb '>
+        <view class='font-30' style='color:#D70164;padding-top:18rpx'>￥20元</view>
+        <view class=''>No:20160530125</view>
+      </view>
+      <view class='dp-flex flex-jc-sb' style='margin-top:15rpx'>
+        <view class=''>有限期:2016-05-30</view>
+        <view class=''>满50元可用</view>
+      </view>
+    </view>
+  </view>
+</view>

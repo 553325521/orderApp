@@ -1,0 +1,30 @@
+<!--pages/template/chosenPosition.wxml-->
+<!-- 选择餐位  -->
+<template name="reserve">
+  <view class='reserve footfixed' style='width:{{width}};heigth:{{heigth}}'>
+    <view class='font-34 cf tc mt24'>请选择餐位号</view>
+    <view class='reserve-list dp-flex flex-wrap'>
+      <view class='reserve-item font-34 cf tc'>1</view>
+      <view class='reserve-item font-34 cf tc'>1</view>
+      <view class='reserve-item font-34 cf tc'>1</view>
+      <view class='reserve-item font-34 cf tc'>1</view>
+      <view class='reserve-item font-34 cf tc'>1</view>
+    </view>
+  </view>
+</template>
+<!-- 选择人数  -->
+<template name="quorum"> 
+  <view class='quorum footfixed' style='width:{{W}};heigth:{{H}}'>
+    <view class='font-34 cf tc mt24'>请选择餐位号</view>
+    <view class='quorum-list dp-flex flex-wrap'>
+      <view class='quorum-item font-34 cf tc'>1</view>
+      <view class='quorum-item font-34 cf tc'>1</view>
+      <view class='quorum-item font-34 cf tc'>1</view>
+      <view class='quorum-item font-34 cf tc'>1</view>
+      <view class='quorum-item font-34 cf tc'>1</view>
+    </view>
+  </view>
+</template>
+<template name="coupon"> 
+  
+</template>

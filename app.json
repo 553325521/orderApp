@@ -1,0 +1,68 @@
+{
+  "pages": [
+    "pages/indent/indent",
+    "pages/checkOut/checkOut",
+    "pages/couponList/couponList",
+    "pages/cashier/cashier",
+    "pages/menu/menu",
+    "pages/takeOut/takeOut",
+    "pages/takeOut/takeOutDateil",
+   
+    
+    "pages/template/chosenPosition",
+    "pages/summary/summary",
+    "pages/consumptionStatistics/consumptionStatistics",
+    "pages/commodityStatistics/commodityStatistics",
+    "pages/statement/statement",
+    "pages/entryOrders/entryOrders",
+    "pages/indent/indentDateil",
+    "pages/payMent/payMent",
+    "pages/orderDetail/orderDetail",
+    "pages/template/selectNumber"
+    
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#EF9BA0",
+    "navigationBarTitleText": "美味餐厅",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#5C5A58",
+    "selectedColor": "#DA251D",
+    "borderStyle": "#000",
+    "backgroundColor": "#EF9BA0",
+    "list": [
+      {
+        "selectedIconPath": "images/icon/caidan.png",
+        "iconPath": "images/icon/caidan.png",
+        "pagePath": "pages/menu/menu",
+        "text": "首页"
+      },
+      {
+        "selectedIconPath": "images/icon/dindan.png",
+        "iconPath": "images/icon/dindan.png",
+        "pagePath": "pages/indent/indent",
+        "text": "订单"
+      },
+      {
+        "selectedIconPath": "images/icon/bb-icon.png",
+        "iconPath": "images/icon/bb-icon.png",
+        "pagePath": "pages/statement/statement",
+        "text": "报表"
+      },
+      {
+        "selectedIconPath": "images/icon/wm-icon.png",
+        "iconPath": "images/icon/wm-icon.png",
+        "pagePath": "pages/takeOut/takeOut",
+        "text": "外卖"
+      },
+      {
+        "selectedIconPath": "images/icon/shouyin.png",
+        "iconPath": "images/icon/shouyin.png",
+        "pagePath": "pages/cashier/cashier",
+        "text": "收银"
+      }
+    ]
+  }
+}

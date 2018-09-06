@@ -1,0 +1,182 @@
+<!-- 引用模板  -->
+<import scr="../template/chosenPosition.wxml"/>
+<!-- 菜单导航  -->
+<view class='menu-nav bg-f9 br-ec' style='height:{{height}}'>
+  <block wx:for="{{navList}}" wx:for-index='index'  wx:key="keys">
+    <view class="nav-item font-24 pr\ c5957 bb-ec tc {{currentTab == item.type?'menu-on':''}}" data-index='{{index}}' data-type='{{item.type}}' bindtap='switchNav'>
+    {{item.title}}
+    <text class='pa font-28 tc cf' wx:if="{{qityArr[index]>0}}">{{qityArr[index]}}</text></view>
+  </block>
+</view>
+<!-- 搜索框  -->
+<view class='search-box' id='search-box'>
+  <image class='ss-icon pa tf-y50' src='../../images/icon/ss.png'></image>
+  <input class='box-s bg-fff font-26' type='text' placeholder='请输入商品编号或助记码'></input>
+</view>
+<!-- 购物车  -->
+<view class='cat' bindtap="{{allQiry>0?'entryOrders':''}}">
+  <image wx:if="{{allQiry==0}}" class='w100 h100' src='../../images/icon/car-unll.png'></image>
+  <image wx:if="{{allQiry>0}}" class='w100 h100' src='../../images/icon/cat-icon.png'></image>
+  <text wx:if="{{allQiry>0}}" class='font-26 cf tc pa'>{{allQiry}}</text>
+</view>
+<!-- 挂单按钮  -->
+<view class='entry-orders' bindtap='checkEntryOrders'>
+  <image class='w100 h100' src='../../images/icon/list-icon.png'></image>
+</view>
+<!-- 挂单列表  -->
+<view wx:if="{{entryShow}}"  class='entry-orders-list full-fixed' style='width:{{W}};height:{{H}}'>
+  <view class='footfixed pr' bindtap='vanish'></view>
+  <view id='box-content' class='box-content pa w100'>
+    <view class='cat orders-cat'>
+      <image  class='w100 h100' src='../../images/icon/cat-icon.png'></image>
+      <text class='font-26 cf tc pa'>{{allQiry}}</text>
+    </view>
+    <view class='head font-28 dp-flex'>
+      <text>购物车</text>
+      <view class='dele-btn' bindtap='emptyCat'>
+        <image src='../../images/icon/dele-icon.png'> </image>
+        清空全都
+      </view>
+    </view>
+    <scroll-view scroll-y class='list bg-fff' style='height:{{height}}'>
+      <block wx:for = "{{ordersList}}" wx:key="{{index}}">
+        <view class='item dp-flex' id="orders-item">
+          <view class='name font-28 c3'>{{item.name}}</view>
+          <view class='price font-28 c2821'>￥{{item.price}}.00/份</view>
+          <view class='quantity1 font-28 c3'>
+            <image class='add'  data-type="-" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/minus-icon.png'></image>
+            <text class='font-26 num' style='line-height: 40rpx'>{{item.qity}}</text>
+            <image class='minus' data-type="+" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/add-icon.png'></image> 
+          </view>
+        </view>
+      </block>  
+    </scroll-view>
+    <view class='bottom bg-fff'>
+      <text class='c60 font-30'>共￥135.00</text>
+    </view>
+  </view>
+</view>
+<!-- 规格和套餐的弹框  -->
+<view wx:if="{{popShow}}" class='pop-up full-fixed' style='width:{{W}};height:{{H}}'>
+  <view class='footfixed pr' bindtap='vanish'></view>
+  <view class='pop-box bg-fff pa bc'>
+    <view class='close-btn pa' bindtap='closePop'>
+      <image class='w100 h100' src='../../images/icon/close-icon.png'></image>
+    </view>
+    <view class='dish-name font-28 c6 tc'>青椒肉丝</view>
+    <view class='specification'>
+      <view class='title font-26 c2821'>规格</view>
+      <view class='spec-list dp-flex flex-wrap'>
+        <view class='spec-item cf tc font-26'>大份</view>
+        <view class='spec-item cf tc font-26'>大份</view>
+        <view class='spec-item cf tc font-26'>大份</view>
+        <view class='spec-item cf tc font-26'>大份</view>
+      </view>
+    </view>
+    <view class='practice'>
+      <view class='title font-26 c2821'>做法</view>
+      <view class='spec-list dp-flex flex-wrap'>
+        <view class='spec-item cf tc font-26'>红烧</view>
+        <view class='spec-item cf tc font-26'>清蒸</view>
+        <view class='spec-item cf tc font-26'>爆炒</view>
+      </view>
+    </view>
+    <view class='taste'>
+      <view class='title font-26 c2821'>口味</view>
+      <view class='spec-list dp-flex flex-wrap'>
+        <view class='spec-item cf tc font-26'>超辣</view>
+        <view class='spec-item cf tc font-26'>中辣</view>
+        <view class='spec-item cf tc font-26'>微辣</view>
+      </view>
+    </view>
+    <view class='bottom btc dp-flex flex-jc-sb'>
+      <text class='c60 font-30'>共￥135.00</text>
+      <view class='spec-btn font-32 cf tc' bindtap='closePop'>确定</view>
+    </view>
+  </view>
+</view>
+<!-- 选好了  -->
+<view class="selected font-28 tc cf {{allQiry>0?'on':''}}" bindtap="{{allQiry>0?'chosen':''}}">
+  选好了
+</view>
+<!-- 选择餐位  -->
+<view wx:if="{{reserveShow}}" class='reserve footfixed' style='width:{{width}};heigth:{{heigth}}'>
+  <view class='font-34 cf tc mt24'>请选择餐位号</view>
+  <view class='reserve-list dp-flex flex-wrap'>
+    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
+    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
+    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
+    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
+    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
+  </view>
+  <view class='colse-btn' style='bottom:48rpx' bindtap='closePop'>
+    <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>
+  </view>
+</view>
+<!-- 选择人数  -->
+<view wx:if="{{quorumShow}}" class='quorum footfixed' style='width:{{W}};heigth:{{H}}'>
+  <view class='font-34 cf tc mt24'>请选就餐人数</view>
+  <view class='quorum-list dp-flex flex-wrap'>
+    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
+    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
+    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
+    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
+    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
+  </view>
+  <view class='colse-btn' style='bottom:48rpx' bindtap='closePop'>
+    <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>
+  </view>
+</view>
+<!-- 展示菜品  -->
+<view class='page'>
+  <!-- <scroll-view scroll-y scroll-top="{{scrollTop}}" class='shou-greens-box bg-fff' style='height:1164rpx'>
+      <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
+        <view  id="{{'item'+keys}}" class='classify-item'>
+          <view class='classify-title font-26 c7372'>{{item.title}}</view>
+          <view class='greens-list dp-flex'>
+            <block wx:for="{{item.arr}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">
+              <view class="greens-item1 box-s pr {{every.qity>0?'on':''}}" data-index="{{index}}" data-item="{{keys}}" bindtap='orderDishes'>
+                <view class='greens-name c3 font-28'>{{every.name}}</view>
+                <view class='price font-28'>￥{{every.price}}.00/份</view>
+                <view class='sales font-26 ca5a4 '>已售 {{every.sales}}</view>
+                <view class='quantity pa dp-flex'>
+                  <text class='font-26 num' wx:if="{{every.qity>1}}">{{every.qity}}</text>
+                  <view class='btn'>
+                     <image class='w100 h100' wx:if="{{every.qity>1}}" data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/add-icon.png'></image> 
+                    <image class='w100 h100' wx:if="{{every.qity==1}}" data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/sele-icon.png'></image>
+                  </view>
+                </view>
+              </view>
+            </block> 
+          </view>
+        </view>
+      </block> 
+  </scroll-view> --> 
+
+  <scroll-view scroll-y="{{false}}" scroll-top="{{scrollTop}}" class='shou-greens-box bg-fff' style='height:1164rpx'>
+      <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
+        <view  id="{{'item'+keys}}" class='classify-item'>
+          <view class='classify-title font-26 c7372'>{{item.title}}</view>
+          <view class='greens-list'>
+            <block wx:for="{{item.arr}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">
+              <view class="greens-item dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}">
+                <view class='img'>
+                  <image class='w100 h100' src='../../images/cai.jpg'></image>
+                </view>
+                <view class='info pr'>
+                  <view class='greens-name1 c3 font-28'>{{every.name}}</view>
+                  <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
+                  <view class='price1 font-28 c2821'>￥{{every.price}}.00/份</view>
+                  <view class='quantity1 pa dp-flex'>
+                    <image class='add' wx:if="{{every.qity>0}}" data-type="-" data-index="{{index}}" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/minus-icon.png'></image>
+                    <text class='font-26 num' style='line-height: 40rpx' wx:if="{{every.qity>0}}" >{{every.qity}}</text>
+                    <image class='minus' data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/add-icon.png'></image> 
+                  </view>
+                </view>
+              </view>
+            </block> 
+          </view>
+        </view>
+      </block>
+  </scroll-view>
+</view>

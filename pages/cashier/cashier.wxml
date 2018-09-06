@@ -1,0 +1,51 @@
+<!--pages/cashier/cashier.wxml-->
+<view class='count-head'>
+  <view class='result dp-flex'>
+    <text class='c6 font-28'>消费金额</text>
+    <view class='total-money flex-1 font-42 flex-jc-sb tr'>{{result}}</view>
+  </view>
+  <view class='process tr font-28 c6'>{{process}}</view>
+</view>
+<view class='discounts dp-flex'>
+  <view class='check pr'>
+    <view class='check-img'>
+      <image wx:if = "{{isDiscounts==true}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+      <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+    </view>
+    <checkbox-group  bindchange="checkboxChange" data-index="0">
+        <checkbox value="0" checked="true"/>
+    </checkbox-group>
+  </view>
+  <input class='flex-1 font-28 c6' disabled='{{true}}' type='digit' placeholder='请输入优惠金额'></input>
+</view>
+<view class='keyboard dp-flex flex-jc-sb'>
+  <view class='numeric-key dp-flex font-28 c6'>
+    <view class='tc' hover-class='bg-hui' data-number = '1' bindtap='processString'>1</view>
+    <view class='tc' hover-class='bg-hui' data-number = '2' bindtap='processString'>2</view>
+    <view class='tc' hover-class='bg-hui' data-number = '3' bindtap='processString'>3</view>
+    <view class='tc' hover-class='bg-hui' data-number = '4' bindtap='processString'>4</view>
+    <view class='tc' hover-class='bg-hui' data-number = '5' bindtap='processString'>5</view>
+    <view class='tc' hover-class='bg-hui' data-number = '6' bindtap='processString'>6</view>
+    <view class='tc' hover-class='bg-hui' data-number = '7' bindtap='processString'>7</view>
+    <view class='tc' hover-class='bg-hui' data-number = '8' bindtap='processString'>8</view>
+    <view class='tc' hover-class='bg-hui' data-number = '9' bindtap='processString'>9</view>
+    <view class='tc' hover-class='bg-hui' data-number = '.' bindtap='processString'>.</view>
+    <view class='tc' hover-class='bg-hui' data-number = '0' bindtap='processString'>0</view>
+    <view class='tc' hover-class='bg-hui' data-number = '+' bindtap='processString'>+</view>
+  </view>
+  <view class='oper-key font-28 c6'>
+    <view class='tc' hover-class='bg-hui' bindtap='empty'>c</view>
+    <view class='tc' hover-class='bg-hui'>×</view>
+    <view class='equal-to tc' hover-class='bg-hui' bindtap='calculate'>=</view>
+  </view>
+</view>
+<view class='pay-way dp-flex'>
+  <view class='scan flex-1 dp-flex' bindtap='qrCodeCollection'>
+    <image src='../../images/icon/QR-scan.png'></image>
+    <text class='font-32 c6'>二维码收款</text>
+  </view>
+  <view class='flicking  flex-1 dp-flex' bindtap='richScan'>
+    <image src='../../images/icon/scan-QR.png' ></image>
+    <text class='font-32 c6'>扫一扫收款</text>
+  </view>
+</view>

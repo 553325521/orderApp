@@ -1,0 +1,156 @@
+<!--pages/consumptionStatistics/consumptionStatistics.wxml-->
+<view class='type-parameter dp-flex font-28 c6 bg-fff'>
+  <view class='flex-1 dp-flex'>
+    <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
+      <view class="picker">
+        {{shopArr[shopIndex]}}
+      </view>
+    </picker>
+    <image src='../../images/icon/down-icon.png'></image>
+  </view>
+  <view class='flex-1 dp-flex'>
+    <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindShopChange">
+      <view class="picker">
+        {{dateArr[dateIndex]}}
+      </view>
+    </picker>
+    <image src='../../images/icon/down-icon.png'></image>
+  </view>
+  <view class='flex-1 dp-flex'>
+    <picker class='w100 tc' value="{{wayIndex}}" range="{{wayArr}}" bindchange="bindShopChange">
+      <view class="picker">
+        {{wayArr[wayIndex]}}
+      </view>
+    </picker>
+    <image src='../../images/icon/down-icon.png'></image>
+  </view>
+</view>
+<view class='indent-list font-28 c6'>
+  <view class='head dp-flex flex-jc-sb'>
+    <view>交易日期</view>
+    <view>应付金额</view>
+    <view>优惠</view>
+    <view>实付金额</view>
+  </view>
+  <view class='indent-item'>
+    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
+      <text>2016-08-18</text>
+      <text>共计186.00元</text>
+    </view>
+    <view class='item-list'>
+      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
+        <view class='label pa'>*</view>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+    </view>
+  </view>
+  <view class='indent-item'>
+    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
+      <text>2016-08-18</text>
+      <text>共计186.00元</text>
+    </view>
+    <view class='item-list'>
+      <view class='item dp-flex font-30 c3 pr'>
+        <view class='label pa'>*</view>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+    </view>
+  </view>
+  <view class='indent-item'>
+    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
+      <text>2016-08-18</text>
+      <text>共计186.00元</text>
+    </view>
+    <view class='item-list'>
+      <view class='item dp-flex font-30 c3 pr'>
+        <view class='label pa'>*</view>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+    </view>
+  </view>
+  <view class='indent-item'>
+    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
+      <text>2016-08-18</text>
+      <text>共计186.00元</text>
+    </view>
+    <view class='item-list'>
+      <view class='item dp-flex font-30 c3 pr'>
+        <view class='label pa'>*</view>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+      <view class='item dp-flex font-30 c3'>
+        <view class='time'>17:23</view>
+        <view class='seat'>A02号餐位</view>
+        <view class='part'>5份</view>
+        <view class='money'>128.00元</view>
+        <view class='pay-way'>现付</view>
+      </view>
+    </view>
+  </view>
+</view>
+

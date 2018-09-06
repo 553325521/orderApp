@@ -1,0 +1,43 @@
+<!--pages/orderDetail/orderDetail.wxml-->
+<view class='order-info dp-flex'>
+  <view class='date'>
+    <view class='c6 tc font-28'>2018-01-01</view>
+    <view class='time c6 tc font-28'>12:05</view>
+  </view>
+  <view class='info flex-1 dp-flex'>
+    <view class='reserve'>
+      <view class='site font-28 c6 tc'>梅花厅</view>
+      <view class='entry-orders cf tc font-18'>挂单</view>
+    </view>
+    <view class='quorum c6 tc font-28'>
+      <view>5人</view>
+    </view>
+    <view class='empty c6 tc font-28'>
+      <view>清空</view>
+    </view>
+  </view>
+</view>
+<scroll-view scroll-y class='list' style='height:{{height}}'>
+  <!-- <block wx:for = "{{ordersList}}" wx:key="{{index}}"> -->
+    <view class='item dp-flex'>
+      <view class='name font-28 c3'>青椒肉丝</view>
+      <view class='price font-28 c2821'>￥10.00/份</view>
+      <view class='quantity font-28 c3 dp-flex'>
+        <image class='add' src='../../images/icon/minus-icon.png'></image>
+        <text class='font-26 num c2821'>1</text>
+        <image class='minus'src='../../images/icon/add-icon.png'></image> 
+      </view>
+    </view>
+  <!-- </block>   -->
+</scroll-view>
+<view class='order-bottom bottom-fixed'>
+  <view class='total dp-flex c6 font-28'>
+    <text>合计</text>
+    <view class='deal'>5份菜品</view>
+    <view class='total-prices c2821'>￥135.00</view>
+  </view>
+  <view class='oper dp-flex font-38 cf tc'>
+    <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>
+    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts'>确定</view>
+  </view>
+</view>

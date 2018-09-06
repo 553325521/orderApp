@@ -1,0 +1,51 @@
+/* pages/template/chosenPosition.wxss */
+.reserve,.quorum{
+  z-index: 999
+}
+.reserve-list,.quorum-list{
+  padding: 40rpx 90rpx;
+}
+.reserve-item{
+  width: 156rpx;
+  line-height: 80rpx;
+  border: 1px solid #fff;
+  border-radius: 80rpx;
+  margin:0 48rpx 58rpx 0;
+
+}
+.reserve-item:nth-child(3n),.quorum-item:nth-child(3n){
+  margin-right:0;
+}
+.quorum-item{
+  width: 100rpx;
+  line-height: 100rpx;
+  border: 1px solid #fff;
+  margin:0 132rpx 58rpx 0;
+  border-radius: 50%
+}
+/*  */
+.coupon-list{
+  padding: 58rpx 38rpx 0 38rpx;
+}
+.coupon-list .coupon-item{
+  height: 168rpx;
+  width: 320rpx;
+  padding: 24rpx 28rpx 0 34rpx;
+  margin-right: 34rpx;
+  background-color: #E77817;
+  margin-bottom: 32rpx
+}
+.coupon-list .coupon-item:nth-child(2n){
+  margin-right: 0;
+}
+.discount{
+  margin: 8rpx 0
+}
+.colse-btn{
+  position: absolute;
+  bottom: 85rpx;left: 50%;
+  width: 96rpx;
+  height: 96rpx;
+  transform: translateX(-50%)
+  /* border-radius: 50% */
+}

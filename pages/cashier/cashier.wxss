@@ -1,0 +1,112 @@
+/* pages/cashier/cashier.wxss */
+page{
+  background-color: #fff;
+}
+.count-head{
+  width: 628rpx;
+  height: 176rpx;
+  border: 1px solid #9F9D9B;
+  border-radius: 10rpx;
+  margin: 50rpx 0 40rpx 50rpx
+}
+.result{
+  height: 110rpx;
+  border-bottom: #E3E2E2 1px solid;
+  padding: 0 16rpx 0 32rpx
+}
+.result text{
+  line-height: 5.5em
+}
+.result .total-money{
+  color: #DD137B;
+  line-height: 2.9em
+}
+.process{
+  padding: 0 16rpx;
+  line-height: 64rpx
+}
+.discounts{
+  width: 628rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  border: 1px solid #9F9D9B;
+  border-radius: 10rpx;
+  margin-left: 50rpx;
+  padding: 0 22rpx
+}
+.discounts checkbox-group{
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0
+}
+.discounts checkbox-group checkbox{
+  width: 30rpx;
+  height: 30rpx
+}
+.discounts .check-img{
+  width: 30rpx;
+  height: 30rpx
+}
+.discounts input{
+  height: 90rpx;
+  margin-left: 10rpx
+}
+/*  */
+.keyboard{
+  padding: 0 50rpx;
+  margin-top: 68rpx
+}
+.keyboard .numeric-key{
+  width: 470rpx;
+  flex-wrap: wrap
+}
+.keyboard .numeric-key>view{
+  width: 108rpx;
+  line-height: 108rpx;
+  border-radius: 50%;
+  border: 1px solid #A09E9C;
+  margin: 0 70rpx 38rpx 0;
+}
+.keyboard .numeric-key>view:nth-child(3n){
+  margin-right: 0
+}
+.keyboard .oper-key{
+  width: 108rpx
+}
+.keyboard .oper-key view{
+  width: 108rpx;
+  line-height: 108rpx;
+  border-radius: 108rpx;
+  border: 1px solid #A09E9C;
+  margin-bottom: 38rpx;
+}
+.keyboard .oper-key view.equal-to{
+  line-height: 235rpx;
+  border: 1px solid #1F1A17;
+  margin-top: 60rpx
+}
+/*  */
+.pay-way{
+  padding: 0 42rpx
+}
+.pay-way .flicking{
+  border-left: 1px solid #D9D9D9;
+  padding-left: 38rpx 
+}
+.pay-way .scan>image{
+  width: 64rpx;
+  height: 64rpx;
+  margin-top: 39rpx;
+  transform: translateY(-50%)
+}
+.pay-way .flicking>image{
+  width: 46rpx;
+  height: 46rpx;
+  margin-top: 39rpx;
+  transform: translateY(-50%)
+}
+.pay-way text{
+  line-height: 78rpx;
+  margin-left: 28rpx
+}

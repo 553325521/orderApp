@@ -1,0 +1,44 @@
+/* pages/statement/statement.wxss */
+.toDay-total{
+  height: 232rpx;
+  background-color: #EAABAE;
+}
+.toDay-total .title{
+  padding:30rpx 0 0 15rpx;
+}
+.title image{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 8rpx
+}
+.total-list{
+  margin-top: 34rpx;
+  justify-content: space-around
+}
+.total-list>view{
+  padding: 10rpx 0;
+  border-right: 1px solid #EEB9BC; 
+}
+.total-list>view::last-child{
+   border-right: none;
+}
+.total-list .value{
+  letter-spacing: 3rpx;
+  margin-top: 16rpx
+}
+/*  */
+.statistics-list{
+  margin-top: 12rpx;
+  padding: 50rpx 0;
+  border-top: 1px solid #CDCDCD
+}
+.statistics-item image{
+  display: block;
+  margin: 0 auto
+}
+.statistics-item .text{
+  width: 150rpx;
+  line-height: 34rpx;
+  border-radius: 34rpx;
+  margin: 54rpx auto auto auto
+}

@@ -1,0 +1,31 @@
+/* pages/payMent/payMent.wxss */
+page{
+  background-color: #fff
+}
+.head{
+  margin-top: 66rpx
+}
+.icon{
+  margin:52rpx auto auto auto; 
+  width: 68rpx;
+  height: 38rpx
+}
+.QR-code{
+  width: 425rpx;
+  height: 425rpx;
+  margin: 126rpx auto
+}
+.hint{
+  margin-top: 84rpx
+}
+.app-list{
+  margin-top: 64rpx;
+  justify-content: center
+}
+.app-list image{
+  width: 50rpx;
+  height: 50rpx;
+}
+.app-list image:nth-child(2){
+  margin: 0 70rpx
+}

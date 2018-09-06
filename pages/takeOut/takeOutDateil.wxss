@@ -1,0 +1,74 @@
+/* pages/takeOut/takeOutDateil.wxss */
+page{
+  background-color: #fff
+}
+.indent-info{
+  color: #4D4948;
+  padding: 0 14rpx;
+}
+.indent-info>view{
+  line-height: 78rpx;
+  padding: 0 20rpx
+}
+.indent-info>view:last-child{
+  border-top: 1px solid #DFDEDE
+}
+/*  */
+.indent-dateil{
+  color: #4D4948;
+}
+.indent-dateil .title{
+  line-height: 51rpx;
+  background-color: #EFEEEE;
+  border-top: 1px solid #D9D8D8;
+  border-bottom: 1px solid #D9D8D8;
+  padding: 0 30rpx;
+  color: #605D5C
+}
+.menu-list{
+  border-bottom: 1px solid #E6E6E6;
+  padding: 0 14rpx;
+}
+.menu-list>view{
+  line-height: 80rpx;
+  border-bottom: 1px solid #E6E6E6;
+  padding: 0 56rpx
+}
+.menu-list>view.menu-item{
+  padding: 0 56rpx
+}
+.menu-list>view.total{
+  padding: 0 28rpx 0 56rpx
+}
+.menu-list>view:last-child{
+  border-bottom: 0
+}
+.dateil-list{
+  padding: 0 14rpx;
+}
+.dateil-list view.total-prices{
+  line-height: 80rpx;
+  border-bottom: 1px solid #E6E6E6;
+  padding: 0 28rpx 0 56rpx
+}
+.dateil-list view.dateil-item{
+  border-bottom: 1px solid #E6E6E6;
+  padding: 18rpx 26rpx
+}
+.dateil-list view.dateil-item:last-child{
+  border-bottom: 0;
+}
+/*  */
+.oper{
+  padding: 20rpx 32rpx;
+  border-top: 1px solid #E1E0E0 
+}
+.oper>view{
+  line-height: 54rpx;
+  background-color: #EF9BA0;
+  margin-left: 12rpx;
+  border-radius: 54rpx 
+}
+.oper>view:first-child{
+  margin-left: 0;
+}

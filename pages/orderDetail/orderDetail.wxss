@@ -1,0 +1,91 @@
+/* pages/orderDetail/orderDetail.wxss */
+page{
+  background-color: #fff
+}
+.date{
+  width: 260rpx;
+  border-right: 1px dashed #ccc;
+  padding-top:50rpx 
+}
+.time{
+  line-height: 68rpx
+}
+.info{
+  padding-left: 47rpx
+}
+.reserve{
+  padding-top: 24rpx;
+  width: 154rpx;
+}
+.site{
+  line-height: 76rpx;
+  width: 154rpx;
+  border: 1px solid #EF9BA0;
+  border-radius: 76rpx
+}
+.entry-orders{
+  width: 72rpx;
+  line-height: 36rpx;
+  margin: 13rpx auto;
+  background-color: #EF9BA0;
+  border-radius: 36rpx
+}
+.quorum{
+  margin: 0 20rpx 0 34rpx;
+}
+.quorum,.empty{
+  padding-top: 28rpx
+}
+.quorum view,.empty view{
+  width: 100rpx;
+  line-height: 100rpx;
+  border: 1px solid #EF9BA0;
+  border-radius: 50%
+}
+/*  */
+.list{
+  padding: 0 42rpx;
+}
+.item{
+  line-height: 96rpx;
+  justify-content: space-between
+}
+.num{
+  margin: 0 12rpx
+}
+.add,.minus{
+  width: 40rpx;
+  height: 40rpx;
+  transform: translateY(30rpx)
+}
+/*  */
+.order-bottom{
+  padding: 0 50rpx;
+}
+.total{
+  padding-bottom: 13rpx 
+}
+.total text{
+  padding-left: 12rpx
+}
+.deal{
+  margin: 0 95rpx 0 250rpx
+}
+.total-prices{
+  padding-right: 12rpx
+}
+.oper{
+  padding: 13rpx 0;
+  border-top: 1px solid #EBEBEB
+}
+.add-dish,.confirm-btn{
+  line-height: 66rpx;
+  border-radius: 66rpx;
+  letter-spacing: 18rpx
+}
+.add-dish{
+  width: 168rpx;
+}
+.confirm-btn{
+  margin-left: 52rpx;
+}

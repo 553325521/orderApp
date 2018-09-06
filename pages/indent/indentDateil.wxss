@@ -1,0 +1,88 @@
+/* pages/indent/indentDateil.wxss */
+page{
+  background-color: #fff
+}
+.p8{
+  padding-left: 8rpx
+}
+/*  */
+.top-oper{
+  justify-content: flex-end;
+  padding: 24rpx 22rpx 32rpx 0;
+}
+.top-oper view{
+  width: 110rpx;
+  line-height: 40rpx;
+  border-radius: 40rpx;
+  margin-left: 40rpx;
+  background-color: #EF9BA0
+}
+/*  */
+.date{
+  width: 260rpx;
+  border-right: 1px dashed #ccc;
+  padding-top:50rpx 
+}
+.time{
+  line-height: 68rpx
+}
+.info{
+  padding: 18rpx 0 0 47rpx
+}
+.info .order-time{
+  margin: 6rpx 0
+} 
+/*  */
+.list{
+}
+.item{
+  line-height: 96rpx;
+  /* justify-content: space-between; */
+  right: 0
+}
+.item .name{
+  padding-left: 70rpx;
+  width: 280rpx
+}
+.item .part{
+  width: 134rpx
+}
+.item .moeny{
+  width: 254rpx
+}
+.retreat-food{
+  width: 100rpx;
+  background-color: #EF9BA0;
+  top: 0;right: -34rpx;
+}
+/*  */
+.order-bottom{
+  padding: 0 50rpx;
+}
+.total{
+  padding-bottom: 13rpx 
+}
+.total text{
+  padding-left: 12rpx
+}
+.deal{
+  margin: 0 95rpx 0 250rpx
+}
+.total-prices{
+  padding-right: 12rpx
+}
+.oper{
+  padding: 13rpx 0;
+  border-top: 1px solid #EBEBEB
+}
+.add-dish,.confirm-btn{
+  line-height: 66rpx;
+  border-radius: 66rpx;
+  letter-spacing: 18rpx
+}
+.add-dish{
+  width: 168rpx;
+}
+.confirm-btn{
+  margin-left: 52rpx;
+}

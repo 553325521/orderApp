@@ -1,0 +1,21 @@
+<!--pages/payMent/payMent.wxml-->
+<view class='page'>
+  <view class='head'>
+    <view class='title font-30 c6 tc'>应收金额</view>
+    <view class='font-40 cde1a tc'>￥135.28</view>
+    <view class='icon tc'>
+      <image class='w100 h100' src='../../images/icon/glide-icon.png'></image>
+    </view>
+  </view>
+  <view class='QR-code'>
+    <image class='w100 h100' src='../../images/icon/QR-code.jpg'></image>
+  </view>
+  <view class='hint'>
+    <view class='title font-20 c6 tc'>顾客使用一下软件扫描上面的二维码</view>
+    <view class='app-list dp-flex'>
+      <image src='../../images/icon/wx.png'></image>
+      <image src='../../images/icon/zfb.png'></image>
+      <image src='../../images/icon/ysf.png'></image>
+    </view>
+  </view>
+</view>

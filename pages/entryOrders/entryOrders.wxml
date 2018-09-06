@@ -1,0 +1,24 @@
+<!--pages/entryOrders/entryOrders.wxml-->
+<view class='indent-list'>
+  <block wx:for="{{cardTeams}}" wx:key="index" wx:for-index='index'>
+    <view class='indent-item'>
+      <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
+        <text>2016-08-18</text>
+        <text>共计186.00元</text>
+      </view>
+      <view class='item-list'>
+        <block wx:for="{{item.list}}" wx:key="index" wx:for-item="every" wx:for-index='item'>
+          <view class='item dp-flex font-30 c3 pr' style="right:{{every.right}}px" data-index='{{index}}' data-item='{{item}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd">
+            <view class='label pa'>*</view>
+            <view class='time'>17:23</view>
+            <view class='seat'>A02号餐位</view>
+            <view class='part'>5份</view>
+            <view class='money'>128.00元</view>
+            <view class='pay-way'>现付</view>
+            <view wx:if="{{every.show}}" class='delete-btn bg-EF9B tc'>删除</view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,148 @@
+<!--pages/checkOut/checkOut.wxml-->
+<import scr="../template/chosenPosition.wxml"/>
+<view class='head'> 
+  <view class='head-top dp-flex tc cf font-26'>
+    <view class='bg-EF9B' bindtap='showCoupon'>优惠</view>
+    <view class='bg-EF9B vip' bindtap='addMember'>会员</view>
+  </view>
+  <view class='pay-money'>
+    <view class='reality-pay dp-flex'>
+      <text class='font-28 c6'>实收金额</text>
+      <view class='money c2821 font-28'>￥<text class='font-34'>120.00</text> <text class='c6'>元</text> </view>
+    </view>
+    <view class='should-pay dp-flex'>
+      <text class='font-28 c6'>实收金额</text>
+      <view class='money c2821 font-26'>￥<text class='font-26'>128.00</text></view>
+    </view>
+  </view>
+</view>
+<view class='pay-option'>
+  <view class='coupon option dp-flex flex-jc-sb'>
+    <text class='font-28 c6'>优惠金额</text>
+    <view class='font-28 c2821'>￥8.20</view>
+  </view>
+  <view class='coupon option dp-flex flex-jc-sb'>
+    <text class='font-28 c6'>优惠券</text>
+    <view class='font-28 dp-flex'>
+      <view class='usable font-20 cf'>
+        <view bindtap='couponList'>10张可用</view>
+      </view>
+      <view class='check pr'>
+        <checkbox-group  bindchange="checkboxChange" data-index="0">
+            <checkbox value="0" checked="true"/>
+        </checkbox-group>
+        <view class='check-img'>
+          <image wx:if = "{{operList[0]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+          <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='integral option dp-flex flex-jc-sb'>
+    <text class='font-28 c6'>积分抵现</text>
+    <view class='font-28 dp-flex'>
+      <view class='hint font-20 c9'>可用积分1531，可抵45.5元</view>
+      <view class='check pr'>
+        <checkbox-group  bindchange="checkboxChange" data-index="1">
+            <checkbox value="0" checked="true"/>
+        </checkbox-group>
+        <view class='check-img'>
+          <image wx:if = "{{operList[1]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+          <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='stored option dp-flex flex-jc-sb'>
+    <text class='font-28 c6'>储值支付</text>
+    <view class='font-28 dp-flex'>
+      <view class='hint font-20 c9'>可用储值120.00元，已用120.00元</view>
+      <view class='check pr'>
+        <checkbox-group  bindchange="checkboxChange" data-index="2">
+            <checkbox value="0" checked="true"/>
+        </checkbox-group>
+        <view class='check-img'>
+          <image wx:if = "{{operList[2]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+          <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='remark option'>
+    <view class='font-28 c6'>添加备注</view>
+    <textarea class='w100 font-28 c3'></textarea>
+  </view>
+</view>
+<view class='pay-way'>
+  <view class='title c6 font-24'>选择支付方式</view>
+  <view class='way-list dp-flex flex-wrap'>
+    <block wx:for="{{payWayList}}" wx:key="{{index}}">
+      <view class="item dp-flex bc pr {{currentTab==index?'on':''}}" data-index='{{index}}' bindtap='selectPay'>
+        <image class='icon' src='{{item.img}}' style='width:{{item.w}}rpx;height:{{item.h}}rpx'></image>
+        <text class='c6 font-28'>{{item.text}}</text>
+        <image wx:if="{{currentTab==index}}" class='sele-on pa' src="../../images/icon/way-sele.png"></image>
+      </view>
+    </block>
+  </view>
+</view>
+<view class='oper bottom-fixed bg-fff dp-flex font-38 cf tc'>
+  <view class='add-dish bg-EF9B'>抹零</view>
+  <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts'>立即结账</view>
+</view>
+<!-- 微信和支付宝  结账  -->
+<view wx:if="{{wzShow}}"  class='wx-zfb full-fixed' style='width:{{W}};height:{{H}};z-index:999999;'>
+  <view class='footfixed pr' bindtap='vanish'></view>
+  <view class='content-box bg-fff pa'>
+    <view class='item dp-flex' data-type='0' bindtap='payWay'>
+      <image src='../../images/icon/xj1.jpg' style='width:68rpx;height:70rpx'></image>
+      <text class='font-32 c3'>线下已支付</text>
+    </view>
+    <view class='item dp-flex' data-type='1' bindtap='payWay'>
+      <image src='../../images/icon/scan-QR.png' style='width:46rpx;height:46rpx'></image>
+      <text class='font-32 c3'>扫一扫收款</text>
+    </view>
+    <view class='item dp-flex' data-type='2' bindtap='payWay'>
+      <image src='../../images/icon/QR-scan.png' style='width:64rpx;height:64rpx'></image>
+      <text class='font-32 c3'>二维码收款</text>
+    </view>
+  </view>
+</view>
+<!--优惠券  -->
+<view wx:if="{{couponShow}}" class='coupon footfixed' style='width:{{W}};heigth:{{H}}'>
+  <view class='coupon-list dp-flex flex-wrap cf'>
+    <view class='coupon-item' bindtap='seleCoupon'>
+      <view class='coupon-title font-35'>优惠标题</view>
+      <view class='discount tr font-35'>9.5折</view>
+      <view class='tr font-26'>全部商品</view>
+    </view>
+    <view class='coupon-item' bindtap='seleCoupon'>
+      <view class='coupon-title font-35'>优惠标题</view>
+      <view class='discount tr font-35'>9.5折</view>
+      <view class='tr font-26'>全部商品</view>
+    </view>
+    <view class='coupon-item' bindtap='seleCoupon'>
+      <view class='coupon-title font-35'>优惠标题</view>
+      <view class='discount tr font-35'>9.5折</view>
+      <view class='tr font-26'>全部商品</view>
+    </view>
+  </view>
+  <view class='colse-btn' bindtap='vanish'>
+    <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>
+  </view>
+</view>
+<!-- 会员  -->
+<view wx:if="{{memberShow}}" class='member full-fixed' style='width:{{W}};height:{{H}};z-index:999999;'>
+  <view class='footfixed pr' bindtap='vanish'></view>
+  <view class='mian-box pa bg-fff'>
+    <!-- <view style='height:40rpx;background-color:#EF9BA0'></view> -->
+    <view style='padding: 0 18rpx;'>
+      <view class='input font-32 c6 dp-flex'>
+        <input class='flex-1' type='number' maxlength='11' placeholder='请输入会员手机号'></input>
+        <view class='icon' bindtap='richScan'>
+          <image src='../../images/icon/yhsys.png'></image>
+        </view>
+      </view>
+      <view class='yes-btn tc cf font-40' bindtap='vanish'>确定输入</view>
+    </view>
+  </view>
+</view>

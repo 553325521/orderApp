@@ -1,0 +1,65 @@
+<!--pages/indent/indentDateil.wxml-->
+<view wx:if="{{type == '0'}}" class='top-oper dp-flex'>
+    <view class='cf tc font-30'>补单</view>
+    <view class='cf tc font-30'>退单</view>
+    <view class='cf tc font-30' bindtap='navTo'>挂单</view>
+</view>
+<view class='order-info dp-flex'>
+  <view class='date c6 tc font-28'>
+    <view class=''>梅花厅 <text class='font-18'>5人</text> </view>
+    <view class=''>2018-01-01</view>
+  </view>
+  <view class='info flex-1 c6 font-28'>
+    <view class=''>订单编号 2168464137851</view>
+    <view class='order-time'>下单时间 12:30:15</view>
+    <view>就餐时间 13:30:15</view>
+  </view>
+</view>
+<scroll-view scroll-y class='list' style='height:{{height}}'>
+  <block wx:for = "{{cardTeams}}" wx:key="{{index}}"> 
+    <view class='item dp-flex font-28 c6 pr' data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
+      <view class='name'>青椒肉丝</view>
+      <view class='part tr'>5份</view>
+      <view class='moeny c2821 tr'>￥10.00</view>
+      <view wx:if="{{item.show}}" class='retreat-food pa tc'>退菜</view>
+    </view>
+  </block>
+  <block wx:if="{{type == '1'}}">
+    <view class='item dp-flex font-28 c6 pr' >
+      <view class='name' style='padding-left:52rpx'>应付金额合计</view>
+      <view class='part tr'>5份菜品</view>
+      <view class='moeny c2821 tr'>￥135.00</view>
+    </view>
+    <view class='item dp-flex font-28 c6 pr'>
+      <view class='name'>优惠金额</view>
+      <view class='part tr'> </view>
+      <view class='moeny c2821 tr'>￥13.00</view>
+    </view>
+    <view class='item dp-flex font-28 c6 pr'>
+      <view class='name'>积分抵现</view>
+      <view class='part tr'></view>
+      <view class='moeny c2821 tr'>￥5.00</view>
+    </view>
+    <view class='item dp-flex font-28 c6 pr'>
+      <view class='name'>抹零金额</view>
+      <view class='part tr'></view>
+      <view class='moeny c2821 tr'>￥0.15</view>
+    </view>
+    <view class='item dp-flex font-28 c6 pr'>
+      <view class='name' style='padding-left:52rpx'>实付金额(支付宝)</view>
+      <view class='part tr'></view>
+      <view class='moeny c2821 tr'>￥128.00</view>
+    </view>
+  </block>   
+</scroll-view>
+<view wx:if="{{type == '0'}}" class='order-bottom bottom-fixed'>
+  <view class='total dp-flex c6 font-28'>
+    <text>合计</text>
+    <view class='deal'>5份菜品</view>
+    <view class='total-prices c2821'>￥135.00</view>
+  </view>
+  <view class='oper dp-flex font-38 cf tc'>
+    <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>
+    <view class='confirm-btn flex-1 bg-EF9B'>确定</view>
+  </view>
+</view>

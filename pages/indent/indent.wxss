@@ -1,0 +1,88 @@
+/* pages/indent/indent.wxss */
+page{
+  background-color: #fff;
+  padding-top: 174rpx
+}
+.page{
+  position: fixed;
+  top: 0;left: 0;
+  z-index: 999
+}
+.swiper-tab{
+  line-height: 84rpx;
+  border: 1px solid #E4E4E4
+}
+.swiper-tab>view.on{
+  border-bottom: 1px solid #DA2725;
+}
+.swiper-tab .icon{
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 0;height: 0;
+  border-width:0 10rpx 10rpx;
+  border-style:solid;
+  border-color:transparent transparent #DA2725;/*透明 透明  灰*/
+}
+.swiper-tab .num{
+  top: 10rpx;right: 33rpx;
+  width: 40rpx;
+  line-height: 40rpx;
+}
+.time-slot{
+  padding: 13rpx 30rpx 18rpx 30rpx
+}
+.time-slot .icon{
+  width: 44rpx;
+  height: 50rpx;
+  margin-right: 11rpx
+}
+.sele-time{
+  border-radius: 50rpx;
+  line-height: 50rpx;
+  overflow: hidden;
+  background-color: #DEDEDD
+}
+.sele-time view{
+  padding-left: 16rpx
+}
+.sele-time view image{
+  width:25rpx;
+  height:20rpx;
+}
+.begin{
+  margin-right: 42rpx
+}
+/*  */
+.item-head{
+  border-top: 1px #EAD5D7 solid;
+  border-bottom: 1px #EAD5D7 solid;
+  background-color: #FEFAFA;
+  line-height: 40rpx;
+  padding: 0 30rpx
+}
+.item-list{
+  padding: 0 16rpx
+}
+.item{
+  border-bottom: 1px solid #E9E8E8;
+  line-height: 98rpx;
+  padding: 0 26rpx 0 46rpx 
+}
+.item:last-child{border-bottom: none}
+.item .time{
+  width: 124rpx;
+}
+.item .seat{
+  width: 198rpx;
+}
+.item .part{
+  width: 90rpx;
+}
+.item .money{
+  width: 160rpx
+}
+.item .label{
+  top: -1rpx;
+  left: 30rpx
+}
