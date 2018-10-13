@@ -63,6 +63,51 @@ Page({
       endIndex: that.data.startIndex
     })
   },
+  getPhoneNumber: function(e) {
+    console.log(e.detail.iv)
+    console.log(e.detail.encryptedData)
+    if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+      wx.showModal({
+        title: '提示',
+        showCancel: false,
+        content: '授权失败,原因:' + e.detail.errMsg,
+        success: function (res) { }
+      })
+    } else {
+          wx.request({
+            url: app.globalData.basePath + 'json/Wx_checkAesKey.json',
+            method: "post",
+            data: {
+              iv: e.detail.iv,
+              openid: wx.getStorageSync('openid'),
+              encryptedData: e.detail.encryptedData
+            },
+            header: {
+              'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+            },
+            success: function (res) {
+              console.info(res)
+              if (res.data.code == '0000') {
+                wx.showToast({
+                  title: '授权成功',
+                })
+              } else {
+                wx.showModal({
+                  title: '提示',
+                  showCancel: false,
+                  content: '授权失败,原因:' + res.data.data,
+                  success: function (res) { }
+                })
+              }
+            },
+            fail: function (error) {
+              wx.showToast({
+                title: '登录失败',
+              })
+            }
+          })
+    } 
+  },
   onReady: function () {
   
   },

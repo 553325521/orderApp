@@ -2,9 +2,9 @@
 <import scr="../template/chosenPosition.wxml"/>
 <!-- 菜单导航  -->
 <view class='menu-nav bg-f9 br-ec' style='height:{{height}}'>
-  <block wx:for="{{navList}}" wx:for-index='index'  wx:key="keys">
-    <view class="nav-item font-24 pr\ c5957 bb-ec tc {{currentTab == item.type?'menu-on':''}}" data-index='{{index}}' data-type='{{item.type}}' bindtap='switchNav'>
-    {{item.title}}
+  <block wx:for="{{navList}}" wx:for-index='index' wx:key="keys">
+    <view class="nav-item font-24 pr\ c5957 bb-ec tc {{currentTab == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-type='{{item.GTYPE_PK}}' bindtap='switchNav'>
+    {{item.GTYPE_NAME}}
     <text class='pa font-28 tc cf' wx:if="{{qityArr[index]>0}}">{{qityArr[index]}}</text></view>
   </block>
 </view>
@@ -41,8 +41,8 @@
     <scroll-view scroll-y class='list bg-fff' style='height:{{height}}'>
       <block wx:for = "{{ordersList}}" wx:key="{{index}}">
         <view class='item dp-flex' id="orders-item">
-          <view class='name font-28 c3'>{{item.name}}</view>
-          <view class='price font-28 c2821'>￥{{item.price}}.00/份</view>
+          <view class='name font-28 c3'>{{item.GOODS_NAME}}</view>
+          <view class='price font-28 c2821'>￥{{item.GOODS_PRICE / 100}}.00/{{item.GOODS_DW}}</view>
           <view class='quantity1 font-28 c3'>
             <image class='add'  data-type="-" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/minus-icon.png'></image>
             <text class='font-26 num' style='line-height: 40rpx'>{{item.qity}}</text>
@@ -52,7 +52,7 @@
       </block>  
     </scroll-view>
     <view class='bottom bg-fff'>
-      <text class='c60 font-30'>共￥135.00</text>
+      <text class='c60 font-30'>共￥{{allMoney}}</text>
     </view>
   </view>
 </view>
@@ -64,29 +64,22 @@
       <image class='w100 h100' src='../../images/icon/close-icon.png'></image>
     </view>
     <view class='dish-name font-28 c6 tc'>青椒肉丝</view>
-    <view class='specification'>
+    <view class='specification' wx:if='{{goodsGuige.guige.length > 0}}'>
       <view class='title font-26 c2821'>规格</view>
       <view class='spec-list dp-flex flex-wrap'>
-        <view class='spec-item cf tc font-26'>大份</view>
-        <view class='spec-item cf tc font-26'>大份</view>
-        <view class='spec-item cf tc font-26'>大份</view>
-        <view class='spec-item cf tc font-26'>大份</view>
+        <view class='spec-item cf tc font-26' wx:for="{{goodsGuige.guige}}" wx:for-index='index' wx:key="keys">{{item.name}}</view>
       </view>
     </view>
-    <view class='practice'>
+    <view class='practice' wx:if='{{goodsGuige.zuofa.length > 0}}'>
       <view class='title font-26 c2821'>做法</view>
       <view class='spec-list dp-flex flex-wrap'>
-        <view class='spec-item cf tc font-26'>红烧</view>
-        <view class='spec-item cf tc font-26'>清蒸</view>
-        <view class='spec-item cf tc font-26'>爆炒</view>
+        <view class='spec-item cf tc font-26' wx:for="{{goodsGuige.zuofa}}" wx:for-index='index' wx:key="keys">{{item.name}}</view>
       </view>
     </view>
-    <view class='taste'>
+    <view class='taste' wx:if='{{goodsGuige.kouwei.length > 0}}'>
       <view class='title font-26 c2821'>口味</view>
       <view class='spec-list dp-flex flex-wrap'>
-        <view class='spec-item cf tc font-26'>超辣</view>
-        <view class='spec-item cf tc font-26'>中辣</view>
-        <view class='spec-item cf tc font-26'>微辣</view>
+        <view class='spec-item cf tc font-26' wx:for="{{goodsGuige.kouwei}}" wx:for-index='index' wx:key="keys">{{item.name}}</view>
       </view>
     </view>
     <view class='bottom btc dp-flex flex-jc-sb'>
@@ -129,54 +122,33 @@
 </view>
 <!-- 展示菜品  -->
 <view class='page'>
-  <!-- <scroll-view scroll-y scroll-top="{{scrollTop}}" class='shou-greens-box bg-fff' style='height:1164rpx'>
-      <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
-        <view  id="{{'item'+keys}}" class='classify-item'>
-          <view class='classify-title font-26 c7372'>{{item.title}}</view>
-          <view class='greens-list dp-flex'>
-            <block wx:for="{{item.arr}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">
-              <view class="greens-item1 box-s pr {{every.qity>0?'on':''}}" data-index="{{index}}" data-item="{{keys}}" bindtap='orderDishes'>
-                <view class='greens-name c3 font-28'>{{every.name}}</view>
-                <view class='price font-28'>￥{{every.price}}.00/份</view>
-                <view class='sales font-26 ca5a4 '>已售 {{every.sales}}</view>
-                <view class='quantity pa dp-flex'>
-                  <text class='font-26 num' wx:if="{{every.qity>1}}">{{every.qity}}</text>
-                  <view class='btn'>
-                     <image class='w100 h100' wx:if="{{every.qity>1}}" data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/add-icon.png'></image> 
-                    <image class='w100 h100' wx:if="{{every.qity==1}}" data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/sele-icon.png'></image>
-                  </view>
-                </view>
-              </view>
-            </block> 
-          </view>
-        </view>
-      </block> 
-  </scroll-view> --> 
-
-  <scroll-view scroll-y="{{false}}" scroll-top="{{scrollTop}}" class='shou-greens-box bg-fff' style='height:1164rpx'>
-      <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
-        <view  id="{{'item'+keys}}" class='classify-item'>
-          <view class='classify-title font-26 c7372'>{{item.title}}</view>
+  <scroll-view style="height: 1020rpx;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'item' + currentTabInit}}" scroll-with -animation="true" bindscroll="doScroll">
+      <view wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys' id="{{'item'+item.GTYPE_PK}}" class='classify-item'>
+          <view class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
           <view class='greens-list'>
-            <block wx:for="{{item.arr}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">
+            <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">
               <view class="greens-item dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}">
                 <view class='img'>
                   <image class='w100 h100' src='../../images/cai.jpg'></image>
                 </view>
                 <view class='info pr'>
-                  <view class='greens-name1 c3 font-28'>{{every.name}}</view>
+                  <view class='greens-name1 c3 font-28'>{{every.GOODS_NAME}}</view>
                   <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
-                  <view class='price1 font-28 c2821'>￥{{every.price}}.00/份</view>
+                  <view class='price1 font-28 c2821'>￥{{every.GOODS_PRICE / 100}}.00/{{every.GOODS_DW}}</view>
                   <view class='quantity1 pa dp-flex'>
-                    <image class='add' wx:if="{{every.qity>0}}" data-type="-" data-index="{{index}}" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/minus-icon.png'></image>
-                    <text class='font-26 num' style='line-height: 40rpx' wx:if="{{every.qity>0}}" >{{every.qity}}</text>
-                    <image class='minus' data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/add-icon.png'></image> 
+                    <block style='display:none;'>
+                      <image class='add' wx:if="{{every.qity>0}}" data-type="-" data-index="{{index}}" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/minus-icon.png'></image>
+                      <text class='font-26 num' style='line-height: 40rpx' wx:if="{{every.qity>0}}" >{{every.qity}}</text>
+                      <image class='minus' data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/add-icon.png'></image>
+                    </block>
+                    <block>
+                      <view class="goods-list-guige" bindtap='selectGuige' data-index="{{index}}" data-item="{{keys}}">规格</view>
+                    </block>
                   </view>
                 </view>
               </view>
             </block> 
           </view>
         </view>
-      </block>
   </scroll-view>
 </view>

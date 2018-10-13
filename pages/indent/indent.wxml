@@ -9,6 +9,7 @@
         </view>
       </block>
   </view>
+  
   <!-- 时间段  -->
   <view class='time-slot dp-flex dp-flex bg-fff w100'>
     <image class='icon' src='../../images/icon/rq-icon.png'></image>
@@ -119,4 +120,6 @@
       </view>
     </view>
   </view>
+  <view>
+  <button id="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">123</button></view>
 </view>

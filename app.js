@@ -1,18 +1,35 @@
 //app.js
 
 App({
-  data: {  
+  data: {   
   },
   /**
   * 生命周期函数--监听小程序初始化
   */
-  onLaunch: function () {
+  onLaunch: function (options) {
     var that = this;
+    if (options.query.appid == undefined) {
+      // wx.showModal({
+      //   title: '提示',
+      //   content: '页面跳转错误，请勿进行操作！',
+      //   showCancel: false,
+      //   confirmText: "知道了",
+      //   confirmColor: "#ffbe00",
+      // })
+      // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
+      options.query.appid = 'wx3326999f88e7077a';
+    }
+    this.globalData.shopid = 'f9099370f12942439aae999f9455d43f';
+    this.globalData.appid = options.query.appid;
     that.wxLogin();
     wx.setStorageSync("Address", "not");  
   },
   globalData: {
     userInfo: null,
+    appid:null,
+    loginUrl: 'http://m.ddera.com/weixin/json/toSmallProgram.json',
+    shopid:null,
+    basePath:'http://m.ddera.com/weixin/',
     tabBar: {
       "color": "#5C5A58",
       "selectedColor": "#DA251D",
@@ -65,7 +82,6 @@ App({
     var that = this;
     wx.login({
       success: function (res) {
-        console.log(res)
         that.getUserAuth(res.code);
       },
       fail: function (res) {
@@ -89,13 +105,25 @@ App({
   sendAppCodeFunction: function (code) {
     var that = this;
     wx.request({
-      url: loginUrl,
+      url: this.globalData.loginUrl,
       method: "post",
       data: {
-        code : code
+        code: code,
+        appid: this.globalData.appid
+      },
+      header:{
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8' 
       },
       success: function (res) {
-        console.log(res)
+        if (res.data.code != '0000') {
+          // 提示登录失败
+          wx.showToast({
+            title: '登录失败',
+          })
+        }
+        wx.setStorageSync("openid", res.data.data);
+
+        //授权成功
       },
       fail: function (error) {
         console.log(error)
@@ -105,7 +133,6 @@ App({
       }
     })
   },
-
   /**
    * 弹框提示授权用户信息
    */
@@ -155,9 +182,9 @@ App({
 
   /**
      * 得到授权获取用户信息
+     * params : code-临时code, appid-对应appid
      */
   getUserAuth: function (cd) {
-    console.log(cd)
     var that = this;
     that.sendAppCodeFunction(cd);
   },

@@ -242,3 +242,24 @@
   top: 8rpx;
   left: 8rpx
 }
+.a-scroll{
+  width: 100%;
+      height: 1200rpx;
+      white-space: nowrap; 
+}
+::-webkit-scrollbar{
+width: 0;
+height: 0;
+color: transparent;
+}
+.goods-list-guige{
+  width:70rpx;
+  line-height:42rpx;
+  margin-right:18rpx;
+  border-radius:42rpx;
+  font-size:26rpx;
+  border-color:red;
+  border-width:1px;
+  border-style:solid;
+  text-align:center;
+}
