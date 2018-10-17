@@ -2,13 +2,12 @@
 var app = getApp()
 Page({
   data: {
-    cardTeams: [{ right: 0, show: false }, { right: 0, show: false }, { right: 0, show: false }],
+    cardTeams: [],
     startY:0,
     startRight:0,
     orderDetailMap:{}
   },
   onLoad: function (options) {
-    console.log(options)
     var that = this;
     that.setData({
       type : options.type,
@@ -26,20 +25,21 @@ Page({
     let that = this;
     let touch = e.touches[0];
     let index = e.currentTarget.dataset.index;
-    console.log(index)
+    var data = that.data.orderDetailMap.data;
     that.data.startX = touch.clientX;
-    that.data.startRight = that.data.cardTeams[index].right
+    that.data.startRight = data[index].right
   },
   drawEnd: function (e) {
     let that = this;
     let index = e.currentTarget.dataset.index;
-    if (that.data.cardTeams[index].right < 30){
-      that.data.cardTeams[index].right = 0
+    var data = that.data.orderDetailMap.data;
+    if (data[index].right < 30){
+      data[index].right = 0
     }else{
-      that.data.cardTeams[index].right = 30
+      data[index].right = 30
     }
     that.setData({
-      cardTeams: that.data.cardTeams
+      orderDetailMap: that.data.orderDetailMap
     });
   },
   drawMove: function (e) {
@@ -47,30 +47,30 @@ Page({
     let touch = e.touches[0];
     let startX = that.data.startX;
     let index = e.currentTarget.dataset.index;
+    var data = that.data.orderDetailMap.data;
     let endX = touch.clientX;
     if (endX - startX == 0)
       return;
     //从右往左  
     if ((endX - startX) < 0) {
-      if (that.data.cardTeams[index].show != true){
-        that.data.cardTeams[index].show = true;
+      if (data[index].show != true){
+        data[index].show = true;
         that.data.startRight = startX - endX;
-        that.data.startRight > 30 ? that.data.cardTeams[index].right = 30 : that.data.cardTeams[index].right = that.data.startRight;
+        that.data.startRight > 30 ? data[index].right = 30 : data[index].right = that.data.startRight;
       }else{
-        that.data.cardTeams[index].right = 30
+        data[index].right = 30
       }   
     } else {//从左往右 
-      if (that.data.cardTeams[index].show != true) {
-        that.data.cardTeams[index].right = 0
+      if (data[index].show != true) {
+        data[index].right = 0
       } else {
         that.data.startRight = 30 - (endX - startX);
-        that.data.startRight < 0 ? that.data.cardTeams[index].right = 0 : that.data.cardTeams[index].right = that.data.startRight;
-        that.data.startRight <= 0 ? that.data.cardTeams[index].show = false : that.data.cardTeams[index].show = true;
+        that.data.startRight < 0 ? data[index].right = 0 : data[index].right = that.data.startRight;
+        that.data.startRight <= 0 ? data[index].show = false : data[index].show = true;
       }  
-      
     }
     that.setData({
-      cardTeams: that.data.cardTeams
+      orderDetailMap: that.data.orderDetailMap
     });
 
   },
@@ -89,11 +89,14 @@ loadOrderDetail:function(){
     },
     success: function (res) {
       if (res.data.code == '0000') {
+        for (var _index in res.data.data) {
+          res.data.data[_index].right = 0;
+          res.data.data[_index].show = false;
+        }
         that.data.orderDetailMap = that.dealOrderDetailData(res.data.data);
         that.setData({
           orderDetailMap: that.data.orderDetailMap
         });
-        console.info(that.data.orderDetailMap);
       }
     },
     fail: function (error) {
