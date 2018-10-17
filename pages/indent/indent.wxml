@@ -30,93 +30,19 @@
   </view>
 </view>
 <view class='indent-list'>
-  <view class='indent-item'>
+  <view class='indent-item' wx:for="{{orderArray}}">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
+      <text>{{item.keyName}}</text>
+      <text>总计:{{item.totalMoney}}元</text>
     </view>
-    <view class='item-list'>
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
+    <view class='item-list' wx:for="{{item.data}}">
+      <view class='item dp-flex font-30 c3 pr' bindtap='navTo' data-id='{{item.ORDER_PK}}'>
         <view class='label pa'>*</view>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-    </view>
-  </view>
-  <view class='indent-item'>
-    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
-    </view>
-    <view class='item-list'>
-      <view class='item dp-flex font-30 c3 pr'>
-        <view class='label pa'>*</view>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-    </view>
-  </view>
-  <view class='indent-item'>
-    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
-    </view>
-    <view class='item-list'>
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
-        <view class='label pa'>*</view>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='time'>17:23</view>
-        <view class='seat'>A02号餐位</view>
-        <view class='part'>5份</view>
-        <view class='money'>128.00元</view>
-        <view class='pay-way'>现付</view>
+        <view class='time'>{{item.SF}}</view>
+        <view class='seat'>{{item.ORDER_POSITION}}</view>
+        <view class='part'>{{item.TOTAL_FS}}份</view>
+        <view class='money'>{{item.TOTAL_MONEY}}元</view>
+        <view class='pay-way'>{{item.payWay}}</view>
       </view>
     </view>
   </view>

@@ -27,9 +27,9 @@ App({
   globalData: {
     userInfo: null,
     appid:null,
-    loginUrl: 'http://m.ddera.com/weixin/json/toSmallProgram.json',
+    loginUrl: 'http://m.ddera.com/dcxt/json/toSmallProgram.json',
     shopid:null,
-    basePath:'http://m.ddera.com/weixin/',
+    basePath:'http://m.ddera.com/dcxt/',
     tabBar: {
       "color": "#5C5A58",
       "selectedColor": "#DA251D",

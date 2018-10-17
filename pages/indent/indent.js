@@ -19,7 +19,8 @@ Page({
     date: '',
     startIndex: [],
     endIndex: [],
-    year: 2015
+    year: 2015,
+    orderArray:{},
   },
   onLoad: function (options) {
     var that = this;
@@ -27,7 +28,8 @@ Page({
     var myDate = new Date();
     var month = myDate.getMonth() + 1;
     var year = myDate.getFullYear();
-    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 7, 0, 0]
+    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 2, 23, 0, 0]
+    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
     if (date == '') {
       date = [];
       var yeas = common.getYears();
@@ -43,7 +45,6 @@ Page({
       date[5] = hours;
       date[6] = ':';
       date[7] = mins;
-
       wx.setStorageSync('datepicker', date);
     }
     if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
@@ -60,8 +61,97 @@ Page({
     that.setData({
       date: date,
       startIndex: that.data.startIndex,
-      endIndex: that.data.startIndex
+      endIndex: that.data.endIndex
+    });
+  },
+  loadOrderData: function () {
+    let that = this;
+    var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
+    var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
+    if (that.data.date[5][that.data.startIndex[5]] == 24) {
+      startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.startIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.startIndex[7]];
+    }
+    if (that.data.date[5][that.data.endIndex[5]] == 24) {
+      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.endIndex[7]];
+    }
+    var payState = that.data.currentTab;
+    wx.request({
+      url: app.globalData.basePath + 'json/Order_load_loadOrderDataByTime.json',
+      method: "post",
+      data: {
+        CREATE_TIME: startTime,
+        END_TIME:endTime,
+        ORDER_PAY_STATE:payState,
+        openid: wx.getStorageSync('openid')
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          console.info(res.data);
+          that.dealOrderDate(res.data.data);
+          that.data.orderArray = that.dealOrderDate(res.data.data);
+          that.setData({
+            orderArray: that.data.orderArray
+          });
+          console.info(that.data.orderArray);
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '登录失败',
+        })
+      }
     })
+  },
+  //分组订单数据
+  dealOrderDate:function(data){
+    var that = this;
+    var dateStr = "";
+    var allMoney = 0;
+    var orderList = [];
+    var orderMap = new Map();
+    var orderBigList = [];
+    for(var i = 0; i < data.length;i++){
+      dateStr = data[i].CREATE_TIME.substring(0, 10);
+      if(!orderMap.has(dateStr)){
+          allMoney = 0;
+          orderList = [];
+          orderMap.clear();
+          for(var j = 0;j < data.length;j++){
+            if (data[j].CREATE_TIME.indexOf(dateStr)!=-1){
+              data[j].SF = data[j].CREATE_TIME.substring(11);
+              if (data[j].ORDER_PAY_WAY == 1){
+                data[j].payWay = '现付';
+              }else{
+                data[j].payWay = '网付';
+              }
+                orderList.push(data[j]);
+                allMoney = allMoney + parseInt(data[j].TOTAL_MONEY);
+            }
+          }
+          orderMap.set(dateStr, null);
+          orderMap.set("data", orderList);
+          orderMap.set("keyName",dateStr);
+          orderMap.set("totalMoney",allMoney);
+          orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
+      }
+    }
+    return orderBigList;
+  },
+  strMapToObj:function(strMap) {
+    let obj = Object.create(null);
+    for (let [k, v] of strMap) {
+      obj[k] = v;
+    }
+    return obj;
+  },
+  /**
+  *map转换为json
+  */
+  mapToJson:function(map) {
+    return JSON.stringify(this.strMapToObj(map));
   },
   getPhoneNumber: function(e) {
     console.log(e.detail.iv)
@@ -112,26 +202,31 @@ Page({
   
   },
   onShow: function () {
-  
+    var that = this;
+    that.loadOrderData();
   },
   swichNav: function (e) {
     var that = this;
     var types = e.currentTarget.dataset.type;
     that.setData({
       currentTab: types,
-    })
+    });
+    that.loadOrderData();
   },
   // 
   bindStartDateChange: function (e) {
+    var that = this;
     this.setData({
-      startIndex: e.detail.value,
-      endIndex: e.detail.value
-    })
+      startIndex: e.detail.value
+    });
+    that.loadOrderData();
   },
   bindEndDateChange: function (e) {
+    var that = this;
     this.setData({
       endIndex: e.detail.value
-    })
+    });
+    that.loadOrderData();
   },
   // 
   bindDateColumnChange: function (e) {
@@ -162,7 +257,9 @@ Page({
       date: that.data.date
     })
   },
-  navTo:function(){
-    app.pageTurns(`indentDateil?type=${this.data.currentTab}`)
+  navTo:function(e){
+    var orderPK = e.currentTarget.dataset.id;
+    console.info(orderPK);
+    app.pageTurns(`indentDateil?type=${this.data.currentTab}&ORDER_PK=${orderPK}`)
   }
 })

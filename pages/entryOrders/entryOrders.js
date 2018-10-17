@@ -17,9 +17,8 @@ Page({
   
   },
   onShow: function () {
-  
+    
   },
-
   drawStart: function (e) {
     let that = this;
     let touch = e.touches[0];

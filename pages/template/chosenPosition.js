@@ -13,6 +13,6 @@ Page({
     })
   },
   onReady: function () {
-  
+    
   },
 })

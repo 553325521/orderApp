@@ -34,8 +34,8 @@
   </view>
   <view class='indent-item'>
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
+      <text>2016-08-19</text>
+      <text>共计187.00元</text>
     </view>
     <view class='item-list'>
       <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
