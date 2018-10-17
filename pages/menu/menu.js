@@ -16,6 +16,7 @@ Page({
     popShow:false,
     reserveShow:false,
     quorumShow:false,
+    currentGood: null,
     goodsGuige:{
       guige: [],
       zuofa: [],
@@ -109,6 +110,7 @@ Page({
     var type = e.currentTarget.dataset.type;
     var data = that.data.greensList;
     var List = data[item].infos;
+    var _url = '';
     // 已点数量
     var qity = 0;
     if (List[index].qity != undefined) {
@@ -118,54 +120,39 @@ Page({
     if (type == "+"){
       that.data.qityArr[item] = qityArr + 1
       List[index].qity = qity + 1;
-      that.data.allQiry++
+      that.data.allQiry++;
+      _url = app.globalData.basePath + 'json/ShoppingCart_insert_insertCart.json';
     }else{
       that.data.qityArr[item] = qityArr - 1
       List[index].qity = qity - 1;
       that.data.allQiry--
+      _url = app.globalData.basePath + 'json/ShoppingCart_update_removeCart.json';
     }
-    that.addCart(List[index]);
-    that.setData({
-      greensList: that.data.greensList,
-      qityArr: that.data.qityArr,
-      allQiry: that.data.allQiry
+    List[index].FK_SHOP = app.globalData.shopid;
+    List[index].FK_USER = wx.getStorageSync('openid');
+
+    wx.request({
+      url: _url,
+      method: "post",
+      data: List[index],
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          that.setData({
+            greensList: that.data.greensList,
+            qityArr: that.data.qityArr,
+            allQiry: that.data.allQiry
+          })
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '登录失败',
+        })
+      }
     })
-  },
-  /**
-   * 添加购物车
-   */
-  addCart:function(item) {
-    console.info(item);
-    // wx.request({
-    //   url: app.globalData.basePath + 'json/GoodsType_add_addGoodsToCart.json',
-    //   method: "post",
-    //   data: {
-    //     shopid: app.globalData.shopid,
-    //     openid: wx.getStorageSync('openid')
-    //   },
-    //   header: {
-    //     'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-    //   },
-    //   success: function (res) {
-    //     if (res.data.code == '0000') {
-    //       let qityArr = [];
-    //       for (let i = 0; i < res.data.data.greensList.length; i++) {
-    //         qityArr.push(0);
-    //       }
-    //       that.setData({
-    //         navList: res.data.data.navList,
-    //         greensList: res.data.data.greensList,
-    //         currentTab: res.data.data.navList[0].GTYPE_PK,
-    //         qityArr: qityArr
-    //       })
-    //     }
-    //   },
-    //   fail: function (error) {
-    //     wx.showToast({
-    //       title: '登录失败',
-    //     })
-    //   }
-    // })
   },
   /**
    *  查看挂单
@@ -356,13 +343,77 @@ Page({
     var index = e.currentTarget.dataset.index;
     var data = that.data.greensList;
     var info = data[item].infos[index];
+    info.LAST_PIRCE = info.GOODS_PRICE / 100;
     that.data.goodsGuige.guige = JSON.parse(info.GOODS_SPECIFICATION);
     that.data.goodsGuige.zuofa = JSON.parse(info.GOODS_RECIPE);
     that.data.goodsGuige.kouwei = JSON.parse(info.GOODS_TASTE);
     that.setData({
       popShow: true,
-      goodsGuige: that.data.goodsGuige
+      goodsGuige: that.data.goodsGuige,
+      currentGood: info
     })
-    console.info(that.data.goodsGuige)
+  },
+  selectGg: function(e) {
+    var that = this;
+    var index = e.currentTarget.dataset.index;
+    var _type = e.currentTarget.dataset.type;
+    var list = that.data.goodsGuige;
+    if (_type != '' && _type != undefined) {
+      if (_type == 'guige') {
+        let _list = that.data.goodsGuige.guige;
+        for (var _index in _list) {
+          _list[_index].checked = false;
+        }
+        _list[index].checked = true;
+      } else if (_type == 'kouwei') {
+        let _list = that.data.goodsGuige.kouwei;
+        for (var _index in _list) {
+          _list[_index].checked = false;
+        }
+        _list[index].checked = true;
+      } else if (_type == 'zuofa') {
+        let _list = that.data.goodsGuige.zuofa;
+        for (var _index in _list) {
+          _list[_index].checked = false;
+        }
+        _list[index].checked = true;
+      }
+  
+      var _price = 0;
+      if (list.guige.length > 0) {
+        for (var _index in list.guige) {
+          if (list.guige[_index].checked) {
+            var price = list.guige[_index].price;
+            price = parseInt(price.substring(1, price.length));
+            _price += price;
+          }
+        }
+      }
+
+      if (list.zuofa.length > 0) {
+        for (var _index in list.zuofa) {
+          if (list.zuofa[_index].checked) {
+            var price = list.zuofa[_index].price;
+            price = parseInt(price.substring(1, price.length));
+            _price += price;
+          }
+        }
+      }
+
+      if (list.kouwei.length > 0) {
+        for (var _index in list.kouwei) {
+          if (list.kouwei[_index].checked) {
+            var price = list.kouwei[_index].price;
+            price = parseInt(price.substring(1, price.length));
+            _price += price;
+          }
+        }
+      }
+      that.data.currentGood.LAST_PIRCE = that.data.currentGood.GOODS_PRICE / 100 + _price;
+      that.setData({
+        goodsGuige: that.data.goodsGuige,
+        currentGood: that.data.currentGood
+      })
+    }
   }
 })

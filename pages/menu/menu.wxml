@@ -63,27 +63,27 @@
     <view class='close-btn pa' bindtap='closePop'>
       <image class='w100 h100' src='../../images/icon/close-icon.png'></image>
     </view>
-    <view class='dish-name font-28 c6 tc'>青椒肉丝</view>
+    <view class='dish-name font-28 c6 tc'>{{currentGood.GOODS_NAME}}</view>
     <view class='specification' wx:if='{{goodsGuige.guige.length > 0}}'>
       <view class='title font-26 c2821'>规格</view>
       <view class='spec-list dp-flex flex-wrap'>
-        <view class='spec-item cf tc font-26' wx:for="{{goodsGuige.guige}}" wx:for-index='index' wx:key="keys">{{item.name}}</view>
+        <view class="spec-item cf tc font-26 {{item.checked ? '' : 'on'}}" wx:for="{{goodsGuige.guige}}" bindtap='selectGg' wx:for-index='index' wx:key="keys" data-index="{{index}}" data-type="{{'guige'}}" data-price="{{item.price}}">{{item.name}}</view>
       </view>
     </view>
     <view class='practice' wx:if='{{goodsGuige.zuofa.length > 0}}'>
       <view class='title font-26 c2821'>做法</view>
       <view class='spec-list dp-flex flex-wrap'>
-        <view class='spec-item cf tc font-26' wx:for="{{goodsGuige.zuofa}}" wx:for-index='index' wx:key="keys">{{item.name}}</view>
+        <view class="spec-item cf tc font-26 {{item.checked ? '' : 'on'}}" wx:for="{{goodsGuige.zuofa}}" data-index="{{index}}" bindtap='selectGg' data-type="{{'zuofa'}}" wx:for-index='index' wx:key="keys" data-price="{{item.price}}">{{item.name}}</view>
       </view>
     </view>
     <view class='taste' wx:if='{{goodsGuige.kouwei.length > 0}}'>
       <view class='title font-26 c2821'>口味</view>
       <view class='spec-list dp-flex flex-wrap'>
-        <view class='spec-item cf tc font-26' wx:for="{{goodsGuige.kouwei}}" wx:for-index='index' wx:key="keys">{{item.name}}</view>
+        <view class="spec-item cf tc font-26 {{item.checked ? '' : 'on'}}" wx:for="{{goodsGuige.kouwei}}" data-index="{{index}}" bindtap='selectGg' data-type="{{'kouwei'}}" wx:for-index='index' wx:key="keys" data-price="{{item.price}}">{{item.name}}</view>
       </view>
     </view>
     <view class='bottom btc dp-flex flex-jc-sb'>
-      <text class='c60 font-30'>共￥135.00</text>
+      <text class='c60 font-30'>共￥{{currentGood.LAST_PIRCE}}.00</text>
       <view class='spec-btn font-32 cf tc' bindtap='closePop'>确定</view>
     </view>
   </view>
@@ -136,12 +136,12 @@
                   <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
                   <view class='price1 font-28 c2821'>￥{{every.GOODS_PRICE / 100}}.00/{{every.GOODS_DW}}</view>
                   <view class='quantity1 pa dp-flex'>
-                    <block style='display:none;'>
+                    <block wx:if="{{every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]'}}">
                       <image class='add' wx:if="{{every.qity>0}}" data-type="-" data-index="{{index}}" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/minus-icon.png'></image>
                       <text class='font-26 num' style='line-height: 40rpx' wx:if="{{every.qity>0}}" >{{every.qity}}</text>
                       <image class='minus' data-index="{{index}}" data-type="+" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/add-icon.png'></image>
                     </block>
-                    <block>
+                    <block wx:if="{{every.GOODS_SPECIFICATION != '[]' || every.GOODS_RECIPE != '[]' || every.GOODS_TASTE != '[]'}}">
                       <view class="goods-list-guige" bindtap='selectGuige' data-index="{{index}}" data-item="{{keys}}">规格</view>
                     </block>
                   </view>

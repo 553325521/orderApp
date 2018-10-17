@@ -252,10 +252,12 @@ width: 0;
 height: 0;
 color: transparent;
 }
+view.on{
+  background-color: #969594
+}
 .goods-list-guige{
   width:70rpx;
   line-height:42rpx;
-  margin-right:18rpx;
   border-radius:42rpx;
   font-size:26rpx;
   border-color:red;
