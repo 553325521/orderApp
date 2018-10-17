@@ -20,7 +20,7 @@ page{
 /*  */
 .date{
   width: 260rpx;
-  border-right: 1px dashed #ccc;
+  border-right: 1px dashed rgba(0, 0, 0, 0.05);
   padding-top:50rpx 
 }
 .time{
@@ -85,4 +85,10 @@ page{
 }
 .confirm-btn{
   margin-left: 52rpx;
+}
+.viewTopBorder{
+  border-top:1rpx solid rgba(0, 0, 0, 0.05)
+}
+.viewBottomBorder{
+  border-bottom:1rpx solid rgba(0, 0, 0, 0.05)
 }

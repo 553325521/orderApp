@@ -5,11 +5,11 @@
     <view class='cf tc font-30' bindtap='navTo'>挂单</view>
 </view>
 <view class='order-info dp-flex'>
-  <view class='date c6 tc font-28'>
+  <view class='date c6 tc font-28 viewTopBorder viewBottomBorder'>
     <view class=''>{{orderDetailMap.ORDER_POSITION}}<text class='font-18'>{{orderDetailMap.ORDER_RS}}人</text> </view>
     <view class=''>{{orderDetailMap.ORDER_YMD}}</view>
   </view>
-  <view class='info flex-1 c6 font-28'>
+  <view class='info flex-1 c6 font-28 viewTopBorder viewBottomBorder'>
     <view class=''>订单编号{{orderDetailMap.ORDER_CODE}}</view>
     <view class='order-time'>下单时间{{orderDetailMap.CREATE_TIME}}</view>
     <view>就餐时间{{orderDetailMap.ARRIVE_TIME}}</view>
@@ -17,7 +17,7 @@
 </view>
 <scroll-view scroll-y class='list' style='height:{{height}}'>
   <block wx:for = "{{orderDetailMap.data}}" wx:key="{{index}}"> 
-    <view class='item dp-flex font-28 c6 pr' data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
+    <view class='item dp-flex font-28 c6 pr  viewBottomBorder'  data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
       <view class='moeny c2821 tr'>￥{{item.ORDER_DETAILS_GMONEY/100}}</view>
@@ -53,7 +53,7 @@
   </block>   
 </scroll-view>
 <view wx:if="{{type == '0'}}" class='order-bottom bottom-fixed'>
-  <view class='total dp-flex c6 font-28'>
+  <view class='total dp-flex c6 font-28 viewTopBorder' style='height:70rpx;padding-top:20rpx;'>
     <text>合计</text>
     <view class='deal'>{{orderDetailMap.totalFS}}份菜品</view>
     <view class='total-prices c2821'>￥{{orderDetailMap.totalMoney}}</view>

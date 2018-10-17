@@ -70,18 +70,18 @@ page{
   padding: 0 26rpx 0 46rpx 
 }
 .item:last-child{border-bottom: none}
-.item .time{
-  width: 124rpx;
+/* .item .time{
+  width: 180rpx;
 }
 .item .seat{
-  width: 198rpx;
+  width: 180rpx;
 }
 .item .part{
-  width: 90rpx;
+  width: 180rpx;
 }
 .item .money{
-  width: 160rpx
-}
+  width: auto;
+} */
 .item .label{
   top: -1rpx;
   left: 30rpx

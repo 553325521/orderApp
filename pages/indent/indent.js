@@ -124,8 +124,10 @@ Page({
               data[j].SF = data[j].CREATE_TIME.substring(11);
               if (data[j].ORDER_PAY_WAY == 1){
                 data[j].payWay = '现付';
-              }else{
+              } else if (data[j].ORDER_PAY_WAY == 2){
                 data[j].payWay = '网付';
+              }else{
+                data[j].payWay = '';
               }
                 orderList.push(data[j]);
                 allMoney = allMoney + parseInt(data[j].TOTAL_MONEY);
@@ -135,6 +137,18 @@ Page({
           orderMap.set("data", orderList);
           orderMap.set("keyName",dateStr);
           orderMap.set("totalMoney",allMoney);
+          if (that.data.currentTab == 0){
+            orderMap.set("timeWidth", "180rpx");
+            orderMap.set("seatWidth", "180rpx");
+            orderMap.set("partWidth", "180rpx");
+            orderMap.set("moneyWidth", "auto");
+          }else{
+            orderMap.set("timeWidth", "140rpx");
+            orderMap.set("seatWidth", "140rpx");
+            orderMap.set("partWidth", "140rpx");
+            orderMap.set("moneyWidth", "140rpx");
+          }
+
           orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
       }
     }
