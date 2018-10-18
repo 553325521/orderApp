@@ -21,7 +21,7 @@
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
       <view class='moeny c2821 tr'>￥{{item.ORDER_DETAILS_GMONEY/100}}</view>
-      <view wx:if="{{item.show}}" class='retreat-food pa tc'>退菜</view>
+      <view wx:if="{{item.show}}" class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
     </view>
   </block>
   <block wx:if="{{type == '1'}}">

@@ -5,7 +5,8 @@
         <view class="flex-1 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
           <text>{{item.title}}</text>
           <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
-          <view wx:if="{{item.type!=2}}" class='num circle cf tc pa bg-d137'>5</view>
+          <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view>
+          <view wx:if="{{item.type!=2 && item.type == 1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
         </view>
       </block>
   </view>
@@ -30,12 +31,12 @@
   </view>
 </view>
 <view class='indent-list'>
-  <view class='indent-item' wx:for="{{orderArray}}"  wx:for-item="itemName">
+  <view class='indent-item' wx:for="{{orderArray}}" wx:key="keys"  wx:for-item="itemName">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
       <text>{{itemName.keyName}}</text>
       <text>总计:{{itemName.totalMoney}}元</text>
     </view>
-    <view class='item-list' wx:for="{{itemName.data}}">
+    <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
       <view class='item dp-flex font-30 c3 pr' style='border-bottom:1rpx solid rgba(0, 0, 0, 0.1);' bindtap='navTo' data-id='{{item.ORDER_PK}}'>
         <view class='label pa'>*</view>
         <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>

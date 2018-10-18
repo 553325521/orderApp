@@ -21,6 +21,7 @@ Page({
     endIndex: [],
     year: 2015,
     orderArray:{},
+    orderCount:{}
   },
   onLoad: function (options) {
     var that = this;
@@ -64,6 +65,60 @@ Page({
       endIndex: that.data.endIndex
     });
   },
+  //加载订单数量
+  loadOrderNumber:function(){
+    let that = this;
+    var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
+    var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
+    if (that.data.date[5][that.data.startIndex[5]] == 24) {
+      startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.startIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.startIndex[7]];
+    }
+    if (that.data.date[5][that.data.endIndex[5]] == 24) {
+      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.endIndex[7]];
+    }
+    var payState = that.data.currentTab;
+    wx.request({
+      url: app.globalData.basePath + 'json/Order_load_loadOrderNumber.json',
+      method: "post",
+      data: {
+        CREATE_TIME: startTime,
+        END_TIME: endTime,
+        FK_SHOP: app.globalData.shopid,
+        openid: wx.getStorageSync('openid')
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          console.info(res.data);
+          var orderCountMap = new Map();
+           orderCountMap.set("first", 0);
+           orderCountMap.set("second", 0);
+          if(res.data.data.length !=0 ){
+              for(var i = 0;i < res.data.data.length;i++){
+                if (res.data.data[i].ORDER_PAY_STATE == "0"){
+                  orderCountMap.set("first", res.data.data[i].ORDER_NUMBER);
+                }else{
+                  orderCountMap.set("second", res.data.data[i].ORDER_NUMBER);
+                }
+              }
+          }
+           that.data.orderCount = JSON.parse(that.mapToJson(orderCountMap));
+           that.setData({
+             orderCount: that.data.orderCount
+           });
+           console.info(that.data.orderCount);
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '登录失败',
+        })
+      }
+    })
+  },
+  //加载订单数据
   loadOrderData: function () {
     let that = this;
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
@@ -82,6 +137,7 @@ Page({
         CREATE_TIME: startTime,
         END_TIME:endTime,
         ORDER_PAY_STATE:payState,
+        FK_SHOP:app.globalData.shopid,
         openid: wx.getStorageSync('openid')
       },
       header: {
@@ -130,7 +186,7 @@ Page({
                 data[j].payWay = '';
               }
                 orderList.push(data[j]);
-                allMoney = allMoney + parseInt(data[j].TOTAL_MONEY);
+                allMoney = allMoney + parseFloat(data[j].TOTAL_MONEY);
             }
           }
           orderMap.set(dateStr, null);
@@ -217,7 +273,14 @@ Page({
   },
   onShow: function () {
     var that = this;
-    that.loadOrderData();
+    that.updateOrderNumber(that);
+  },
+  //定时任务
+  updateOrderNumber:function(that){
+    setTimeout(function () {
+      that.loadOrderNumber()
+      that.updateOrderNumber(that);
+    },60000)
   },
   swichNav: function (e) {
     var that = this;
@@ -234,6 +297,7 @@ Page({
       startIndex: e.detail.value
     });
     that.loadOrderData();
+    that.loadOrderNumber();
   },
   bindEndDateChange: function (e) {
     var that = this;
@@ -241,6 +305,7 @@ Page({
       endIndex: e.detail.value
     });
     that.loadOrderData();
+    that.loadOrderNumber();
   },
   // 
   bindDateColumnChange: function (e) {

@@ -165,6 +165,32 @@ dealOrderDetailData:function(data){
       url: '../menu/menu',
     })
   },
+  //退菜
+  tuicai: function (e) {
+    let that = this;
+    var ORDER_DETAILS_PK = e.currentTarget.dataset.id;
+    wx.request({
+      url: app.globalData.basePath + 'json/Order_delete_tuiCai.json',
+      method: "post",
+      data: {
+        ORDER_DETAILS_PK:ORDER_DETAILS_PK,
+        openid: wx.getStorageSync('openid')
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          that.loadOrderDetail();
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '登录失败',
+        })
+      }
+    })
+  },
   navTo:function(){
     app.pageTurns(`../entryOrders/entryOrders`)
   } 
