@@ -35,7 +35,7 @@
       <text>购物车</text>
       <view class='dele-btn' bindtap='emptyCat'>
         <image src='../../images/icon/dele-icon.png'> </image>
-        清空全都
+        清空全部
       </view>
     </view>
     <scroll-view scroll-y class='list bg-fff' style='height:{{height}}'>
@@ -84,7 +84,7 @@
     </view>
     <view class='bottom btc dp-flex flex-jc-sb'>
       <text class='c60 font-30'>共￥{{currentGood.LAST_PIRCE}}.00</text>
-      <view class='spec-btn font-32 cf tc' bindtap='closePop'>确定</view>
+      <view class='spec-btn font-32 cf tc' bindtap='addToCart2'>确定</view>
     </view>
   </view>
 </view>
