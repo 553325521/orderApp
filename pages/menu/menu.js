@@ -8,7 +8,7 @@ Page({
     greensList:null,
     qityArr:null,
     scrollTop:0,
-    allQiry:1,
+    allQiry:0,
     allMoney:0,
     ordersList:[],
     height:'',
@@ -53,14 +53,18 @@ Page({
       success: function (res) {
         if (res.data.code == '0000') {
           let qityArr = [];
+          that.data.allQiry = 0;
           for (let i = 0; i < res.data.data.greensList.length; i++) {
-            qityArr.push(0);
+            qityArr.push(parseFloat(res.data.data.greensList[i].GTYPE_QITY));
+            that.data.allQiry += parseFloat(res.data.data.greensList[i].GTYPE_QITY);
           }
+          
           that.setData({
             navList: res.data.data.navList,
             greensList: res.data.data.greensList,
             currentTab: res.data.data.navList[0].GTYPE_PK,
-            qityArr: qityArr
+            qityArr: qityArr,
+            allQiry: that.data.allQiry
           })
         }
       },
@@ -69,38 +73,6 @@ Page({
           title: '添加失败~',
         })
       }
-    })
-  },
-  /**
-   * 无图点餐的减少数量
-   */
-  orderDishes:function(e){
-    var that = this;
-    var item = e.currentTarget.dataset.item;
-    var index = e.currentTarget.dataset.index;
-    var data = that.data.greensList;
-    var List = data[item].infos;
-    var qity = List[index].qity;
-    var qityArr = that.data.qityArr[item];
-    var allQiry = that.data.allQiry;
-    if (qity > 0){
-      qity--;
-      that.data.qityArr[item] = qityArr - 1;
-      that.data.allQiry --
-    }else{
-      qity++;
-      that.data.qityArr[item] = qityArr + 1;
-      that.data.allQiry ++
-    }
-    qityArr = [];
-    for (let i = 0; i < that.data.greensList.length; i++) {
-      qityArr.push(0);
-    }
-    List[index].qity = qity;
-    that.setData({
-      greensList: that.data.greensList,
-      qityArr: qityArr,
-      allQiry: that.data.allQiry
     })
   },
   /**
