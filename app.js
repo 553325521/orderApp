@@ -22,7 +22,58 @@ App({
     this.globalData.shopid = 'f9099370f12942439aae999f9455d43f';
     this.globalData.appid = options.query.appid;
     that.wxLogin();
-    wx.setStorageSync("Address", "not");  
+    wx.setStorageSync("Address", "not");
+    setTimeout(function () {
+      that.test()
+    }, 5000)
+  },
+  //声明连接socket方法
+  connectWebsocket: function () {
+    var task = wx.connectSocket({
+      url: 'ws://m.ddera.com/dcxt/json/webSocket.json',
+      data: {
+        userid:"123455"
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      method: "POST"
+    })
+    wx.onSocketOpen(function (res) {
+     // task.send("123");
+      wx.sendSocketMessage({
+        data: "微信小程序 web socket"
+      })
+      console.log('WebSocket连接已打开！')
+    })
+    wx.onSocketError(function (res) {
+      console.log('WebSocket连接打开失败，请检查！')
+    })
+    wx.onSocketMessage(function (res) {
+      var page = getCurrentPages()[0];
+      var currentRoute = page.route;
+      console.info(currentRoute);
+      console.info(getCurrentPages());
+      //getCurrentPages()[0].testRefresh();
+      console.log('收到服务器内容：' + res.data);
+      //处理订单数据更新
+      if(res.data == "1"){
+        console.info("订单数据更新");
+        if (currentRoute == "pages/indent/indent"){
+            page.loadOrderData();
+            page.loadOrderNumber();
+        }
+      }
+    })
+    wx.onSocketClose(function (res) {
+      console.log('关闭socket')
+    })
+  },
+  onShow:function(){
+    var that = this;
+  },
+  onHide:function(){
+   
   },
   globalData: {
     userInfo: null,
@@ -83,6 +134,7 @@ App({
     wx.login({
       success: function (res) {
         that.getUserAuth(res.code);
+        that.pushSession();
       },
       fail: function (res) {
         if (wx.hideLoading) {
@@ -98,7 +150,52 @@ App({
       }
     })
   },
-
+  test:function(){
+    wx.request({
+      url: this.globalData.basePath + "json/Shop_test_test.json",
+      method: "post",
+      data: {
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        console.info(res.data.data);
+      },
+      fail: function (error) {
+        console.log(error);
+        wx.showToast({
+          title: '登录失败',
+        })
+      }
+    })
+  },
+//shopid,userid放入session
+pushSession:function(){
+  var that = this;
+  wx.request({
+    url: this.globalData.basePath + "json/Shop_pushSession_pushOpenIDAndShopIDSession.json",
+    method: "post",
+    data: {
+      openId: wx.getStorageSync('openid'),
+      shopId: this.globalData.shopid
+    },
+    header: {
+      'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+    },
+    success: function (res) {
+      //连接websocket
+      that.connectWebsocket(); 
+      console.info(res.data.data);
+    },
+    fail: function (error) {
+      console.log(error);
+      wx.showToast({
+        title: '登录失败',
+      })
+    }
+  })
+},
   /**
      * 调用后台接口，传递code参数
      */

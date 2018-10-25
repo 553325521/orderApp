@@ -118,6 +118,10 @@ Page({
       }
     })
   },
+
+  testRefresh:function(){
+    console.info("app.js去刷新的");
+  },
   //加载订单数据
   loadOrderData: function () {
     let that = this;
@@ -273,15 +277,15 @@ Page({
   },
   onShow: function () {
     var that = this;
-    that.updateOrderNumber(that);
+    //that.updateOrderNumber(that);
   },
   //定时任务
-  updateOrderNumber:function(that){
-    setTimeout(function () {
-      that.loadOrderNumber()
-      that.updateOrderNumber(that);
-    },60000)
-  },
+  // updateOrderNumber:function(that){
+  //   setTimeout(function () {
+  //     that.loadOrderNumber()
+  //     that.updateOrderNumber(that);
+  //   },60000)
+  // },
   swichNav: function (e) {
     var that = this;
     var types = e.currentTarget.dataset.type;
