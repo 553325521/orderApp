@@ -2,6 +2,7 @@
 var app = getApp();
 Page({
   data: {
+    loadingHidden:true,
     navList:null,
     currentTab:0,
     currentTabInit: 0,
@@ -29,6 +30,9 @@ Page({
   },
   onShow: function (options) {
     var that = this;
+    that.setData({
+      loadingHidden: false
+    })
     var mobInfo = app.getSystemInfo();
     that.setData({
       W: mobInfo.mob_width +'px',
@@ -57,7 +61,8 @@ Page({
       success: function (res) {
         if (res.data.code == '0000') {
           that.setData({
-            tableList: res.data.data
+            tableList: res.data.data,
+            loadingHidden:true
           })
         }
       },
@@ -70,6 +75,9 @@ Page({
   },
   loadGoodsInfo: function () {
     let that = this;
+    that.setData({
+      loadingHidden: false
+    })
     wx.request({
       url: app.globalData.basePath + 'json/GoodsType_select_loadGoodsTypeByShopId.json',
       method: "post",
@@ -112,6 +120,9 @@ Page({
    */
   addQity:function(e){
     var that = this;
+    that.setData({
+      loadingHidden: false
+    })
     var item = e.currentTarget.dataset.item;
     var index = e.currentTarget.dataset.index;
     var type = e.currentTarget.dataset.type;
@@ -268,7 +279,8 @@ Page({
           }
           that.setData({
             ordersList: that.data.ordersList,
-            allMoney: allMoney / 100 + '.00'
+            allMoney: allMoney / 100 + '.00',
+            loadingHidden: true
           })
         }
       },
@@ -356,6 +368,10 @@ Page({
    */
   alterCount:function(e){
     var that = this;
+    var that = this;
+    that.setData({
+      loadingHidden: false
+    })
     var index = e.currentTarget.dataset.index;
     var type = e.currentTarget.dataset.type;
     var i = e.currentTarget.dataset.i;
@@ -404,7 +420,8 @@ Page({
             qityArr: that.data.qityArr,
             allQiry: that.data.allQiry,
             ordersList: that.data.ordersList,
-            allMoney: that.data.allMoney.toFixed(2)
+            allMoney: that.data.allMoney.toFixed(2),
+            loadingHidden: true
           })
           // 购物车里面空的时候隐藏购物车列表
           if (that.data.ordersList.length == 0) {
@@ -651,6 +668,10 @@ Page({
         }
       }
     }
+    var that = this;
+    that.setData({
+      loadingHidden: false
+    })
     wx.request({
       url: _url,
       method: "post",
@@ -683,7 +704,8 @@ Page({
           that.setData({
             greensList: that.data.greensList,
             qityArr: that.data.qityArr,
-            allQiry: that.data.allQiry
+            allQiry: that.data.allQiry,
+            loadingHidden: true
           })
           that.closePop();
           wx.showToast({

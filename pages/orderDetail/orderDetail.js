@@ -3,9 +3,13 @@ var util = require('../../utils/util.js');
 var app =getApp()
 Page({
   data: {
+    loadingHidden: true
   },
   onLoad: function (options) {
-    var that = this
+    var that = this;
+    that.setData({
+      loadingHidden: false
+    })
     var queryBean = JSON.parse(options.queryBean);
     var ordersList = JSON.parse(options.ordersList);
     var currentTime = util.nowTime().split(' ');
@@ -14,7 +18,8 @@ Page({
       currentDay: currentTime[0],
       currentTimes: currentTime[1],
       allMoney: options.allMoney,
-      ordersList: ordersList
+      ordersList: ordersList,
+      loadingHidden: true
     })
   },
   onReady: function () {
@@ -28,6 +33,9 @@ Page({
    */
   alterCount: function (e) {
     var that = this;
+    that.setData({
+      loadingHidden: false
+    })
     var index = e.currentTarget.dataset.index;
     var type = e.currentTarget.dataset.type;
     var i = e.currentTarget.dataset.i;
@@ -65,7 +73,8 @@ Page({
         if (res.data.code == '0000') {
           that.setData({
             ordersList: that.data.ordersList,
-            allMoney: that.data.allMoney.toFixed(2)
+            allMoney: that.data.allMoney.toFixed(2),
+            loadingHidden: true
           })
           // 购物车里面空的时候隐藏购物车列表
           if (that.data.ordersList.length == 0) {
@@ -84,6 +93,12 @@ Page({
   },
   settleAccounts: function(e) {
     var that = this;
+    var _type = e.currentTarget.dataset.type;
+    that.setData({
+      loadingHidden: false
+    })
+    var _open = 'on';
+    
     wx.request({
       url: app.globalData.basePath + 'json/Order_insert_createOrder.json',
       method: "post",
@@ -99,12 +114,34 @@ Page({
       },
       success: function (res) {
         if (res.data.code == '0000') {
-          app.pageTurns(`../menu/menu`);
+          if (_type == 'confirm') {
+            // 验证是否开启堂点带出收银
+            if (_open == 'on') {
+              app.pageTurns(`../checkOut/checkOut`)
+            } else {
+              app.pageTurns(`../menu/menu`);
+            }
+          } else {
+            app.pageTurns(`../menu/menu`);
+          }
+          that.setData({
+            loadingHidden: true
+          })
+          wx.showToast({
+            title: '创建成功~',
+          })
+        } else {
+          wx.showToast({
+            title: '创建失败~',
+          })
         }
       },
       fail: function (error) {
+        that.setData({
+          loadingHidden: true
+        })
         wx.showToast({
-          title: '添加失败~',
+          title: '创建失败~',
         })
       }
     })

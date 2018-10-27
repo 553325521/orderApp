@@ -7,7 +7,7 @@
   <view class='info flex-1 dp-flex'>
     <view class='reserve'>
       <view class='site font-28 c6 tc'>{{queryBean.TABLES_NAME}}</view>
-      <view class='entry-orders cf tc font-18'>挂单</view>
+      <view class='entry-orders cf tc font-18' bindtap='settleAccounts' data-type="guadan">挂单</view>
     </view>
     <view class='quorum c6 tc font-28'>
       <view>5人</view>
@@ -38,6 +38,25 @@
   </view>
   <view class='oper dp-flex font-38 cf tc'>
     <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>
-    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts'>确定</view>
+    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts' data-type="confirm">确定</view>
   </view>
+</view>
+
+<!--index.wxml-->
+<view class="container">
+    <view id="loading" hidden="{{loadingHidden}}">
+        <view id="loading-center">
+            <view id="loading-center-absolute">
+                <view class="object" id="object_one"></view>
+                <view class="object" id="object_two"></view>
+                <view class="object" id="object_three"></view>
+                <view class="object" id="object_four"></view>
+                <view class="object" id="object_five"></view>
+                <view class="object" id="object_six"></view>
+                <view class="object" id="object_seven"></view>
+                <view class="object" id="object_eight"></view>
+                <view class="object" id="object_big"></view>
+            </view>
+        </view>
+    </view>
 </view>
