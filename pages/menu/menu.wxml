@@ -41,7 +41,7 @@
     <scroll-view scroll-y class='list bg-fff' style='height:{{height}}'>
       <block wx:for = "{{ordersList}}" wx:key="{{index}}">
         <view class='item dp-flex' id="orders-item">
-          <view class='name font-28 c3'>{{item.GOODS_NAME}}</view>
+          <view class='name font-28 c3'>{{item.GOODS_NAME}}{{item.GOODS_RECIPE == undefined ? '' : '('+item.GOODS_RECIPE+')'}}</view>
           <view class='price font-28 c2821'>￥{{item.GOODS_PRICE / 100}}.00/{{item.GOODS_DW}}</view>
           <view class='quantity1 font-28 c3'>
             <image class='add'  data-type="-" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/minus-icon.png'></image>
@@ -96,11 +96,10 @@
 <view wx:if="{{reserveShow}}" class='reserve footfixed' style='width:{{width}};heigth:{{heigth}}'>
   <view class='font-34 cf tc mt24'>请选择餐位号</view>
   <view class='reserve-list dp-flex flex-wrap'>
-    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
-    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
-    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
-    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
-    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm'>1</view>
+    <block wx:for="{{tableList}}" wx:key="keys">
+    <view class='reserve-item font-34 cf tc' bindtap='reserveConfirm' data-index="{{index}}">{{item.TABLES_NAME}}
+    </view>
+    </block>
   </view>
   <view class='colse-btn' style='bottom:48rpx' bindtap='closePop'>
     <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>

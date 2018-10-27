@@ -30,7 +30,7 @@ App({
   //声明连接socket方法
   connectWebsocket: function () {
     var task = wx.connectSocket({
-      url: 'ws://m.ddera.com/dcxt/json/webSocket.json',
+      url: 'ws://m.ddera.com/weixin/json/webSocket.json',
       data: {
         userid:"123455"
       },
@@ -78,9 +78,9 @@ App({
   globalData: {
     userInfo: null,
     appid:null,
-    loginUrl: 'http://m.ddera.com/dcxt/json/toSmallProgram.json',
+    loginUrl: 'http://m.ddera.com/weixin/json/toSmallProgram.json',
     shopid:null,
-    basePath:'http://m.ddera.com/dcxt/',
+    basePath:'http://m.ddera.com/weixin/',
     tabBar: {
       "color": "#5C5A58",
       "selectedColor": "#DA251D",

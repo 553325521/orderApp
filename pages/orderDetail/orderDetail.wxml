@@ -1,12 +1,12 @@
 <!--pages/orderDetail/orderDetail.wxml-->
 <view class='order-info dp-flex'>
   <view class='date'>
-    <view class='c6 tc font-28'>2018-01-01</view>
-    <view class='time c6 tc font-28'>12:05</view>
+    <view class='c6 tc font-28'>{{currentDay}}</view>
+    <view class='time c6 tc font-28'>{{currentTimes}}</view>
   </view>
   <view class='info flex-1 dp-flex'>
     <view class='reserve'>
-      <view class='site font-28 c6 tc'>梅花厅</view>
+      <view class='site font-28 c6 tc'>{{queryBean.TABLES_NAME}}</view>
       <view class='entry-orders cf tc font-18'>挂单</view>
     </view>
     <view class='quorum c6 tc font-28'>
@@ -18,23 +18,23 @@
   </view>
 </view>
 <scroll-view scroll-y class='list' style='height:{{height}}'>
-  <!-- <block wx:for = "{{ordersList}}" wx:key="{{index}}"> -->
+  <block wx:for = "{{ordersList}}" wx:key="{{index}}">
     <view class='item dp-flex'>
-      <view class='name font-28 c3'>青椒肉丝</view>
-      <view class='price font-28 c2821'>￥10.00/份</view>
+      <view class='name font-28 c3'>{{item.GOODS_NAME}}{{item.GOODS_RECIPE == undefined ? '' : '('+item.GOODS_RECIPE+')'}}</view>
+      <view class='price font-28 c2821'>￥{{item.GOODS_PRICE / 100}}.00/{{item.GOODS_DW}}</view>
       <view class='quantity font-28 c3 dp-flex'>
-        <image class='add' src='../../images/icon/minus-icon.png'></image>
-        <text class='font-26 num c2821'>1</text>
-        <image class='minus'src='../../images/icon/add-icon.png'></image> 
+        <image class='add' src='../../images/icon/minus-icon.png' data-type="-" data-index="{{index}}" catchtap='alterCount'></image>
+        <text class='font-26 num c2821'>{{item.qity}}</text>
+        <image class='minus'src='../../images/icon/add-icon.png' data-type="+" data-index="{{index}}" catchtap='alterCount'></image> 
       </view>
     </view>
-  <!-- </block>   -->
+  </block>  
 </scroll-view>
 <view class='order-bottom bottom-fixed'>
   <view class='total dp-flex c6 font-28'>
     <text>合计</text>
-    <view class='deal'>5份菜品</view>
-    <view class='total-prices c2821'>￥135.00</view>
+    <view class='deal'>{{ordersList.length}}份菜品</view>
+    <view class='total-prices c2821'>￥{{allMoney}}</view>
   </view>
   <view class='oper dp-flex font-38 cf tc'>
     <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>

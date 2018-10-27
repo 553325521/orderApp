@@ -24,7 +24,8 @@ Page({
       zuofa: [],
       kouwei: []
     },
-    isSelected: false
+    isSelected: false,
+    tableList: []
   },
   onShow: function (options) {
     var that = this;
@@ -33,10 +34,39 @@ Page({
       W: mobInfo.mob_width +'px',
       H: mobInfo.mob_height +'px'
     })
+    // 查询菜单和数量
     that.loadGoodsInfo();
+    // 查询餐桌
+    that.loadTables();
   },
   onReady: function () {
   
+  },
+  loadTables: function() {
+    let that = this;
+    wx.request({
+      url: app.globalData.basePath + 'json/Tables_select_loadTableList.json',
+      method: "post",
+      data: {
+        shopid: app.globalData.shopid,
+        openid: wx.getStorageSync('openid')
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          that.setData({
+            tableList: res.data.data
+          })
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '查询失败~',
+        })
+      }
+    })
   },
   loadGoodsInfo: function () {
     let that = this;
@@ -58,7 +88,9 @@ Page({
             qityArr.push(parseFloat(res.data.data.greensList[i].GTYPE_QITY));
             that.data.allQiry += parseFloat(res.data.data.greensList[i].GTYPE_QITY);
           }
-          
+          // 查询购物车
+          that.getOrdersList();
+
           that.setData({
             navList: res.data.data.navList,
             greensList: res.data.data.greensList,
@@ -70,7 +102,7 @@ Page({
       },
       fail: function (error) {
         wx.showToast({
-          title: '添加失败~',
+          title: '操作失败~',
         })
       }
     })
@@ -120,18 +152,20 @@ Page({
             qityArr: that.data.qityArr,
             allQiry: that.data.allQiry
           })
+          // 查询购物车
+          that.getOrdersList();
           wx.showToast({
-            title: '添加成功~',
+            title: '操作成功~',
           })
         } else {
           wx.showToast({
-            title: '添加失败~',
+            title: '操作失败~',
           })
         }
       },
       fail: function (error) {
         wx.showToast({
-          title: '添加失败~',
+          title: '操作失败~',
         })
       }
     })
@@ -155,10 +189,24 @@ Page({
       success: function (res) {
         if (res.data.code == '0000') {
           var allMoney = 0;
+          var greensList = that.data.greensList;
           that.data.ordersList = res.data.data;
           if (res.data.data.length > 0) {
             for (var _index in that.data.ordersList) {
               allMoney += parseFloat(that.data.ordersList[_index].GOODS_PRICE);
+            }
+
+            for (let i = 0; i < greensList.length; i++) {
+              for (let j = 0; j < greensList[i].infos.length; j++) {
+                if (greensList[i].infos[j].qity > 0) {
+                  for (var _index in that.data.ordersList) {
+                    if (that.data.ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
+                      that.data.ordersList[_index].i = i;
+                      that.data.ordersList[_index].j = j;
+                    }
+                  }
+                }
+              }
             }
           }
           if (that.data.ordersList.length > 4) {
@@ -177,7 +225,56 @@ Page({
       },
       fail: function (error) {
         wx.showToast({
-          title: '添加失败~',
+          title: '操作失败~',
+        })
+      }
+    })
+  },
+  getOrdersList:function() {
+    var that = this;
+    wx.request({
+      url: app.globalData.basePath + 'json/ShoppingCart_load_loadCartDataByUser.json',
+      method: "post",
+      data: {
+        FK_SHOP: app.globalData.shopid,
+        FK_USER: wx.getStorageSync('openid'),
+        CART_STATE: 'zancun'
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          var allMoney = 0;
+          var greensList = that.data.greensList;
+          that.data.ordersList = res.data.data;
+          if (res.data.data.length > 0) {
+            for (var _index in that.data.ordersList) {
+              allMoney += parseFloat(that.data.ordersList[_index].GOODS_PRICE);
+            }
+
+            for (let i = 0; i < greensList.length; i++) {
+              for (let j = 0; j < greensList[i].infos.length; j++) {
+                if (greensList[i].infos[j].qity > 0) {
+                  for (var _index in that.data.ordersList) {
+                    if (that.data.ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
+                      that.data.ordersList[_index].i = i;
+                      that.data.ordersList[_index].j = j;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          that.setData({
+            ordersList: that.data.ordersList,
+            allMoney: allMoney / 100 + '.00'
+          })
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '操作失败~',
         })
       }
     })
@@ -264,15 +361,16 @@ Page({
     var i = e.currentTarget.dataset.i;
     var j = e.currentTarget.dataset.j;
     var _url = '';
+    var tpnum = 0;
     if (type == "+") {
       that.data.qityArr[i]++;
       that.data.greensList[i].infos[j].qity++;
       that.data.allQiry++;
       that.data.ordersList[index].qity++;
       that.data.allMoney = parseFloat(that.data.allMoney) + parseFloat(that.data.ordersList[index].GOODS_PRICE) / 100;
-      _url = app.globalData.basePath + 'json/ShoppingCart_insert_insertCart.json';
+      _url = app.globalData.basePath + 'json/ShoppingCart_update_updateCartNum.json';
     }else{
-      let tpnum = that.data.greensList[i].infos[j].qity - 1;
+      tpnum = that.data.greensList[i].infos[j].qity - 1;
       that.data.qityArr[i]--;
       that.data.allQiry--;
       that.data.ordersList[index].qity--;
@@ -281,16 +379,21 @@ Page({
       if (tpnum <= 0) {
         that.data.ordersList.splice(index, 1)
       }
-      _url = app.globalData.basePath + 'json/ShoppingCart_update_removeCart.json';
+      _url = app.globalData.basePath + 'json/ShoppingCart_update_updateCartNum.json';
     }
 
-    that.data.greensList[i].infos[j].FK_SHOP = app.globalData.shopid;
-    that.data.greensList[i].infos[j].FK_USER = wx.getStorageSync('openid');
+    // that.data.greensList[i].infos[j].FK_SHOP = app.globalData.shopid;
+    // that.data.greensList[i].infos[j].FK_USER = wx.getStorageSync('openid');
 
     wx.request({
       url: _url,
       method: "post",
-      data: that.data.greensList[i].infos[j],
+      data: {
+        CART_PK: that.data.ordersList[index].CART_PK,
+        GOODS_NUM: tpnum,
+        FK_SHOP: app.globalData.shopid,
+        FK_USER: wx.getStorageSync('openid')
+      },
       header: {
         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
@@ -313,7 +416,7 @@ Page({
       },
       fail: function (error) {
         wx.showToast({
-          title: '添加失败~',
+          title: '操作失败~',
         })
       }
     })
@@ -343,22 +446,27 @@ Page({
   /**
    * 选择餐位
    */
-  reserveConfirm:function(){
+  reserveConfirm:function(e){
     var that = this;
+    var index = e.currentTarget.dataset.index;
+    var queryBean = JSON.stringify(that.data.tableList[index]);
+    var orders = JSON.stringify(that.data.ordersList);
     that.setData({
-      reserveShow: false,
-      quorumShow: true
+      reserveShow: false
+      //quorumShow: true
     })
+    app.pageTurns(`../orderDetail/orderDetail?queryBean=` + queryBean + '&ordersList=' + orders + '&allMoney=' + that.data.allMoney)
   },
   /**
    * 
    */
-  reserveQuorum:function(){
+  reserveQuorum:function(e){
     var that = this;
-    that.setData({
-      quorumShow: false
-    })
-    app.pageTurns(`../orderDetail/orderDetail`)
+    
+    // that.setData({
+    //   quorumShow: false
+    // })
+    // app.pageTurns(`../orderDetail/orderDetail`)
   },
   /**
    * 查看挂单
@@ -583,13 +691,13 @@ Page({
           })
         } else {
           wx.showToast({
-            title: '添加失败~',
+            title: '操作失败~',
           })
         }
       },
       fail: function (error) {
         wx.showToast({
-          title: '添加失败~',
+          title: '操作失败~',
         })
       }
     })
