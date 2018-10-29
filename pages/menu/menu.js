@@ -453,12 +453,48 @@ Page({
   /**
    * 选好了
    */
-  chosen:function(){
+  chosen: function (){
     var that = this;
-    that.setData({
-      reserveShow: true,
-      entryShow: false
-    })
+    var orderId = wx.getStorageSync('ORDER_PK');
+    if (orderId != null && orderId != undefined) {
+      // 直接加入订单里面
+      that.setData({
+        loadingHidden: false
+      })
+      wx.request({
+        url: app.globalData.basePath + 'json/ShoppingCart_update_updateCartToOrderMore.json',
+        method: "post",
+        data: {
+          FK_ORDER: orderId,
+          FK_SHOP: app.globalData.shopid,
+          FK_USER: wx.getStorageSync('openid')
+        },
+        header: {
+          'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        success: function (res) {
+          if (res.data.code == '0000') {
+            wx.showToast({
+              title: '操作成功~',
+            })
+            app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId)
+          }
+          wx.showToast({
+            title: '操作失败~',
+          })
+        },
+        fail: function (error) {
+          wx.showToast({
+            title: '操作失败~',
+          })
+        }
+      })
+    } else {
+      that.setData({
+        reserveShow: true,
+        entryShow: false
+      })
+    }
   },
   /**
    * 选择餐位

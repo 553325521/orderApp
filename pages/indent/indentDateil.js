@@ -160,9 +160,11 @@ dealOrderDetailData:function(data){
   /**
    * 加菜
    */
-  addDish:function(){
+  addDish: function (){
+    var that = this;
+    wx.setStorageSync('ORDER_PK', that.data.ORDER_PK);
     wx.switchTab({
-      url: '../menu/menu',
+      url: '../menu/menu'
     })
   },
   //退菜
