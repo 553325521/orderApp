@@ -23,14 +23,11 @@ App({
     this.globalData.appid = options.query.appid;
     that.wxLogin();
     wx.setStorageSync("Address", "not");
-    setTimeout(function () {
-      that.test()
-    }, 5000)
   },
   //声明连接socket方法
   connectWebsocket: function () {
     var task = wx.connectSocket({
-      url: 'ws://m.ddera.com/weixin/json/webSocket.json',
+      url: 'ws://m.ddera.com/dcxt/json/webSocket.json',
       data: {
         userid:"123455"
       },
@@ -40,7 +37,6 @@ App({
       method: "POST"
     })
     wx.onSocketOpen(function (res) {
-     // task.send("123");
       wx.sendSocketMessage({
         data: "微信小程序 web socket"
       })
@@ -52,13 +48,10 @@ App({
     wx.onSocketMessage(function (res) {
       var page = getCurrentPages()[0];
       var currentRoute = page.route;
-      console.info(currentRoute);
-      console.info(getCurrentPages());
-      //getCurrentPages()[0].testRefresh();
       console.log('收到服务器内容：' + res.data);
       //处理订单数据更新
-      if(res.data == "1"){
-        console.info("订单数据更新");
+      if(res.data == "101"){
+        console.info("有新的订单");
         if (currentRoute == "pages/indent/indent"){
             page.loadOrderData();
             page.loadOrderNumber();
@@ -78,9 +71,9 @@ App({
   globalData: {
     userInfo: null,
     appid:null,
-    loginUrl: 'http://m.ddera.com/weixin/json/toSmallProgram.json',
+    loginUrl: 'http://m.ddera.com/dcxt/json/toSmallProgram.json',
     shopid:null,
-    basePath:'http://m.ddera.com/weixin/',
+    basePath:'http://m.ddera.com/dcxt/',
     tabBar: {
       "color": "#5C5A58",
       "selectedColor": "#DA251D",
@@ -150,26 +143,7 @@ App({
       }
     })
   },
-  test:function(){
-    wx.request({
-      url: this.globalData.basePath + "json/Shop_test_test.json",
-      method: "post",
-      data: {
-      },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
-      success: function (res) {
-        console.info(res.data.data);
-      },
-      fail: function (error) {
-        console.log(error);
-        wx.showToast({
-          title: '登录失败',
-        })
-      }
-    })
-  },
+
 //shopid,userid放入session
 pushSession:function(){
   var that = this;
@@ -191,7 +165,7 @@ pushSession:function(){
     fail: function (error) {
       console.log(error);
       wx.showToast({
-        title: '登录失败',
+        title: 'pushSession失败',
       })
     }
   })

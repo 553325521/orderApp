@@ -64,6 +64,8 @@ Page({
       startIndex: that.data.startIndex,
       endIndex: that.data.endIndex
     });
+    that.loadOrderNumber();
+    that.loadOrderData();
   },
   //加载订单数量
   loadOrderNumber:function(){
@@ -113,14 +115,10 @@ Page({
       },
       fail: function (error) {
         wx.showToast({
-          title: '登录失败',
+          title: '加载订单数量失败',
         })
       }
     })
-  },
-
-  testRefresh:function(){
-    console.info("app.js去刷新的");
   },
   //加载订单数据
   loadOrderData: function () {
@@ -149,9 +147,12 @@ Page({
       },
       success: function (res) {
         if (res.data.code == '0000') {
-          console.info(res.data);
           that.dealOrderDate(res.data.data);
+          console.info("res");
+          console.info(res.data.data);
           that.data.orderArray = that.dealOrderDate(res.data.data);
+          console.info("array");
+          console.info(that.data.orderArray);
           that.setData({
             orderArray: that.data.orderArray
           });
@@ -160,7 +161,7 @@ Page({
       },
       fail: function (error) {
         wx.showToast({
-          title: '登录失败',
+          title: '加载订单数据失败',
         })
       }
     })

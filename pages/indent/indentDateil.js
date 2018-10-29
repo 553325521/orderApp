@@ -128,7 +128,7 @@ dealOrderDetailData:function(data){
   orderDetailMap.set("ORDER_CODE", data[0].ORDER_CODE);
   orderDetailMap.set("ORDER_YMD",data[0].CREATE_TIME.substring(0,10));
   orderDetailMap.set("CREATE_TIME", data[0].CREATE_TIME.substring(11));
-  orderDetailMap.set("ARRIVE_TIME", data[0].ARRIVE_TIME.substring(11));
+  orderDetailMap.set("ARRIVE_TIME", data[0].CREATE_TIME.substring(11));
   var totalMoney = 0;
   var totalFS = 0;
   for(var i = 0;i < data.length;i++){
