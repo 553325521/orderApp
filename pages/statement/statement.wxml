@@ -7,15 +7,15 @@
   <view class='total-list dp-flex'>
     <view class='flex-1'>
       <view class='cf tc font-20'>消费(元)</view>
-      <view class='value cf tc font-30'>1250</view>
+      <view class='value cf tc font-30'>{{SUM_MONEY}}</view>
     </view>
     <view class='flex-1'>
       <view class='cf tc font-20'>商品(份)</view>
-      <view class='value cf tc font-30'>125</view>
+      <view class='value cf tc font-30'>{{SUM_GOODS_NUMBER}}</view>
     </view>
     <view class='flex-1'>
       <view class='cf tc font-20'>会员(个)</view>
-      <view class='value cf tc font-30'>12</view>
+      <view class='value cf tc font-30'>{{SUM_MEMBER}}</view>
     </view>
   </view>
 </view>

@@ -47,7 +47,13 @@ App({
     })
     wx.onSocketMessage(function (res) {
       var page = getCurrentPages()[0];
-      var currentRoute = page.route;
+      console.info("page值");
+      console.info(page);
+      var currentRoute = "";
+      if(page !=undefined){
+          currentRoute = page.route;
+      }
+      console.info("当前路由:"+currentRoute);
       console.log('收到服务器内容：' + res.data);
       //处理订单数据更新
       if(res.data == "101"){
