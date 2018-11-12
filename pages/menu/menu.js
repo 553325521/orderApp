@@ -64,7 +64,8 @@ Component({
       var mobInfo = app.getSystemInfo();
       that.setData({
         W: mobInfo.mob_width + 'px',
-        H: mobInfo.mob_height + 'px'
+        H: mobInfo.mob_height + 'px',
+        scrollHeight: mobInfo.mob_height - 180 * mobInfo.mob_onerpx
       })
       // 查询菜单和数量
       that.loadGoodsInfo();

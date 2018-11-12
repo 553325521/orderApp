@@ -313,14 +313,16 @@ pushSession:function(){
     var contentWidth = "";
     var contentHeight = "";
     var modelName = "";
+    var onerpx = "";
     wx.getSystemInfo({
       success: function (res) {
         modelName = res.model;
         contentHeight = res.windowHeight;
         contentWidth = res.windowWidth;
+        onerpx = res.screenWidth/750;
       },
     })
-    var appObj = { mob_width: contentWidth, mob_height: contentHeight, mob_name: modelName };
+    var appObj = { mob_width: contentWidth, mob_height: contentHeight, mob_name: modelName, mob_onerpx: onerpx};
     return appObj;
   },
 
@@ -496,7 +498,7 @@ pushSession:function(){
       that.data.animtedata = animation.export();
     },10)
   },
-  getTabBar:function(that){
+  getTabBar:function(that){//获取tab栏的数据
     return tabBar;
   }
 })

@@ -121,7 +121,7 @@
 </view>
 <!-- 展示菜品  -->
 <view class='page'>
-  <scroll-view style="height: 1020rpx;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'item' + currentTabInit}}" scroll-with -animation="true" bindscroll="doScroll">
+  <scroll-view style="height: {{scrollHeight}}px;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'item' + currentTabInit}}" scroll-with -animation="true" bindscroll="doScroll">
       <view wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys' id="{{'item'+item.GTYPE_PK}}" class='classify-item'>
           <view class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
           <view class='greens-list'>
