@@ -1,4 +1,5 @@
 <!--pages/takeOut/takeOut.wxml-->
+<view class='takeOut-page'>
 <view class='header bg-fff w100'>
   <view class='swiper-tab dp-flex'>
     <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
@@ -176,4 +177,5 @@
       </view>
     </view>
   </view>
+</view>
 </view>

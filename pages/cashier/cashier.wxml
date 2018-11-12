@@ -1,4 +1,5 @@
 <!--pages/cashier/cashier.wxml-->
+<view class='cashier-page'>
 <view class='count-head'>
   <view class='result dp-flex'>
     <text class='c6 font-28'>消费金额</text>
@@ -48,4 +49,5 @@
     <image src='../../images/icon/scan-QR.png' ></image>
     <text class='font-32 c6'>扫一扫收款</text>
   </view>
+</view>
 </view>

@@ -1,5 +1,7 @@
 /* pages/takeOut/takeOut.wxss */
-page{
+@import '../../app2.wxss';
+
+.takeOut-page{
   background-color: #fff;
   padding-top: 186rpx
 }

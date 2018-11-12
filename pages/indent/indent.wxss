@@ -1,5 +1,7 @@
 /* pages/indent/indent.wxss */
-page{
+@import '../../app2.wxss';
+
+.indent-page{
   background-color: #fff;
   padding-top: 174rpx
 }

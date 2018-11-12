@@ -1,7 +1,7 @@
 // pages/indent/indent.js
 var app = getApp()
 var common = require('../../utils/common.js');
-Page({
+Component({
   data: {
     nav: [
       {
@@ -20,55 +20,83 @@ Page({
     startIndex: [],
     endIndex: [],
     year: 2015,
-    orderArray:{},
-    orderCount:{}
+    orderArray: {},
+    orderCount: {}
   },
-  onLoad: function (options) {
-    var that = this;
-    var date = wx.getStorageSync('datepicker');
-    var myDate = new Date();
-    var month = myDate.getMonth() + 1;
-    var year = myDate.getFullYear();
-    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 2, 23, 0, 0]
-    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
-    if (date == '') {
-      date = [];
-      var yeas = common.getYears();
-      var months = common.getMonths();
-      var days = common.getDays().days1;
-      var hours = common.getHours();
-      var mins = common.getMins();
-      date[0] = yeas;
-      date[1] = '-';
-      date[2] = months;
-      date[3] = '-';
-      date[4] = days;
-      date[5] = hours;
-      date[6] = ':';
-      date[7] = mins;
-      wx.setStorageSync('datepicker', date);
-    }
-    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-      date[4] = common.getDays().days4
-    } else if (month == 2) {
-      if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) {
-        date[4] = common.getDays().days1
-      } else {
-        date[4] = common.getDays().days2
+/**
+ * 声明周期函数
+ */
+  lifetimes: {
+    // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
+    //组件被加载
+    attached: function () { 
+      
+      var that = this;
+      var date = wx.getStorageSync('datepicker');
+      var myDate = new Date();
+      var month = myDate.getMonth() + 1;
+      var year = myDate.getFullYear();
+      that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 2, 23, 0, 0]
+      that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
+      if (date == '') {
+        date = [];
+        var yeas = common.getYears();
+        var months = common.getMonths();
+        var days = common.getDays().days1;
+        var hours = common.getHours();
+        var mins = common.getMins();
+        date[0] = yeas;
+        date[1] = '-';
+        date[2] = months;
+        date[3] = '-';
+        date[4] = days;
+        date[5] = hours;
+        date[6] = ':';
+        date[7] = mins;
+        wx.setStorageSync('datepicker', date);
       }
-    } else {
-      date[4] = common.getDays().days3
-    }
-    that.setData({
-      date: date,
-      startIndex: that.data.startIndex,
-      endIndex: that.data.endIndex
-    });
-    that.loadOrderNumber();
-    that.loadOrderData();
+      if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+        date[4] = common.getDays().days4
+      } else if (month == 2) {
+        if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) {
+          date[4] = common.getDays().days1
+        } else {
+          date[4] = common.getDays().days2
+        }
+      } else {
+        date[4] = common.getDays().days3
+      }
+      that.setData({
+        date: date,
+        startIndex: that.data.startIndex,
+        endIndex: that.data.endIndex
+      });
+      that.loadOrderNumber();
+      that.loadOrderData();
+
+    },
+    moved: function () { console.log("组件被moved")},
+    //组件被移除
+    detached: function () { console.log("detached")},
   },
+  
+/**
+ * page的生命周期
+ */
+  pageLifetimes: {
+    // 组件所在页面的生命周期函数
+    show: function () { attached(); console.log("页面show") },
+    hide: function () { },
+    resize: function () { },
+  },
+
+
+/**
+ * 自定义方法函数
+ */
+methods:{
   //加载订单数量
-  loadOrderNumber:function(){
+  loadOrderNumber: function(){
     let that = this;
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
     var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
@@ -121,7 +149,7 @@ Page({
     })
   },
   //加载订单数据
-  loadOrderData: function () {
+    loadOrderData:function () {
     let that = this;
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
     var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
@@ -167,7 +195,7 @@ Page({
     })
   },
   //分组订单数据
-  dealOrderDate:function(data){
+  dealOrderDate:function (data){
     var that = this;
     var dateStr = "";
     var allMoney = 0;
@@ -215,7 +243,7 @@ Page({
     }
     return orderBigList;
   },
-  strMapToObj:function(strMap) {
+  strMapToObj:function (strMap) {
     let obj = Object.create(null);
     for (let [k, v] of strMap) {
       obj[k] = v;
@@ -225,10 +253,10 @@ Page({
   /**
   *map转换为json
   */
-  mapToJson:function(map) {
+  mapToJson:function (map) {
     return JSON.stringify(this.strMapToObj(map));
   },
-  getPhoneNumber: function(e) {
+  getPhoneNumber:function (e) {
     console.log(e.detail.iv)
     console.log(e.detail.encryptedData)
     if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
@@ -273,13 +301,7 @@ Page({
           })
     } 
   },
-  onReady: function () {
-  
-  },
-  onShow: function () {
-    var that = this;
-    //that.updateOrderNumber(that);
-  },
+
   //定时任务
   // updateOrderNumber:function(that){
   //   setTimeout(function () {
@@ -287,7 +309,7 @@ Page({
   //     that.updateOrderNumber(that);
   //   },60000)
   // },
-  swichNav: function (e) {
+  swichNav:function (e) {
     var that = this;
     var types = e.currentTarget.dataset.type;
     that.setData({
@@ -296,7 +318,7 @@ Page({
     that.loadOrderData();
   },
   // 
-  bindStartDateChange: function (e) {
+  bindStartDateChange:function (e) {
     var that = this;
     this.setData({
       startIndex: e.detail.value
@@ -304,7 +326,7 @@ Page({
     that.loadOrderData();
     that.loadOrderNumber();
   },
-  bindEndDateChange: function (e) {
+  bindEndDateChange:function (e) {
     var that = this;
     this.setData({
       endIndex: e.detail.value
@@ -313,7 +335,7 @@ Page({
     that.loadOrderNumber();
   },
   // 
-  bindDateColumnChange: function (e) {
+  bindDateColumnChange:function (e) {
     var that = this;
     var column = e.detail.column;
     var value = e.detail.value;
@@ -341,9 +363,10 @@ Page({
       date: that.data.date
     })
   },
-  navTo:function(e){
+  navTo:function (e){
     var orderPK = e.currentTarget.dataset.id;
     console.info(orderPK);
     app.pageTurns(`indentDateil?type=${this.data.currentTab}&ORDER_PK=${orderPK}`)
   }
+}
 })

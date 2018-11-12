@@ -1,5 +1,7 @@
 /* pages/menu/menu.wxss */
 @import "../template/chosenPosition.wxss";
+@import '../../app2.wxss';
+
 .menu-nav{
   position: fixed;
   top: 0;left: 0;
@@ -44,7 +46,7 @@
 /* 选好了  */
 .selected{
   position: fixed;
-  right: 38rpx;bottom: 6rpx;
+  right: 38rpx;bottom: 96rpx;
   width: 144rpx;
   line-height: 58rpx;
   border-radius: 58rpx;
@@ -58,7 +60,7 @@
 .cat,.entry-orders{
   position: fixed;
   left: 48rpx;
-  bottom: 10rpx;
+  bottom: 100rpx;
   width: 74rpx;
   height: 74rpx;
   z-index: 50
@@ -77,7 +79,7 @@
   background-color: #DA1A7D;
 }
 .entry-orders{
-  bottom: 100rpx;
+  bottom: 190rpx;
   z-index: 10
 }
 /* 挂单列表  */
@@ -85,7 +87,7 @@
   z-index: 50
 }
 .box-content{
-   bottom: 98rpx; left: 0;
+   bottom: 188rpx; left: 0;
    z-index: 60;
 }
 .box-content .head{
@@ -247,11 +249,12 @@
       height: 1200rpx;
       white-space: nowrap; 
 }
-::-webkit-scrollbar{
+/*TODO CSS
+ ::-webkit-scrollbar{
 width: 0;
 height: 0;
 color: transparent;
-}
+} */
 view.on{
   background-color: #969594
 }

@@ -1,5 +1,7 @@
 /* pages/cashier/cashier.wxss */
-page{
+@import '../../app2.wxss';
+
+.cashier-page{
   background-color: #fff;
 }
 .count-head{

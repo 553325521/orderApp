@@ -1,6 +1,6 @@
 // pages/menu/menu.js
 var app = getApp();
-Page({
+Component({
   data: {
     loadingHidden:true,
     navList:null,
@@ -28,24 +28,49 @@ Page({
     isSelected: false,
     tableList: []
   },
-  onShow: function (options) {
-    var that = this;
-    that.setData({
-      loadingHidden: false
-    })
-    var mobInfo = app.getSystemInfo();
-    that.setData({
-      W: mobInfo.mob_width +'px',
-      H: mobInfo.mob_height +'px'
-    })
-    // 查询菜单和数量
-    that.loadGoodsInfo();
-    // 查询餐桌
-    that.loadTables();
+
+
+  /**
+     * 组件周期函数
+     */
+  lifetimes: {
+    // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
+    //组件被加载
+    attached: function () {
+      this.pageInit();
+    },
+    moved: function () { console.log("组件被moved") },
+    //组件被移除
+    detached: function () { console.log("detached") },
   },
-  onReady: function () {
-  
+  /**
+   * page的生命周期
+   */
+  pageLifetimes: {
+    // 组件所在页面的生命周期函数
+    show: function () {console.log("页面show") },
+    hide: function () { },
+    resize: function () { },
   },
+
+
+  methods:{
+    //自定义页面初始化函数
+    pageInit:function(){
+      var that = this;
+      that.setData({
+        loadingHidden: false
+      })
+      var mobInfo = app.getSystemInfo();
+      that.setData({
+        W: mobInfo.mob_width + 'px',
+        H: mobInfo.mob_height + 'px'
+      })
+      // 查询菜单和数量
+      that.loadGoodsInfo();
+      // 查询餐桌
+      that.loadTables();
+    },
   loadTables: function() {
     let that = this;
     wx.request({
@@ -759,5 +784,6 @@ Page({
         })
       }
     })
+  }
   }
 })

@@ -1,0 +1,20 @@
+<!--单页面化-->
+<view style="margin-bottom:80rpx;">
+  <!--加载哪个页面？-->
+  <block wx:if="{{currentPage=='../founding/founding'}}"><founding></founding></block>
+  <block wx:elif="{{currentPage=='../indent/indent'}}"><indent></indent></block>
+  <block wx:elif="{{currentPage=='../statement/statement'}}"><statement></statement></block>
+  <block wx:elif="{{currentPage=='../takeOut/takeOut'}}"><takeOut></takeOut></block>
+  <block wx:elif="{{currentPage=='../cashier/cashier'}}"><cashier></cashier></block>
+  <block wx:elif="{{currentPage=='../menu/menu'}}"><menu></menu></block>
+</view>
+
+
+<view class="tabBar">
+  <block wx:for="{{tabBar}}" wx:for-item="item" wx:key="tabBar">
+    <view class="tabBar-item" bindtap="switchTab" data-current-page="{{item.pagePath}}">
+        <view style="height:50rpx;"><image class="icon" src='{{item.iconPath}}'></image></view>
+        <view class="{{item.pagePath == currentPage ? 'tabBartext' :''}}">{{item.text}}</view>
+    </view>
+  </block>
+</view>

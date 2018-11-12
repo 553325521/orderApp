@@ -1,4 +1,6 @@
 /* pages/statement/statement.wxss */
+@import '../../app2.wxss';
+
 .toDay-total{
   height: 232rpx;
   background-color: #EAABAE;

@@ -1,4 +1,5 @@
 <!--pages/indent/indent.wxml-->
+<view class='indent-page'>
 <view class='page w100'> 
   <view class='swiper-tab bg-fff dp-flex'>
       <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
@@ -51,4 +52,5 @@
   </view>
   <view>
   <button id="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">123</button></view>
+</view>
 </view>

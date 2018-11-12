@@ -1,0 +1,54 @@
+<!--pages/founding/founding.wxml-->
+<!--判断，如果有桌位区域大于1，就显示滚动view-->
+<view class="founding-page">
+  <view style='overflow:hidden;white-space:nowrap;'>
+    <scroll-view scroll-x="true" class="fd-scroll" style="">
+          <button class="fd-bt fd-bt01 select-bt">全 部</button>
+          <button class="fd-bt fd-bt02">A区</button>
+          <button class="fd-bt fd-bt02">大厅</button>
+    </scroll-view>
+  </view>
+<!--判断，如果有桌位区域大于1，就显示滚动view  end-->
+
+<!--第二部分-->
+<view class='w100 dp-flex flex-wrap'>
+  <view class="fd-tb fd-tb-1">
+    <view class='fd-one'>空台</view>
+    <view class='fd-two'><view class='two-one'>01</view></view>
+    <view class='fd-one-line'></view>
+    <view class='fd-th'><view style="height:80%;">0/8</view></view>
+  </view>
+    
+  <view class='fd-tb fd-tb-2'>
+    <view class='fd-one'>
+      <view class='fd-one-1'>04</view>
+      <view class='fd-one-2'>5/8</view>
+    </view>
+    <view class='fd-two'><view class='fd-two-1'>12.58h</view></view>
+    <view class='fd-one-line'></view>
+    <view class='fd-th'>￥11.80</view>
+  </view>
+</view>
+<!--第二部分end-->
+
+
+
+
+<!--第三部分-->
+<view class='fd-end'>
+  <view class='fd-end-1'>
+      <button class="fd-end-bt">全部</button>
+      <view class="weui-badge bg-d137 fd-end-lr">25</view>
+  </view>
+   <view class='fd-end-1'>
+      <button class="fd-end-bt">空台</button>
+      <view class="weui-badge bg-a9 fd-end-lr">23</view>
+  </view>
+   <view class='fd-end-1'>
+      <button class="fd-end-bt">已开台</button>
+      <view class="weui-badge bg-d137 fd-end-lr">2</view>
+  </view>
+   
+</view>
+<!--第三部分end-->
+</view>
