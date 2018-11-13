@@ -163,6 +163,7 @@ dealOrderDetailData:function(data){
   addDish: function (){
     var that = this;
     wx.setStorageSync('ORDER_PK', that.data.ORDER_PK);
+    wx.setStorageSync('ORDER_TYPE', that.data.type);
     wx.switchTab({
       url: '../menu/menu'
     })

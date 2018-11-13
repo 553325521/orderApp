@@ -20,6 +20,7 @@ Component({
     currentGood: null,
     currentIndex: null,
     currentItem: null,
+    ordersFalg: true,
     goodsGuige:{
       guige: [],
       zuofa: [],
@@ -90,6 +91,9 @@ Component({
             tableList: res.data.data,
             loadingHidden:true
           })
+
+          // 查询挂单数量
+          that.loadCountOrderWei();
         }
       },
       fail: function (error) {
@@ -482,13 +486,13 @@ Component({
   chosen: function (){
     var that = this;
     var orderId = wx.getStorageSync('ORDER_PK');
-    if (orderId != null && orderId != undefined) {
+    if (orderId != null && orderId != undefined && orderId != '') {
       // 直接加入订单里面
       that.setData({
         loadingHidden: false
       })
       wx.request({
-        url: app.globalData.basePath + 'json/ShoppingCart_update_updateCartToOrderMore.json',
+        url: app.globalData.basePath + 'json/Order_update_updateCartToOrderMore.json',
         method: "post",
         data: {
           FK_ORDER: orderId,
@@ -500,16 +504,26 @@ Component({
         },
         success: function (res) {
           if (res.data.code == '0000') {
+            let _type = wx.getStorageSync('ORDER_TYPE', '');
             wx.showToast({
               title: '操作成功~',
             })
-            app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId)
+            that.setData({
+              loadingHidden: true
+            })
+            wx.setStorageSync('ORDER_PK', '');
+            wx.setStorageSync('ORDER_TYPE', '');
+            app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId + `&type=` + _type)
+          } else {
+            wx.showToast({
+              title: '操作失败~',
+            })
           }
-          wx.showToast({
-            title: '操作失败~',
-          })
         },
         fail: function (error) {
+          that.setData({
+            loadingHidden: true
+          })
           wx.showToast({
             title: '操作失败~',
           })
@@ -777,6 +791,35 @@ Component({
           wx.showToast({
             title: '操作失败~',
           })
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '操作失败~',
+        })
+      }
+    })
+  },
+  loadCountOrderWei: function() {
+    wx.request({
+      url: app.globalData.basePath + 'json/Order_select_loadCountOrderWei.json',
+      method: "post",
+      data: {
+        FK_SHOP: app.globalData.shopid,
+        FK_USER: wx.getStorageSync('openid')
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          console.info(res.data);
+          if (res.data.ORDER_COUNT > 0) {
+            that.data.ordersFalg = false;
+            that.setData({
+              ordersFalg: that.data.ordersFalg
+            });
+          }
         }
       },
       fail: function (error) {

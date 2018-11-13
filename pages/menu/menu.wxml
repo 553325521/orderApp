@@ -20,7 +20,7 @@
   <text wx:if="{{allQiry>0}}" class='font-26 cf tc pa'>{{allQiry}}</text>
 </view>
 <!-- 挂单按钮  -->
-<view class='entry-orders' bindtap='checkEntryOrders'>
+<view class='entry-orders' bindtap='checkEntryOrders' hidden='{{ordersFalg}}'>
   <image class='w100 h100' src='../../images/icon/list-icon.png'></image>
 </view>
 <!-- 挂单列表  -->
