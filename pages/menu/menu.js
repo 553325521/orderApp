@@ -1,6 +1,9 @@
 // pages/menu/menu.js
 var app = getApp();
 Component({
+  options: {
+    addGlobalClass: true,
+  },
   data: {
     loadingHidden:true,
     navList:null,

@@ -1,0 +1,107 @@
+<!--pages/payOrders/payOrders.wxml-->
+
+
+<view class='po-pageone'>
+  <!--第一行-->
+    <view class='po-pageone-one'>
+        <view class="cf bg-EF9B po-pageone-one-view">优惠</view>
+        <view class="cf bg-EF9B po-pageone-one-view">会员</view>
+    </view>
+  <!--第二行-->
+  <view class='c5 po-pageone-two'>应收金额<text class='po-pageone-twotxt c2821'>￥128.20</text>元</view>
+<view class='po-oneline'></view>
+  <!--第三行-->
+  <view class='po-page-bd'>
+      <view class="c5" style="float:left;">优惠金额</view>
+
+      <view class="c2821" style="float:right;">￥8.20</view>
+  </view>
+
+  <view class='po-oneline'></view>
+  <!--第四行-->
+  <view class='po-page-bd'>
+      <view class="c5" style="float:left;">优惠券</view>
+      <checkbox class='po-checkbox' checked="true"/>
+      <view class="cf po-cou" style="">1张可用</view>
+  </view>
+<view class='po-oneline'></view>
+ <!--第五行-->
+ <view class='po-page-bd'>
+      <view class="c5" style="float:left;">积分抵现</view>
+
+<checkbox class='po-checkbox' checked="true"/>
+
+      <view class="po-small-font" style="">可用积分1290.50，可抵12.9元</view>
+
+      
+  </view>
+<view class='po-oneline'></view>
+<!--第六行-->
+<view class='po-page-bd'>
+      <view class="c5" style="float:left;">储值支付</view>
+      <view class="po-small-font">可用储值120.00元</view>
+      <view class='' style="float:right;"></view>
+  </view>
+<view class='po-oneline'></view>
+<!--第七行-->
+<view class='po-page-bd'>
+    <view class="c5" style="float:left;">添加备注</view>
+    <input class='po-input' placeholder='无'></input> 
+</view>
+<view class='po-oneline'></view>
+</view>
+
+
+<!--悬浮的下半部分-->
+<view class='po-pagetwo'>
+<view class='po-oneline'></view>
+  <view class='c5 po-pagetwo-one'>
+        <view class='po-pt-ot'>支付金额</view>
+        <view class='c2821 po-pt-oto' style=''><text class='po-pt-otoo'>￥</text>120.00</view>
+    </view>
+  <view class='c5 bg-EF9B po-pt-to'>选择支付方式</view>
+  <view class='po-pt-th'>
+<view class='po-pay-box'>
+      <view class='po-pay-imgbox'><image src="http://m.ddera.com/dcxt/assets/img/xj.webp" class='po-pay-imgsize'></image></view>
+       <view class='po-pay-boxtxt'>现金</view>
+    </view>
+
+
+    <view class='po-pay-box'>
+      <view class='po-pay-imgbox'><image src="http://m.ddera.com/dcxt/assets/img/weixinpay.png" class='po-pay-imgsize'></image></view>
+       <view class='po-pay-boxtxt'>微信</view>
+    </view>
+
+    <view class='po-pay-box'>
+      <view class='po-pay-imgbox'><image src="http://m.ddera.com/dcxt/assets/img/alipay.webp" class='po-pay-imgsize'></image></view>
+       <view class='po-pay-boxtxt' style='padding-left:0;'>支付宝</view>
+    </view>
+   
+
+   <view class='po-pay-box'>
+      <view class='po-pay-imgbox'><image src="http://m.ddera.com/dcxt/assets/img/yhk.webp" style="width:56rpx;height:40rpx;"></image></view>
+       <view class='po-pay-boxtxt'>POS</view>
+    </view>
+
+
+
+    <view class='po-pay-box'>
+      <view class='po-pay-imgbox'><image src="http://m.ddera.com/dcxt/assets/img/cz.webp" class='po-pay-imgsize'></image></view>
+       <view class='po-pay-boxtxt' style="">储值</view>
+    </view>
+
+
+     <view class='po-pay-box-select'>
+      <view class='po-pay-imgbox'><image src="http://m.ddera.com/dcxt/assets/img/other.webp" class='po-pay-imgsize'></image></view>
+       <view class='po-pay-boxtxt'>其他</view>
+       <view class='po-pay-selectimg'><image  src="http://m.ddera.com/dcxt/assets/img/select.webp" class='po-pay-selectimg-size'></image></view>
+    </view>
+
+   
+  </view>
+  <view class='po-oneline'></view>
+  <view class="po-end">
+    <view class="cf bg-EF9B po-end-o">抹零</view>
+    <view class="cf bg-EF9B po-end-t" bindtap='clickPay'>立即结账</view>
+  </view>
+</view>

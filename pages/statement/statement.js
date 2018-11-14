@@ -1,7 +1,9 @@
 // pages/statement/statement.js
 var app = getApp()
 Component({
-
+  options: {
+    addGlobalClass: true,
+  },
   data: {
     SUM_MONEY:0.0,
     SUM_GOODS_NUMBER:0,

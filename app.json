@@ -1,5 +1,6 @@
 {
   "pages": [
+    
     "pages/index/index",
     "pages/founding/founding",
     "pages/indent/indent",
@@ -18,8 +19,8 @@
     "pages/indent/indentDateil",
     "pages/payMent/payMent",
     "pages/orderDetail/orderDetail",
-    "pages/template/selectNumber"
-   
+    "pages/template/selectNumber",
+    "pages/payOrders/payOrders"
   ],
   "window": {
     "backgroundTextStyle": "light",

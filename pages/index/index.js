@@ -1,6 +1,6 @@
 // pages/index/index.js
 var app = getApp();
-var currentPage = "../founding/founding";//当前是哪个页面
+var currentPage = "../menu/menu";//当前是哪个页面
 
 //引入单页面页面的js
 // var indent = require('../indent/indent.js');//引入modul
@@ -11,14 +11,13 @@ Page({
    */
   data: {
     currentPage: currentPage,
-    tabBar: app.getTabBar()//获取tabBar
+    tabBar: app.globalData.tabBar//获取tabBar
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
   },
 
   /**

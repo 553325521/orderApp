@@ -2,6 +2,9 @@
 var app = getApp()
 var common = require('../../utils/common.js');
 Component({
+  options: {
+    addGlobalClass: true,
+  },
   data: {
     nav: [
       {

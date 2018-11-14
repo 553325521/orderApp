@@ -1,2 +1,5 @@
 Component({
+  options: {
+    addGlobalClass: true,
+  }
 })

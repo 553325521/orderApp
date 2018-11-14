@@ -1,6 +1,9 @@
 // pages/cashier/cashier.js
 var app = getApp()
 Component({
+  options: {
+    addGlobalClass: true,
+  },
   data: {
     isDiscounts:true,
     result:'',

@@ -1,44 +1,5 @@
 //app.js
 
-var tabBar = [{
-  "pagePath": "../founding/founding",
-  "iconPath": "../../images/icon/caidan.png",
-  "selectedIconPath": "../../images/icon/caidan.png",
-  "text": "开台"
-},
-{
-  "pagePath": "../indent/indent",
-  "iconPath": "../../images/icon/dindan.png",
-  "selectedIconPath": "../../images/icon/dindan.png",
-  "text": "订单"
-
-},
-{
-  "pagePath": "../statement/statement",
-  "iconPath": "../../images/icon/bb-icon.png",
-  "selectedIconPath": "../../images/icon/bb-icon.png",
-  "text": "报表"
-},
-{
-  "pagePath": "../takeOut/takeOut",
-  "iconPath": "../../images/icon/wm-icon.png",
-  "selectedIconPath": "../../images/icon/wm-icon.png",
-  "text": "外卖"
-},
-{
-  "pagePath": "../cashier/cashier",
-  "iconPath": "../../images/icon/shouyin.png",
-  "selectedIconPath": "../../images/icon/shouyin.png",
-  "text": "收银"
-  },
-  {
-    "pagePath": "../menu/menu",
-    "iconPath": "../../images/icon/caidan.png",
-    "selectedIconPath": "../../images/icon/caidan.png",
-    "text": "首页"
-  }]
-
-
 App({
   data: {   
   },
@@ -124,44 +85,43 @@ App({
       "selectedColor": "#DA251D",
       "borderStyle": "#000",
       "backgroundColor": "#EF9BA0",
-      "list": [
-        {
-          "selectedIconPath": "images/icon/caidan.png",
-          "iconPath": "images/icon/caidan.png",
-          "pagePath": "pages/menu/menu",
-          "text": "首页",
-          active: true
-        },
-        {
-          "selectedIconPath": "images/icon/dindan.png",
-          "iconPath": "images/icon/dindan.png",
-          "pagePath": "pages/indent/indent",
-          "text": "订单",
-          active: false
-        },
-        {
-          "selectedIconPath": "images/icon/bb-icon.png",
-          "iconPath": "images/icon/bb-icon.png",
-          "pagePath": "pages/statement/statement",
-          "text": "报表",
-          active: false
-        },
-        {
-          "selectedIconPath": "images/icon/wm-icon.png",
-          "iconPath": "images/icon/wm-icon.png",
-          "pagePath": "pages/takeOut/takeOut",
-          "text": "外卖",
-          active: false
-        },
-        {
-          "selectedIconPath": "images/icon/shouyin.png",
-          "iconPath": "images/icon/shouyin.png",
-          "pagePath": "pages/cashier/cashier",
-          "text": "收银",
-          active: false
-        }
-      ],
-      "position": "bottom"
+      "list": [{
+        "pagePath": "../founding/founding",
+        "iconPath": "../../images/icon/caidan.png",
+        "selectedIconPath": "../../images/icon/caidan.png",
+        "text": "开台"
+      },
+      {
+        "pagePath": "../indent/indent",
+        "iconPath": "../../images/icon/dindan.png",
+        "selectedIconPath": "../../images/icon/dindan.png",
+        "text": "订单"
+
+      },
+      {
+        "pagePath": "../statement/statement",
+        "iconPath": "../../images/icon/bb-icon.png",
+        "selectedIconPath": "../../images/icon/bb-icon.png",
+        "text": "报表"
+      },
+      {
+        "pagePath": "../takeOut/takeOut",
+        "iconPath": "../../images/icon/wm-icon.png",
+        "selectedIconPath": "../../images/icon/wm-icon.png",
+        "text": "外卖"
+      },
+      {
+        "pagePath": "../cashier/cashier",
+        "iconPath": "../../images/icon/shouyin.png",
+        "selectedIconPath": "../../images/icon/shouyin.png",
+        "text": "收银"
+      },
+      {
+        "pagePath": "../menu/menu",
+        "iconPath": "../../images/icon/caidan.png",
+        "selectedIconPath": "../../images/icon/caidan.png",
+        "text": "首页"
+      }]
     }
   },
   /**
@@ -497,8 +457,5 @@ pushSession:function(){
     setTimeout(function(){
       that.data.animtedata = animation.export();
     },10)
-  },
-  getTabBar:function(that){//获取tab栏的数据
-    return tabBar;
   }
 })

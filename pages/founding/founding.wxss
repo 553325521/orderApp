@@ -1,16 +1,16 @@
 /* pages/founding/founding.wxss */
-@import '../../weui.wxss';
-@import '../../app2.wxss';
 
 .founding-page{
   background-color: #fff;
-  padding: 94rpx 0rpx 100rpx 0;
+  padding: 94rpx 0rpx 90rpx 0;
 }
 
 .fd-scroll{
   position:fixed;
   top:0;
   background-color:#fff;
+  height:94rpx;
+  z-index: 99;
 }
 
 .fd-tb{
@@ -150,10 +150,11 @@
   display:flex;
   justify-content:space-around;
   position:fixed;
-  bottom:90rpx;
+  bottom:89rpx;
   width:100%;
   height:80rpx;
   background-color:#fff;
+  z-index:99;
 }
 
 .fd-end-1{

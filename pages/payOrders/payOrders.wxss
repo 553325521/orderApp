@@ -1,0 +1,177 @@
+/* pages/payOrders/payOrders.wxss */
+
+.po-pageone{
+  height:auto;
+  width:100vw;
+  padding-bottom:600rpx;
+  background-color:#fff;
+}
+
+.po-pageone-one{
+  height:70rpx;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.po-pageone-one-view{
+  line-height:40rpx;
+  text-align:center;
+  font-size:30rpx;
+  width:130rpx;
+  margin:15rpx 30rpx 15rpx 0;
+  border-radius:40rpx;
+}
+
+.po-pageone-two{
+  height:80rpx;
+  line-height:80rpx;
+  font-size:30rpx;
+  text-align:center;
+}
+
+.po-pageone-twotxt{
+  margin:0 14rpx 0 40rpx;
+}
+
+.po-page-bd{
+  height:70rpx;
+  font-size:26rpx;
+  line-height:70rpx;
+  padding:0 30rpx;
+}
+
+.po-input{
+  padding-left:40rpx;
+  height:70rpx;
+  text-align:right;
+}
+
+.po-checkbox{
+  margin:-2rpx 10rpx auto 20rpx;
+  float:right;
+  height:24rpx;
+  width:24rpx;
+}
+
+.po-small-font{
+  color:#888;
+  font-size:20rpx;
+  line-height:30rpx;
+  height:30rpx;
+  float:right;
+  padding:0 12rpx; 
+  margin:20rpx 0;
+}
+
+.po-cou{
+  font-size:20rpx;border-radius:30rpx;line-height:30rpx;height:30rpx;float:right;padding:0 20rpx;margin:20rpx 10rpx;background-color:#c6382a;
+}
+
+.po-oneline{
+  height:1px;
+  width: 100%;
+  background-color: #e3e3e3;
+}
+
+.po-radio{
+  width: 26rpx;
+  height: 26rpx;
+  background-color: #fff;
+  border: 1px solid #111;
+}
+
+/*checkbox 选项框大小  */
+checkbox .wx-checkbox-input {
+  width: 24rpx;
+  height: 24rpx;
+  border-color:#000;
+}
+
+/*checkbox选中后图标样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+  width: 28rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #000;
+  background: transparent;
+  transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+}
+
+.po-pagetwo{
+  position:fixed;
+  width:100vw;
+  bottom:0rpx;
+  background-color:#fff;
+}
+
+.po-pagetwo-one{
+  background-color:#fdfdfd;
+  display:flex;
+  font-size:30rpx;
+  padding:0 40rpx;
+}
+
+.po-pt-ot{
+  display:flex;
+  align-items:center;
+  width:50%;
+}
+
+.po-pt-oto{
+  display:flex;justify-content:flex-end; width:50%;font-size:60rpx;text-align:right;
+}
+
+.po-pt-otoo{
+  font-size:40rpx;display:flex;align-items:flex-end;padding-bottom:8rpx;margin-right:6rpx;
+}
+
+.po-pt-to{
+  height:38rpx;line-height:38rpx;font-size:20rpx;padding-left:30rpx;
+}
+
+.po-pt-th{
+  display:flex;flex-wrap:wrap;padding:10rpx 0;
+}
+
+.po-pay-box{
+  border:1px solid #E8E8E8;border-radius:12rpx;display:flex;width:28%;height:126rpx;margin:10rpx 0 10rpx 4%;
+}
+
+.po-pay-imgbox{
+  width:50%;height:100%;display:flex;align-items:center;justify-content:flex-end;padding-right:16rpx;
+}
+
+.po-pay-boxtxt{
+  width:50%;height:100%;font-size:28rpx;color:#666;display:flex;align-items:center;justify-content:flex-start;padding-left:16rpx;
+}
+
+.po-pay-box-select{
+  overflow:hidden;white-space:nowrap;border:1px solid #c8392b;border-radius:12rpx;display:flex;width:28%;height:126rpx;margin:10rpx 0 10rpx 4%;position:relative;
+}
+
+.po-pay-imgsize{
+  width:56rpx;height:52rpx;
+}
+
+.po-pay-selectimg{
+  position: absolute;bottom: 0;right: 0;width:48rpx;height:46rpx;
+}
+
+.po-pay-selectimg-size{
+  width:48rpx;height:46rpx;
+}
+
+.po-end{
+  height:80rpx;display:flex;padding:12rpx 50rpx;
+}
+
+.po-end-o{
+  width:30%;height:56rpx;text-align:center;line-height:56rpx;border-radius:56rpx;
+}
+
+.po-end-t{
+  width:70%;height:56rpx;margin-left:60rpx;text-align:center;line-height:56rpx;border-radius:56rpx;
+}
