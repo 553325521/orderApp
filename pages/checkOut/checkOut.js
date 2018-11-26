@@ -1,5 +1,6 @@
 // pages/checkOut/checkOut.js
 var app = getApp();
+var payWay = -1;
 Page({
   data: {
     operList:[1,1,1],
@@ -119,8 +120,10 @@ Page({
    */
   selectPay:function(e){
     var that = this;
+    payWay = e.currentTarget.dataset.index
+    console.info("payWay"+payWay)
     that.setData({
-      currentTab: e.currentTarget.dataset.index
+      currentTab: payWay
     })
   },
   /**
@@ -169,10 +172,61 @@ Page({
         onlyFromCamera:true,
         scanType: ['qrCode'],
         success:function(res){
+          //扫码成功
           console.log(res)
+          var code = res.result
+          if (code != null){
+            //进行支付
+            wx.request({
+              url: app.globalData.basePath + 'json/ShopScanPay.json',
+              method: "post",
+              data: {
+                qrCode: code,
+                //openid: wx.getStorageSync('openid'),
+                payWay: payWay
+              },
+              header: {
+                'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+              },
+              success: function (res) {
+                console.info(res)
+                if (res.data.code == '0000') {
+                  if(res.data.data.result == 'A'){
+                    wx.showModal({
+                      title: '提示',
+                      showCancel: false,
+                      content: '等待用户确认支付',
+                      success: function (res) { }
+                    })
+                  } else if(res.data.data.result == 'S'){
+                    wx.showToast({
+                      title: '支付成功',
+                    })
+                  }
+                 
+                } else {
+                  
+                  wx.showModal({
+                    title: '提示',
+                    showCancel: false,
+                    content: '支付失败,原因:' + res.data,
+                    success: function (res) { }
+                  })
+                }
+              },
+              fail: function (error) {
+                wx.showToast({
+                  title: '支付失败',
+                })
+              }
+            })
+          }
         },
         fail:function(error){
           console.log(error)
+          wx.showToast({
+            title: error,
+          })
         }
       })
     }

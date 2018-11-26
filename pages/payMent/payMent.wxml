@@ -8,14 +8,14 @@
     </view>
   </view>
   <view class='QR-code'>
-    <image class='w100 h100' src='../../images/icon/QR-code.jpg'></image>
+    <image class='w100 h100' src='{{QRCodeUrl}}'></image>
   </view>
   <view class='hint'>
     <view class='title font-20 c6 tc'>顾客使用一下软件扫描上面的二维码</view>
     <view class='app-list dp-flex'>
       <image src='../../images/icon/wx.png'></image>
       <image src='../../images/icon/zfb.png'></image>
-      <image src='../../images/icon/ysf.png'></image>
+      <!-- <image src='../../images/icon/ysf.png'></image> -->
     </view>
   </view>
 </view>
