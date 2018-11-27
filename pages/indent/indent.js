@@ -33,50 +33,8 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () { 
-      
-      var that = this;
-      var date = wx.getStorageSync('datepicker');
-      var myDate = new Date();
-      var month = myDate.getMonth() + 1;
-      var year = myDate.getFullYear();
-      that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 2, 23, 0, 0]
-      that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
-      if (date == '') {
-        date = [];
-        var yeas = common.getYears();
-        var months = common.getMonths();
-        var days = common.getDays().days1;
-        var hours = common.getHours();
-        var mins = common.getMins();
-        date[0] = yeas;
-        date[1] = '-';
-        date[2] = months;
-        date[3] = '-';
-        date[4] = days;
-        date[5] = hours;
-        date[6] = ':';
-        date[7] = mins;
-        wx.setStorageSync('datepicker', date);
-      }
-      if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-        date[4] = common.getDays().days4
-      } else if (month == 2) {
-        if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) {
-          date[4] = common.getDays().days1
-        } else {
-          date[4] = common.getDays().days2
-        }
-      } else {
-        date[4] = common.getDays().days3
-      }
-      that.setData({
-        date: date,
-        startIndex: that.data.startIndex,
-        endIndex: that.data.endIndex
-      });
-      that.loadOrderNumber();
-      that.loadOrderData();
-
+     this.init();
+      console.log("组件被att")
     },
     moved: function () { console.log("组件被moved")},
     //组件被移除
@@ -88,7 +46,7 @@ Component({
  */
   pageLifetimes: {
     // 组件所在页面的生命周期函数
-    show: function () { attached(); console.log("页面show") },
+    show: function () {this.init();console.log("页面show") },
     hide: function () { },
     resize: function () { },
   },
@@ -98,6 +56,51 @@ Component({
  * 自定义方法函数
  */
 methods:{
+  //初始化页面
+  init:function(){
+    var that = this;
+    var date = wx.getStorageSync('datepicker');
+    var myDate = new Date();
+    var month = myDate.getMonth() + 1;
+    var year = myDate.getFullYear();
+    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 2, 23, 0, 0]
+    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
+    if (date == '') {
+      date = [];
+      var yeas = common.getYears();
+      var months = common.getMonths();
+      var days = common.getDays().days1;
+      var hours = common.getHours();
+      var mins = common.getMins();
+      date[0] = yeas;
+      date[1] = '-';
+      date[2] = months;
+      date[3] = '-';
+      date[4] = days;
+      date[5] = hours;
+      date[6] = ':';
+      date[7] = mins;
+      wx.setStorageSync('datepicker', date);
+    }
+    if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+      date[4] = common.getDays().days4
+    } else if (month == 2) {
+      if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) {
+        date[4] = common.getDays().days1
+      } else {
+        date[4] = common.getDays().days2
+      }
+    } else {
+      date[4] = common.getDays().days3
+    }
+    that.setData({
+      date: date,
+      startIndex: that.data.startIndex,
+      endIndex: that.data.endIndex
+    });
+    that.loadOrderNumber();
+    that.loadOrderData();
+  },
   //加载订单数量
   loadOrderNumber: function(){
     let that = this;
@@ -369,7 +372,7 @@ methods:{
   navTo:function (e){
     var orderPK = e.currentTarget.dataset.id;
     console.info(orderPK);
-    app.pageTurns(`indentDateil?type=${this.data.currentTab}&ORDER_PK=${orderPK}`)
+    app.pageTurns(`../indent/indentDateil?type=${this.data.currentTab}&ORDER_PK=${orderPK}`)
   }
 }
 })

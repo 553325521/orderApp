@@ -17,6 +17,7 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () {
+      this.loadTotalData();
     },
     moved: function () { console.log("组件被moved") },
     //组件被移除

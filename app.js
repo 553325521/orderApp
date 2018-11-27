@@ -19,7 +19,7 @@ App({
       // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
       options.query.appid = 'wx3326999f88e7077a';
     }
-    this.globalData.shopid = 'f9099370f12942439aae999f9455d43f';
+    this.globalData.shopid = 'c3a1f69158e04e0b8d072e5bc1f47b31';
     this.globalData.appid = options.query.appid;
     that.wxLogin();
     wx.setStorageSync("Address", "not");
@@ -197,8 +197,10 @@ pushSession:function(){
             title: '登录失败',
           })
         }
-        wx.setStorageSync("openid", res.data.data);
-
+        console.info("sss");
+        console.info(res.data);
+        wx.setStorageSync("openid", res.data.data.OPENID);
+        wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
         //授权成功
       },
       fail: function (error) {

@@ -9,7 +9,7 @@
     <image src='../../images/icon/down-icon.png'></image>
   </view>
   <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindShopChange">
+    <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
       <view class="picker">
         {{dateArr[dateIndex]}}
       </view>
