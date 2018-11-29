@@ -1,5 +1,23 @@
 // pages/menu/menu.js
 var app = getApp();
+var pageTitle = "菜单";//当前页面title
+var greensList;//商品列表，一个map，里边两个key 一个是放的是列表，为每个商品的数量及该商品的属性的集合；另一个存放的是该类别下的数量
+var navList;//分类列表，里边有分类名称和PK
+var qityArr = [];//一个列表，存放的是每个分类下点的商品的数量的集合
+var allQiry=0;//商品总数量
+var ordersList = [];//购物车列表吧？
+var allMoney = 0.0;//订单总金额
+var tableList = [];//桌位列表
+var goodsGuige = {
+  guige: [],
+  zuofa: [],
+  kouwei: []
+}//当前弹框的属性 规格做法和口味  
+var height = '';//还不知道是什么高度
+var ordersFalg = true;//隐藏挂单按钮
+var currentGood;//当前商品
+var isSelected = false;//选择规格了吗
+
 Component({
   options: {
     addGlobalClass: true,
@@ -9,28 +27,24 @@ Component({
     navList:null,
     currentTab:0,
     currentTabInit: 0,
-    greensList:null,
-    qityArr:null,
+    // greensList:null,
+    // qityArr:null,//一个数组，里边装的是每个分类点的菜的数量
     scrollTop:0,
-    allQiry:0,
-    allMoney:0,
-    ordersList:[],
-    height:'',
-    entryShow:false,
+    allQiry: allQiry,
+    allMoney: allMoney.toFixed(2),
+    ordersList: ordersList,
+    height:height,
+    entryShow:false,//购物车显示
     popShow:false,
     reserveShow:false,
     quorumShow:false,
-    currentGood: null,
+    currentGood: currentGood,
     currentIndex: null,
     currentItem: null,
-    ordersFalg: true,
-    goodsGuige:{
-      guige: [],
-      zuofa: [],
-      kouwei: []
-    },
-    isSelected: false,
-    tableList: []
+    ordersFalg: ordersFalg,//隐藏购买了的订单信息
+    goodsGuige: goodsGuige,
+    // isSelected: isSelected,
+    tableList: tableList
   },
 
 
@@ -41,6 +55,7 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () {
+      app.updateTitle(pageTitle)
       this.pageInit();
     },
     moved: function () { console.log("组件被moved") },
@@ -56,8 +71,6 @@ Component({
     hide: function () { },
     resize: function () { },
   },
-
-
   methods:{
     //自定义页面初始化函数
     pageInit:function(){
@@ -78,80 +91,72 @@ Component({
     },
   loadTables: function() {
     let that = this;
-    wx.request({
-      url: app.globalData.basePath + 'json/Tables_select_loadTableList.json',
-      method: "post",
+    app.sendRequest({
+      url: 'Tables_select_loadTableList',
+      method: 'POST',
       data: {
         shopid: app.globalData.shopid,
         openid: wx.getStorageSync('openid')
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
+          tableList = res.data.data;
           that.setData({
-            tableList: res.data.data,
-            loadingHidden:true
+            tableList: tableList,
+            loadingHidden: true
           })
-
           // 查询挂单数量
           that.loadCountOrderWei();
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '查询失败~',
-        })
+        app.toast('查询失败')
       }
-    })
+    });
   },
   loadGoodsInfo: function () {
     let that = this;
     that.setData({
       loadingHidden: false
     })
-    wx.request({
-      url: app.globalData.basePath + 'json/GoodsType_select_loadGoodsTypeByShopId.json',
-      method: "post",
+    app.sendRequest({
+      url: 'GoodsType_select_loadGoodsTypeByShopId',
+      method: 'POST',
       data: {
         shopid: app.globalData.shopid,
         openid: wx.getStorageSync('openid')
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
-          let qityArr = [];
-          that.data.allQiry = 0;
-          for (let i = 0; i < res.data.data.greensList.length; i++) {
-            qityArr.push(parseFloat(res.data.data.greensList[i].GTYPE_QITY));
-            that.data.allQiry += parseFloat(res.data.data.greensList[i].GTYPE_QITY);
+          allQiry = 0;
+          greensList = res.data.data.greensList;
+          navList = res.data.data.navList;
+          for (let i = 0; i < greensList.length; i++) {
+            qityArr.push(parseFloat(greensList[i].GTYPE_QITY));
+            allQiry += parseFloat(greensList[i].GTYPE_QITY);
           }
           // 查询购物车
           that.getOrdersList();
           //如果没有类别，就不set类别了
-          if (res.data.data.navList.length != 0){
+          if (navList.length != 0) {
             that.setData({
-                currentTab: res.data.data.navList[0].GTYPE_PK,
+              currentTab: navList[0].GTYPE_PK,
             })
           }
           that.setData({
-            navList: res.data.data.navList,
-            greensList: res.data.data.greensList,
-            
+            navList: navList,
+            greensList: greensList,
             qityArr: qityArr,
-            allQiry: that.data.allQiry
+            allQiry: allQiry
           })
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
-    })
+    });
+
+
   },
   /**
    * 添加购物车和删除购物车
@@ -164,7 +169,7 @@ Component({
     var item = e.currentTarget.dataset.item;
     var index = e.currentTarget.dataset.index;
     var type = e.currentTarget.dataset.type;
-    var data = that.data.greensList;
+    // var data = greensList;
     var List = data[item].infos;
     var _url = '';
     // 已点数量
@@ -172,143 +177,123 @@ Component({
     if (List[index].qity != undefined) {
       qity = List[index].qity;
     }
-    var qityArr = that.data.qityArr[item];
+    var qityArr = qityArr[item];
     if (type == "+"){
-      that.data.qityArr[item] = qityArr + 1
+      qityArr[item] = qityArr + 1
       List[index].qity = qity + 1;
-      that.data.allQiry++;
-      _url = app.globalData.basePath + 'json/ShoppingCart_insert_insertCart.json';
+      allQiry++;
+      _url = 'ShoppingCart_insert_insertCart';
     }else{
-      that.data.qityArr[item] = qityArr - 1
+      qityArr[item] = qityArr - 1
       List[index].qity = qity - 1;
-      that.data.allQiry--
-      _url = app.globalData.basePath + 'json/ShoppingCart_update_removeCart.json';
+      allQiry--
+      _url = 'ShoppingCart_update_removeCart';
     }
     List[index].FK_SHOP = app.globalData.shopid;
     List[index].FK_USER = wx.getStorageSync('openid');
-
-    wx.request({
+    app.sendRequest({
       url: _url,
-      method: "post",
+      method: 'POST',
       data: List[index],
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
           that.setData({
-            greensList: that.data.greensList,
-            qityArr: that.data.qityArr,
-            allQiry: that.data.allQiry
+            greensList: greensList,
+            qityArr: qityArr,
+            allQiry: allQiry
           })
           // 查询购物车
           that.getOrdersList();
-          wx.showToast({
-            title: '操作成功~',
-          })
+          app.toast('操作成功')
         } else {
-          wx.showToast({
-            title: '操作失败~',
-          })
+          app.toast('操作失败')
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
     })
   },
   /**
-   *  查看挂单
+   *  查看购物车
    */
   entryOrders:function(){
     var that = this;
-    wx.request({
-      url: app.globalData.basePath + 'json/ShoppingCart_load_loadCartDataByUser.json',
-      method: "post",
+    app.sendRequest({
+      url: 'ShoppingCart_load_loadCartDataByUser',
+      method: 'POST',
       data: {
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid'),
         CART_STATE: 'zancun'
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
-          var allMoney = 0;
-          var greensList = that.data.greensList;
-          that.data.ordersList = res.data.data;
+          allMoney = 0;
+          ordersList = res.data.data;
           if (res.data.data.length > 0) {
-            for (var _index in that.data.ordersList) {
-              allMoney += parseFloat(that.data.ordersList[_index].GOODS_PRICE);
+            for (var _index in ordersList) {
+              allMoney += parseFloat(ordersList[_index].GOODS_PRICE)/100.0;
             }
 
             for (let i = 0; i < greensList.length; i++) {
               for (let j = 0; j < greensList[i].infos.length; j++) {
                 if (greensList[i].infos[j].qity > 0) {
-                  for (var _index in that.data.ordersList) {
-                    if (that.data.ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
-                      that.data.ordersList[_index].i = i;
-                      that.data.ordersList[_index].j = j;
+                  for (var _index in ordersList) {
+                    if (ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
+                      ordersList[_index].i = i;
+                      ordersList[_index].j = j;
                     }
                   }
                 }
               }
             }
           }
-          if (that.data.ordersList.length > 4) {
-            that.data.height = 384 + 'rpx';
+          if (ordersList.length > 4) {
+            height = 384 + 'rpx';
           } else {
-            that.data.height = ''
+            height = ''
           }
           that.setData({
-            ordersList: that.data.ordersList,
-            height: that.data.height,
+            ordersList: ordersList,
+            height: height,
             entryShow: true,
             slide: false,
-            allMoney: (allMoney / 100.0).toFixed(2)
+            allMoney: allMoney.toFixed(2)
           })
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
-    })
+    });
   },
   getOrdersList:function() {
     var that = this;
-    wx.request({
-      url: app.globalData.basePath + 'json/ShoppingCart_load_loadCartDataByUser.json',
+    app.sendRequest({
+      url: 'ShoppingCart_load_loadCartDataByUser',
       method: "post",
       data: {
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid'),
         CART_STATE: 'zancun'
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
-          var allMoney = 0;
-          var greensList = that.data.greensList;
-          that.data.ordersList = res.data.data;
+          allMoney = 0;
+          ordersList = res.data.data;
           if (res.data.data.length > 0) {
-            for (var _index in that.data.ordersList) {
-              allMoney += parseFloat(that.data.ordersList[_index].GOODS_PRICE);
+            for (var _index in ordersList) {
+              allMoney += parseFloat(ordersList[_index].GOODS_PRICE)/100.0;
             }
 
             for (let i = 0; i < greensList.length; i++) {
               for (let j = 0; j < greensList[i].infos.length; j++) {
                 if (greensList[i].infos[j].qity > 0) {
-                  for (var _index in that.data.ordersList) {
-                    if (that.data.ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
-                      that.data.ordersList[_index].i = i;
-                      that.data.ordersList[_index].j = j;
+                  for (var _index in ordersList) {
+                    if (ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
+                      ordersList[_index].i = i;
+                      ordersList[_index].j = j;
                     }
                   }
                 }
@@ -316,18 +301,18 @@ Component({
             }
           }
           that.setData({
-            ordersList: that.data.ordersList,
-            allMoney: (allMoney / 100.0).toFixed(2),
+            ordersList: ordersList,
+            allMoney: allMoney.toFixed(2),
             loadingHidden: true
           })
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
     })
+
+   
   },
   /**
    *  隐藏挂单
@@ -343,14 +328,14 @@ Component({
    */
   emptyCat:function(){
     var that = this;
-    var greensList = that.data.greensList
+    var greensList = greensList
     for (let i = 0; i < greensList.length; i++) {
       for (let j = 0; j < greensList[i].infos.length; j++) {
         greensList[i].infos[j].qity = 0
       }
     }
     let qityArr = [];
-    for (let i = 0; i < that.data.greensList.length; i++) {
+    for (let i = 0; i < greensList.length; i++) {
       qityArr.push(0);
     }
 
@@ -367,38 +352,35 @@ Component({
       success: function (res) {
         if (res.data.code == '0000') {
           that.setData({
-            greensList: that.data.greensList,
-            qityArr: that.data.qityArr,
-            allQiry: that.data.allQiry,
-            ordersList: that.data.ordersList,
-            allMoney: that.data.allMoney.toFixed(2)
+            greensList: greensList,
+            qityArr: qityArr,
+            allQiry: allQiry,
+            ordersList: ordersList,
+            allMoney: allMoney.toFixed(2)
           })
           // 购物车里面空的时候隐藏购物车列表
-          if (that.data.ordersList.length == 0) {
+          if (ordersList.length == 0) {
             that.setData({
               entryShow: false
             })
           }
         } else {
-          wx.showToast({
-            title: '系统错误~',
-          })
+          app.toast('系统错误')
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '系统错误~',
-        })
+        app.toast('系统错误')
       }
     })
-
+    allMoney = 0;
+    allQiry = 0;
     that.setData({
-      greensList: that.data.greensList,
+      greensList: greensList,
       qityArr: qityArr,
-      allQiry: 0,
+      allQiry: allQiry,
       entryShow: false,
       ordersList:[],
-      allMoney: 0
+      allMoney: allMoney.toFixed(2)
     })
   },
   /**
@@ -417,52 +399,45 @@ Component({
     var _url = '';
     var tpnum = 0;
     if (type == "+") {
-      that.data.qityArr[i]++;
-      that.data.greensList[i].infos[j].qity++;
-      that.data.allQiry++;
-      that.data.ordersList[index].qity++;
-      that.data.allMoney = parseFloat(that.data.allMoney) + parseFloat(that.data.ordersList[index].GOODS_PRICE) / 100;
-      _url = app.globalData.basePath + 'json/ShoppingCart_update_updateCartNum.json';
+      qityArr[i]++;
+      tpnum = greensList[i].infos[j].qity++;
+      allQiry++;
+      ordersList[index].qity++;
+      allMoney = parseFloat(allMoney) + parseFloat(ordersList[index].GOODS_PRICE) / 100.0;
+      _url = 'ShoppingCart_update_updateCartNum';
     }else{
-      tpnum = that.data.greensList[i].infos[j].qity - 1;
-      that.data.qityArr[i]--;
-      that.data.allQiry--;
-      that.data.ordersList[index].qity--;
-      that.data.greensList[i].infos[j].qity--;
-      that.data.allMoney = parseFloat(that.data.allMoney) - parseFloat(that.data.ordersList[index].GOODS_PRICE) / 100;
+      tpnum = greensList[i].infos[j].qity - 1;
+      qityArr[i]--;
+      allQiry--;
+      ordersList[index].qity--;
+      greensList[i].infos[j].qity--;
+      allMoney = parseFloat(allMoney) - parseFloat(ordersList[index].GOODS_PRICE) / 100.0;
       if (tpnum <= 0) {
-        that.data.ordersList.splice(index, 1)
+        ordersList.splice(index, 1)
       }
-      _url = app.globalData.basePath + 'json/ShoppingCart_update_updateCartNum.json';
+      _url = 'ShoppingCart_update_updateCartNum';
     }
-
-    // that.data.greensList[i].infos[j].FK_SHOP = app.globalData.shopid;
-    // that.data.greensList[i].infos[j].FK_USER = wx.getStorageSync('openid');
-
-    wx.request({
+    app.sendRequest({
       url: _url,
       method: "post",
       data: {
-        CART_PK: that.data.ordersList[index].CART_PK,
+        CART_PK: ordersList[index].CART_PK,
         GOODS_NUM: tpnum,
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid')
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
           that.setData({
-            greensList: that.data.greensList,
-            qityArr: that.data.qityArr,
-            allQiry: that.data.allQiry,
-            ordersList: that.data.ordersList,
-            allMoney: that.data.allMoney.toFixed(2),
+            greensList: greensList,
+            qityArr: qityArr,
+            allQiry: allQiry,
+            ordersList: ordersList,
+            allMoney: allMoney.toFixed(2),
             loadingHidden: true
           })
           // 购物车里面空的时候隐藏购物车列表
-          if (that.data.ordersList.length == 0) {
+          if (ordersList.length == 0) {
             that.setData({
               entryShow: false
             })
@@ -470,11 +445,10 @@ Component({
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
     })
+   
   },
   /**
    * 关闭弹框
@@ -493,29 +467,27 @@ Component({
    */
   chosen: function (){
     var that = this;
+
+    this.getOrdersList()
+
     var orderId = wx.getStorageSync('ORDER_PK');
     if (orderId != null && orderId != undefined && orderId != '') {
       // 直接加入订单里面
       that.setData({
         loadingHidden: false
       })
-      wx.request({
-        url: app.globalData.basePath + 'json/Order_update_updateCartToOrderMore.json',
-        method: "post",
+      app.sendRequest({
+        url: 'Order_update_updateCartToOrderMore',
+        method: 'POST',
         data: {
           FK_ORDER: orderId,
           FK_SHOP: app.globalData.shopid,
           FK_USER: wx.getStorageSync('openid')
         },
-        header: {
-          'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-        },
         success: function (res) {
           if (res.data.code == '0000') {
             let _type = wx.getStorageSync('ORDER_TYPE', '');
-            wx.showToast({
-              title: '操作成功~',
-            })
+            app.toast('操作成功')
             that.setData({
               loadingHidden: true
             })
@@ -523,20 +495,16 @@ Component({
             wx.setStorageSync('ORDER_TYPE', '');
             app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId + `&type=` + _type)
           } else {
-            wx.showToast({
-              title: '操作失败~',
-            })
+            app.toast('操作失败')
           }
         },
         fail: function (error) {
           that.setData({
             loadingHidden: true
           })
-          wx.showToast({
-            title: '操作失败~',
-          })
+          app.toast('操作失败')
         }
-      })
+      });
     } else {
       that.setData({
         reserveShow: true,
@@ -550,13 +518,13 @@ Component({
   reserveConfirm:function(e){
     var that = this;
     var index = e.currentTarget.dataset.index;
-    var queryBean = JSON.stringify(that.data.tableList[index]);
-    var orders = JSON.stringify(that.data.ordersList);
+    var queryBean = JSON.stringify(tableList[index]);
+    var orders = JSON.stringify(ordersList);
     that.setData({
       reserveShow: false
       //quorumShow: true
     })
-    app.pageTurns(`../orderDetail/orderDetail?queryBean=` + queryBean + '&ordersList=' + orders + '&allMoney=' + that.data.allMoney)
+    app.pageTurns(`../orderDetail/orderDetail?queryBean=` + queryBean + '&ordersList=' + orders + '&allMoney=' + allMoney)
   },
   /**
    * 
@@ -583,7 +551,7 @@ Component({
     var scrollTop = e.detail.scrollTop,
     h = 0; 
     let currentTab = 0;
-    that.data.greensList.forEach(function (item, i) {
+    greensList.forEach(function (item, i) {
       var _h = 24.4 + 71.2 * item.infos.length;
       if (scrollTop >= h) {
         currentTab = item.GTYPE_PK
@@ -605,52 +573,57 @@ Component({
       currentTabInit: type
     })
   },
+  /**
+   * 选择规格
+   */
   selectGuige: function (e) {
     var that = this;
     var item = e.currentTarget.dataset.item;
     var index = e.currentTarget.dataset.index;
-    var data = that.data.greensList;
-    var info = data[item].infos[index];
-    info.LAST_PIRCE = (info.GOODS_PRICE / 100.0).toFixed(2);
-    that.data.goodsGuige.guige = JSON.parse(info.GOODS_SPECIFICATION);
-    that.data.goodsGuige.zuofa = JSON.parse(info.GOODS_RECIPE);
-    that.data.goodsGuige.kouwei = JSON.parse(info.GOODS_TASTE);
+    var data = greensList;
+    currentGood = data[item].infos[index];
+    currentGood.LAST_PIRCE = (currentGood.GOODS_PRICE / 100.0).toFixed(2);
+    goodsGuige.guige = JSON.parse(currentGood.GOODS_SPECIFICATION);
+    goodsGuige.zuofa = JSON.parse(currentGood.GOODS_RECIPE);
+    goodsGuige.kouwei = JSON.parse(currentGood.GOODS_TASTE);
     that.setData({
       popShow: true,
-      goodsGuige: that.data.goodsGuige,
-      currentGood: info,
+      goodsGuige: goodsGuige,
+      currentGood: currentGood,
       currentIndex : index,
       currentItem: item
     })
   },
+  /**
+   * 选择规格里边的属性
+   */
   selectGg: function(e) {
-    
     var that = this;
     var index = e.currentTarget.dataset.index;
     var _type = e.currentTarget.dataset.type;
-    var list = that.data.goodsGuige;
+    var list = goodsGuige;
     if (_type != '' && _type != undefined) {
       if (_type == 'guige') {
-        let _list = that.data.goodsGuige.guige;
+        let _list = goodsGuige.guige;
         for (var _index in _list) {
           _list[_index].checked = false;
         }
         _list[index].checked = true;
-        that.data.isSelected = true;
+        isSelected = true;
       } else if (_type == 'kouwei') {
-        let _list = that.data.goodsGuige.kouwei;
+        let _list = goodsGuige.kouwei;
         for (var _index in _list) {
           _list[_index].checked = false;
         }
         _list[index].checked = true;
-        that.data.isSelected = true;
+        isSelected = true;
       } else if (_type == 'zuofa') {
-        let _list = that.data.goodsGuige.zuofa;
+        let _list = goodsGuige.zuofa;
         for (var _index in _list) {
           _list[_index].checked = false;
         }
         _list[index].checked = true;
-        that.data.isSelected = true;
+        isSelected = true;
       }
   
       var _price = 0;
@@ -698,16 +671,16 @@ Component({
           }
         }
       }
-      if (!that.data.isSelected) {
+      if (!isSelected) {
         wx.showToast({
-          title: '请选择规格、做法或口味~',
+          title: '请选择规格、做法或口味',
         })
       } else {
-        that.data.currentGood.LAST_PIRCE = (that.data.currentGood.GOODS_PRICE / 100.0 + _price).toFixed(2);
+        currentGood.LAST_PIRCE = (currentGood.GOODS_PRICE / 100.0 + _price).toFixed(2);
         that.setData({
-          goodsGuige: that.data.goodsGuige,
-          currentGood: that.data.currentGood,
-          isSelected: that.data.isSelected
+          goodsGuige: goodsGuige,
+          currentGood: currentGood,
+          // isSelected: that.data.isSelected
         })
       }
     }
@@ -717,28 +690,25 @@ Component({
    */
   addToCart2: function (e) {
     var that = this;
-    if (!that.data.isSelected) {
-      wx.showToast({
-        title: '请选择~',
-      })
+    if (!isSelected) {
+      app.toast('请选择规格')
       return;
     }
     var item = that.data.currentItem;
     var index = that.data.currentIndex;
-    var list = that.data.goodsGuige;
-    var data = that.data.greensList;
+    var list = goodsGuige;
+    var data = greensList;
     var List = data[item].infos;
-    var _url = '';
+    // var _url = '';
     // 已点数量
     var qity = 0;
     if (List[index].qity != undefined) {
       qity = List[index].qity;
     }
-    var qityArr = that.data.qityArr[item];
-    that.data.qityArr[item] = qityArr + 1
+    qityArr[item] = qityArr[item] + 1;
     List[index].qity = qity + 1;
-    that.data.allQiry++;
-    _url = app.globalData.basePath + 'json/ShoppingCart_insert_insertCart.json';
+    allQiry++;
+    // _url = app.globalData.basePath + 'json/.json';
 
     let reqObj = {
       GOODS_SPECIFICATION: [],
@@ -772,9 +742,10 @@ Component({
     that.setData({
       loadingHidden: false
     })
-    wx.request({
-      url: _url,
-      method: "post",
+
+    app.sendRequest({
+      url: 'ShoppingCart_insert_insertCart',
+      method: 'POST',
       data: {
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid'),
@@ -785,7 +756,7 @@ Component({
         GOODS_NAME: List[index].GOODS_NAME,
         GOODS_NUM: List[index].GOODS_NUM,
         GOODS_PK: List[index].GOODS_PK,
-        GOODS_PRICE: that.data.currentGood.LAST_PIRCE * 100,
+        GOODS_PRICE: currentGood.LAST_PIRCE * 100,
         GOODS_PXXH: List[index].GOODS_PXXH,
         GOODS_RECIPE: reqObj.GOODS_RECIPE,
         GOODS_SPECIFICATION: reqObj.GOODS_SPECIFICATION,
@@ -796,33 +767,24 @@ Component({
         PICTURE_URL: List[index].PICTURE_URL,
         SHOW_RANGE: List[index].SHOW_RANGE
       },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
       success: function (res) {
         if (res.data.code == '0000') {
           that.setData({
-            greensList: that.data.greensList,
-            qityArr: that.data.qityArr,
-            allQiry: that.data.allQiry,
+            greensList: greensList,
+            qityArr: qityArr,
+            allQiry: allQiry,
             loadingHidden: true
           })
           that.closePop();
-          wx.showToast({
-            title: '添加成功~',
-          })
+          app.toast('添加成功')
         } else {
-          wx.showToast({
-            title: '操作失败~',
-          })
+          app.toast('操作失败')
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
-    })
+    });
   },
 
   /**
@@ -831,33 +793,31 @@ Component({
    * lps  2018年11月29日02:24:21
    */
   loadCountOrderWei: function() {
-    wx.request({
-      url: app.globalData.basePath + 'json/Order_select_loadCountOrderWei.json',
-      method: "post",
+    app.sendRequest({
+      url: 'Order_select_loadCountOrderWei',
+      method: 'POST',
       data: {
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid')
-      },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
       success: function (res) {
         if (res.data.code == '0000') {
           console.info(res.data);
           if (res.data.ORDER_COUNT > 0) {
-            that.data.ordersFalg = false;
+            ordersFalg = false;
+            console.info("哈哈")
             that.setData({
-              ordersFalg: that.data.ordersFalg
+              ordersFalg: ordersFalg
             });
           }
         }
       },
       fail: function (error) {
-        wx.showToast({
-          title: '操作失败~',
-        })
+        app.toast('操作失败')
       }
-    })
+    });
   }
+
+ 
   }
 })

@@ -1,6 +1,7 @@
 // pages/indent/indentDateil.js
 var app = getApp()
 var totalMoney = 0;
+var ORDER_PK;
 
 Page({
   data: {
@@ -11,13 +12,13 @@ Page({
   },
   onLoad: function (options) {
     var that = this;
+    ORDER_PK = options.ORDER_PK
     that.setData({
       type : options.type,
-      ORDER_PK: options.ORDER_PK
+      ORDER_PK: ORDER_PK
     })
   },
   onReady: function () {
-  
   },
   onShow: function () {
     var that = this;
@@ -83,7 +84,7 @@ loadOrderDetail:function(){
     url: app.globalData.basePath + 'json/Order_load_loadOrderDetailByOrderPK.json',
     method: "post",
     data: {
-      ORDER_PK: that.data.ORDER_PK,
+      ORDER_PK: ORDER_PK,
       openid: wx.getStorageSync('openid')
     },
     header: {
@@ -133,8 +134,9 @@ dealOrderDetailData:function(data){
   orderDetailMap.set("ARRIVE_TIME", data[0].CREATE_TIME.substring(11));
   
   var totalFS = 0;
+  totalMoney = 0;
   for(var i = 0;i < data.length;i++){
-    totalMoney = totalMoney + (data[i].ORDER_DETAILS_GMONEY * data[i].ORDER_DETAILS_FS/100);
+    totalMoney = totalMoney + (data[i].ORDER_DETAILS_GMONEY * data[i].ORDER_DETAILS_FS/100.0);
     totalFS = totalFS + parseInt(data[i].ORDER_DETAILS_FS);
   }
   orderDetailMap.set("totalMoney", totalMoney);
@@ -165,7 +167,7 @@ dealOrderDetailData:function(data){
   addDish: function (){
     console.info("点了")
     var that = this;
-    wx.setStorageSync('ORDER_PK', that.data.ORDER_PK);
+    wx.setStorageSync('ORDER_PK', ORDER_PK);
     wx.setStorageSync('ORDER_TYPE', that.data.type);
     app.pageTurns('../index/index?page=../menu/menu')
   },
@@ -196,6 +198,6 @@ dealOrderDetailData:function(data){
     })
   },
   navTo:function(){
-    app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney +'&orderId=3')
+    app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney + '&ORDER_PK='+ORDER_PK)
   } 
 })

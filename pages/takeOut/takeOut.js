@@ -1,5 +1,7 @@
 // pages/takeOut/takeOut.js
 var app = getApp();
+var pageTitle = "外卖";
+
 var common = require('../../utils/common.js');
 Component({
   options: {
@@ -47,6 +49,7 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () {
+      app.updateTitle(pageTitle)
       var that = this;
       var date = wx.getStorageSync('datepicker');
       var myDate = new Date();

@@ -2,6 +2,7 @@
 var app = getApp();
 var currentPage = "../menu/menu";//当前是哪个页面
 
+
 //引入单页面页面的js
 // var indent = require('../indent/indent.js');//引入modul
 
@@ -18,18 +19,19 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    if (options != undefined && options.page != undefined) {
+      currentPage = options.page;
+      this.setData({
+        currentPage: currentPage
+      })
+    }
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function (options) {
-    if(options != undefined){
-      currentPage = options.page;
-      this.setData({
-        currentPage: currentPage
-      })
-    }
+   
    
   },
 

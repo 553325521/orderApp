@@ -197,8 +197,6 @@ pushSession:function(){
             title: '登录失败',
           })
         }
-        console.info("sss");
-        console.info(res.data);
         wx.setStorageSync("openid", res.data.data.OPENID);
         wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
         //授权成功
@@ -459,5 +457,40 @@ pushSession:function(){
     setTimeout(function(){
       that.data.animtedata = animation.export();
     },10)
+  },
+  /**
+   * 更换title
+   */
+  updateTitle:function(title){
+    wx.setNavigationBarTitle({
+      title:title
+    })
+  },
+  /**
+   * 封装request
+   */
+  sendRequest:function(data){
+    wx.request({
+      url: this.globalData.basePath + 'json/' + data.url + '.json',
+      method: data.method,
+      data: data.data,
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        data.success(res)
+      },
+      fail: function (error) {
+        data.fail(error)
+      }
+    })
+  },
+  /**
+   * 弹框提示
+   */
+  toast:function(message){
+    wx.showToast({
+      title: message,
+    })
   }
 })

@@ -1,5 +1,4 @@
 /* pages/founding/founding.wxss */
-
 .founding-page{
   background-color: #fff;
   padding: 94rpx 0rpx 90rpx 0;

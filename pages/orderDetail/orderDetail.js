@@ -1,6 +1,11 @@
 // pages/orderDetail/orderDetail.js
 var util = require('../../utils/util.js');  
 var app =getApp()
+var allMoney=0.0;//订单总金额
+var queryBean;
+var ordersList;
+var currentTime;
+
 Page({
   data: {
     loadingHidden: true
@@ -10,14 +15,15 @@ Page({
     that.setData({
       loadingHidden: false
     })
-    var queryBean = JSON.parse(options.queryBean);
-    var ordersList = JSON.parse(options.ordersList);
-    var currentTime = util.nowTime().split(' ');
+    queryBean = JSON.parse(options.queryBean);
+    ordersList = JSON.parse(options.ordersList);
+    currentTime = util.nowTime().split(' ');
+    allMoney = parseFloat(options.allMoney)
     that.setData({
       queryBean: queryBean,
       currentDay: currentTime[0],
       currentTimes: currentTime[1],
-      allMoney: options.allMoney,
+      allMoney: allMoney.toFixed(2),
       ordersList: ordersList,
       loadingHidden: true
     })
@@ -43,16 +49,16 @@ Page({
     var _url = '';
     var tpnum = 0;
     if (type == "+") {
-      tpnum = parseFloat(that.data.ordersList[index].qity) + 1;
-      that.data.ordersList[index].qity++;
-      that.data.allMoney = parseFloat(that.data.allMoney) + parseFloat(that.data.ordersList[index].GOODS_PRICE) / 100;
+      tpnum = parseFloat(ordersList[index].qity) + 1;
+      ordersList[index].qity++;
+      allMoney = parseFloat(allMoney) + parseFloat(ordersList[index].GOODS_PRICE) / 100;
       _url = app.globalData.basePath + 'json/ShoppingCart_update_updateCartNum.json';
     } else {
-      tpnum = that.data.ordersList[index].qity - 1;
-      that.data.ordersList[index].qity--
-      that.data.allMoney = parseFloat(that.data.allMoney) - parseFloat(that.data.ordersList[index].GOODS_PRICE) / 100;
+      tpnum = ordersList[index].qity - 1;
+      ordersList[index].qity--
+      allMoney = parseFloat(allMoney) - parseFloat(ordersList[index].GOODS_PRICE) / 100;
       if (tpnum <= 0) {
-        that.data.ordersList.splice(index, 1)
+        ordersList.splice(index, 1)
       }
       _url = app.globalData.basePath + 'json/ShoppingCart_update_updateCartNum.json';
     }
@@ -61,7 +67,7 @@ Page({
       url: _url,
       method: "post",
       data: {
-        CART_PK: that.data.ordersList[index].CART_PK,
+        CART_PK: ordersList[index].CART_PK,
         GOODS_NUM: tpnum,
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid')
@@ -72,12 +78,12 @@ Page({
       success: function (res) {
         if (res.data.code == '0000') {
           that.setData({
-            ordersList: that.data.ordersList,
-            allMoney: that.data.allMoney.toFixed(2),
+            ordersList: ordersList,
+            allMoney: allMoney.toFixed(2),
             loadingHidden: true
           })
           // 购物车里面空的时候隐藏购物车列表
-          if (that.data.ordersList.length == 0) {
+          if (ordersList.length == 0) {
             wx.navigateBack({
               delta: 1
             })
@@ -86,7 +92,7 @@ Page({
       },
       fail: function (error) {
         wx.showToast({
-          title: '添加失败~',
+          title: '添加失败',
         })
       }
     })
@@ -105,7 +111,7 @@ Page({
       data: {
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid'),
-        ORDER_POSITION: that.data.queryBean.TABLES_PK,
+        ORDER_POSITION: queryBean.TABLES_PK,
         ORDER_STATE: '2',
         ORDER_RS: '5'
       },
@@ -117,22 +123,22 @@ Page({
           if (_type == 'confirm') {
             // 验证是否开启堂点带出收银
             if (_open == 'on') {
-              app.pageTurns(`../checkOut/checkOut`)
+              app.pageTurns(`../checkOut/checkOut?shouldMoney=`+allMoney)
             } else {
-              app.pageTurns(`../menu/menu`);
+              app.pageTurns(`../index/index?page=../menu/menu`);
             }
           } else {
-            app.pageTurns(`../menu/menu`);
+            app.pageTurns(`../index/index?page=../menu/menu`);
           }
           that.setData({
             loadingHidden: true
           })
           wx.showToast({
-            title: '创建成功~',
+            title: '创建成功',
           })
         } else {
           wx.showToast({
-            title: '创建失败~',
+            title: '创建失败',
           })
         }
       },
@@ -141,7 +147,7 @@ Page({
           loadingHidden: true
         })
         wx.showToast({
-          title: '创建失败~',
+          title: '创建失败',
         })
       }
     })

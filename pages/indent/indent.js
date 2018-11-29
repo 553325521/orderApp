@@ -1,5 +1,8 @@
 // pages/indent/indent.js
 var app = getApp()
+var pageTitle = "订单";
+var currentTab = 0;
+
 var common = require('../../utils/common.js');
 Component({
   options: {
@@ -18,7 +21,7 @@ Component({
         title: '全部'
       }
     ],
-    currentTab: 0,
+    currentTab: currentTab,
     date: '',
     startIndex: [],
     endIndex: [],
@@ -33,6 +36,7 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () {
+      app.updateTitle(pageTitle)
       this.init();
     },
     moved: function () { console.log("组件被moved")},
@@ -111,7 +115,7 @@ methods:{
     if (that.data.date[5][that.data.endIndex[5]] == 24) {
       var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.endIndex[7]];
     }
-    var payState = that.data.currentTab;
+    var payState = currentTab;
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderNumber.json',
       method: "post",
@@ -164,7 +168,7 @@ methods:{
     if (that.data.date[5][that.data.endIndex[5]] == 24) {
       var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.endIndex[7]];
     }
-    var payState = that.data.currentTab;
+    var payState = currentTab;
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderDataByTime.json',
       method: "post",
@@ -231,7 +235,7 @@ methods:{
           orderMap.set("data", orderList);
           orderMap.set("keyName",dateStr);
           orderMap.set("totalMoney",allMoney);
-          if (that.data.currentTab == 0){
+          if (currentTab == 0){
             orderMap.set("timeWidth", "180rpx");
             orderMap.set("seatWidth", "180rpx");
             orderMap.set("partWidth", "180rpx");
@@ -316,9 +320,9 @@ methods:{
   // },
   swichNav:function (e) {
     var that = this;
-    var types = e.currentTarget.dataset.type;
+    currentTab = e.currentTarget.dataset.type;
     that.setData({
-      currentTab: types,
+      currentTab: currentTab,
     });
     that.loadOrderData();
   },
@@ -371,7 +375,7 @@ methods:{
   navTo:function (e){
     var orderPK = e.currentTarget.dataset.id;
     console.info(orderPK);
-    app.pageTurns(`../indent/indentDateil?type=${this.data.currentTab}&ORDER_PK=${orderPK}`)
+    app.pageTurns(`../indent/indentDateil?type=${currentTab}&ORDER_PK=${orderPK}`)
   }
 }
 })

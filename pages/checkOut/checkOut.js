@@ -7,6 +7,8 @@ var discountsMoneyShow = false;//优惠金额显示不显示
 var discountCouponShow = false;//优惠券显示不显示
 var jfdxShow = false;//积分抵现显示不显示
 var czzfShow = false;//储值支付显示不显示
+var ORDER_PK;//订单ID
+
 Page({
   data: {
     operList:[1,1,1],
@@ -65,8 +67,9 @@ Page({
   },
   onLoad: function (options) {
     var that = this;
-    //获取传过来的实收金额
-    shouldMoney = options.shouldMoney
+    //获取传过来的数据
+    ORDER_PK = options.ORDER_PK
+    shouldMoney = options.shouldMoney//应收金额
     trueMoney = shouldMoney
     console.info("多少钱" + trueMoney);
     that.setData({
@@ -150,34 +153,33 @@ Page({
    * 确定支付
    */
   settleAccounts:function(){
-    console.info("点击了")
 
-    wx.requestPayment({
-      appId:'wxc1531dc6935daa38',
-      timeStamp: '1543482074',
-      nonceStr: '0053e1d524eb4c3fafbace17f9608844',
-      package: 'prepay_id=wx29170114233862eed5ef9bfe4028463379',
-      signType: 'RSA',
-      paySign: 'uwTz6T3wJJB7X/TzrkOynAmOmv7SMmmgHVrcLQi2gbKtwrTDQjhe5TbKd/HVQ7jtpC9IT7tyRSLWwCq0uVuBE/lY8aDm7qGIJO EKaC0NhBOIxdBeyLn5BDoqRdZOQvD6jJGfqH6EsfFOCEN2ygFbI2creXtlYrntrU9q3b82iENL9MuuyvHctV8Y54dQr WAi0hrKTKOtp6cOkR/DNXjgXZbOb7WN8Yzb N9EQVd/vFa1Q28cnZneKj5V33T q1/fEmIR771bc9afivs7ltZQyicFxxlZq//TVKumVDv3owVCh BRkviiPYg/PMK279ozX6KA6JDWOrcvY7bCjMpw==',
-      success(res) { console.info(res)},
-      fail(res) { console.info(res)}
-    })
-
-
-    // var that = this;
-    // var currentTab = that.data.currentTab;
-    // console.log(currentTab)
-    // if (currentTab == undefined){
-    //   app.hintBox('请选择支付方式','none')
-    // } else if (currentTab == 1 || currentTab == 2){
-    //   console.log(1)
-    //   that.data.wzShow = true
-    // }else{
-    //   app.hintBox('付款成功','success')
-    // }
-    // that.setData({
-    //   wzShow: that.data.wzShow
+    // wx.requestPayment({
+    //   appId:'wx3326999f88e7077a',
+    //   timeStamp: '1543484072',
+    //   nonceStr: '2727b32b4e0a407e9cf01f9e25120304',
+    //   package: 'prepay_id=wx291734320062914b0f49dade2319482583',
+    //   signType: 'RSA',
+    //   paySign: 'm5TNqqUT/EuU6zBfwPimmYTyMbniVS6fVXf 6 dedENA0YcONNvM/uqPEAu0tpW64Zk3hoC6La5kmL6sQWruDLp GxW1QqaxRxgDC6KZhveYKjI0ORUpXk/hxlQMcgFBkEVBcVCZEwSOyyXqPculaR4QOfFmGVV/wau6Y6vHN8at3zTrb3IuxfV7z66d6eiOAh49Rk 8tx467x3r0zalfgaOtm/ba04coifSx0uXXe7tC4fLr2peKivmUuGXMzZvvi55gxNz8N3TeVb4xeyi 9NI/63ERz3uu67qU2Q4yNm/c6/qHI/vJsjPMrd8puECROKcetwS9H6jRF0h8hewzQ==',
+    //   success(res) { console.info(res)},
+    //   fail(res) { console.info(res)}
     // })
+
+
+    var that = this;
+    var currentTab = that.data.currentTab;
+    console.log(currentTab)
+    if (currentTab == undefined){
+      app.hintBox('请选择支付方式','none')
+    } else if (currentTab == 1 || currentTab == 2){
+      console.log(1)
+      that.data.wzShow = true
+    }else{
+      app.hintBox('付款成功','success')
+    }
+    that.setData({
+      wzShow: that.data.wzShow
+    })
   },
   /**
    * 关闭所有弹框
@@ -215,35 +217,31 @@ Page({
           var code = res.result
           if (code != null){
             //进行支付
-            wx.request({
-              url: app.globalData.basePath + 'json/ShopScanPay.json',
+            app.sendRequest({
+              url: 'ShopScanPay',
               method: "post",
               data: {
                 qrCode: code,
                 //openid: wx.getStorageSync('openid'),
-                payWay: payWay
-              },
-              header: {
-                'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+                payWay: payWay,
+                ORDER_PK: ORDER_PK
               },
               success: function (res) {
                 console.info(res)
                 if (res.data.code == '0000') {
-                  if(res.data.data.result == 'A'){
+                  if (res.data.data.result == 'A') {
                     wx.showModal({
                       title: '提示',
                       showCancel: false,
                       content: '等待用户确认支付',
                       success: function (res) { }
                     })
-                  } else if(res.data.data.result == 'S'){
-                    wx.showToast({
-                      title: '支付成功',
-                    })
+                  } else if (res.data.data.result == 'S') {
+                    app.toast('支付成功')
                   }
-                 
+
                 } else {
-                  
+
                   wx.showModal({
                     title: '提示',
                     showCancel: false,
@@ -253,9 +251,7 @@ Page({
                 }
               },
               fail: function (error) {
-                wx.showToast({
-                  title: '支付失败',
-                })
+                app.toast('支付失败')
               }
             })
           }

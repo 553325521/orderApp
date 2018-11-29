@@ -1,5 +1,7 @@
 // pages/statement/statement.js
 var app = getApp()
+var pageTitle = "报表";
+
 Component({
   options: {
     addGlobalClass: true,
@@ -17,6 +19,7 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () {
+      app.updateTitle(pageTitle)
       this.loadTotalData();
     },
     moved: function () { console.log("组件被moved") },

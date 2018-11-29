@@ -1,10 +1,8 @@
 {
   "pages": [
-    
     "pages/index/index",
-    "pages/founding/founding",
-    "pages/indent/indent",
     "pages/checkOut/checkOut",
+    "pages/founding/founding",
     "pages/couponList/couponList",
     "pages/cashier/cashier",
     "pages/menu/menu",
@@ -21,6 +19,7 @@
     "pages/orderDetail/orderDetail",
     "pages/template/selectNumber",
     "pages/payOrders/payOrders"
+    
   ],
   "window": {
     "backgroundTextStyle": "light",
