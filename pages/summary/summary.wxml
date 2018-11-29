@@ -17,62 +17,66 @@
     <image src='../../images/icon/down-icon.png'></image>
   </view>
 </view>
-<view class='summary-list font-28 c6'>
+<view class='summary-list font-28 c6' style='display:{{pageShow?"block":"none"}}'>
   <view class='item dp-flex flex-jc-sb'>
     <view>新增会员</view>
-    <view>0个</view>
+    <view>{{memberNumber}}个</view>
   </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>店内订单</view>
-    <view>0单</view>
+    <view>{{innerOrderNumber}}单</view>
   </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>外卖订单</view>
-    <view>0单</view>
+    <view>{{outOrderNumber}}单</view>
   </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>产生积分</view>
-    <view>128分</view>
+    <view>{{produceJF}}分</view>
   </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>积分兑换</view>
-    <view>125分</view>
+    <view>{{customJF}}分</view>
   </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>发放电子券</view>
-    <view>5张</view>
+    <view>{{sendCardNumber}}张</view>
   </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>使用电子券</view>
-    <view>5张</view>
+    <view>{{useCardNumber}}张</view>
   </view>
 </view>
-<view class='consume font-28 c6'>
+<view class='consume font-28 c6' style='display:{{pageShow?"block":"none"}}'>
   <view class='consume-head dp-flex'>
     <view>消费</view>
-    <view class='number'>12笔</view>
-    <view class='total flex-1 tr'>总金额125.50元</view>
+    <view class='number'>{{totalOrderNumber}}笔</view>
+    <view class='total flex-1 tr'>总金额{{totalOrderMoney}}元</view>
   </view>
   <view class='consume-dateils'>
     <view class='item dp-flex'>
       <view class='pay-way'>微信支付</view>
-      <view class='pay-number tr'>8笔</view>
-      <view class='flex-1 tr'>总额10.0元</view>
+      <view class='pay-number tr'>{{wxPayOrderNumber}}笔</view>
+      <view class='flex-1 tr'>总额{{wxPayOrderMoney}}元</view>
     </view>
     <view class='item dp-flex'>
       <view class='pay-way'>支付宝支付</view>
-      <view class='pay-number tr'>8笔</view>
-      <view class='flex-1 tr'>总额10.0元</view>
+      <view class='pay-number tr'>{{aliPayOrderNumber}}笔</view>
+      <view class='flex-1 tr'>总额{{aliPayOrderMoney}}元</view>
     </view>
     <view class='item dp-flex'>
       <view class='pay-way'>POS支付</view>
-      <view class='pay-number tr'>8笔</view>
-      <view class='flex-1 tr'>总额10.0元</view>
+      <view class='pay-number tr'>{{posPayOrderNumber}}笔</view>
+      <view class='flex-1 tr'>总额{{posPayOrderMoney}}元</view>
     </view>
     <view class='item dp-flex'>
       <view class='pay-way'>现金支付</view>
-      <view class='pay-number tr'>8笔</view>
-      <view class='flex-1 tr'>总额10.0元</view>
+      <view class='pay-number tr'>{{cashPayOrderNumber}}笔</view>
+      <view class='flex-1 tr'>总额{{cashPayOrderMoney}}元</view>
     </view>
   </view>
+</view>
+ <view class="weui-loadmore" style='display:{{pageShow?"none":"block"}}'>
+            <view class="weui-loading"></view>
+            <view class="weui-loadmore__tips">正在加载</view>
 </view>

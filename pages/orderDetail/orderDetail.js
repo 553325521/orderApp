@@ -105,7 +105,7 @@ Page({
       data: {
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid'),
-        ORDER_POSITION: that.data.queryBean.TABLES_NAME,
+        ORDER_POSITION: that.data.queryBean.TABLES_PK,
         ORDER_STATE: '2',
         ORDER_RS: '5'
       },

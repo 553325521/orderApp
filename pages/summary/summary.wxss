@@ -1,4 +1,5 @@
 /* pages/summary/summary.wxss */
+@import '../../weui.wxss';
 page{
   padding-top: 100rpx
 }
