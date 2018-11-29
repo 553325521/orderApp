@@ -1,6 +1,12 @@
 // pages/checkOut/checkOut.js
 var app = getApp();
 var payWay = -1;
+var trueMoney;//实收金额
+var shouldMoney;//应收金额
+var discountsMoneyShow = false;//优惠金额显示不显示
+var discountCouponShow = false;//优惠券显示不显示
+var jfdxShow = false;//积分抵现显示不显示
+var czzfShow = false;//储值支付显示不显示
 Page({
   data: {
     operList:[1,1,1],
@@ -50,10 +56,24 @@ Page({
     ],
     wzShow:false,
     couponShow:false,
-    memberShow:false
+    memberShow:false,
+    discountsMoneyShow: discountsMoneyShow,
+    discountCouponShow: discountCouponShow,
+    jfdxShow: jfdxShow,
+    czzfShow: czzfShow
+
   },
   onLoad: function (options) {
     var that = this;
+    //获取传过来的实收金额
+    shouldMoney = options.shouldMoney
+    trueMoney = shouldMoney
+    console.info("多少钱" + trueMoney);
+    that.setData({
+      trueMoney:Number(trueMoney).toFixed(2),
+      shouldMoney: Number(shouldMoney).toFixed(2)
+    })
+
     var mobInfo = app.getSystemInfo();
     that.setData({
       W: mobInfo.mob_width + 'px',
@@ -130,20 +150,34 @@ Page({
    * 确定支付
    */
   settleAccounts:function(){
-    var that = this;
-    var currentTab = that.data.currentTab;
-    console.log(currentTab)
-    if (currentTab == undefined){
-      app.hintBox('请选择支付方式','none')
-    } else if (currentTab == 1 || currentTab == 2){
-      console.log(1)
-      that.data.wzShow = true
-    }else{
-      app.hintBox('付款成功','success')
-    }
-    that.setData({
-      wzShow: that.data.wzShow
+    console.info("点击了")
+
+    wx.requestPayment({
+      appId:'wxc1531dc6935daa38',
+      timeStamp: '1543482074',
+      nonceStr: '0053e1d524eb4c3fafbace17f9608844',
+      package: 'prepay_id=wx29170114233862eed5ef9bfe4028463379',
+      signType: 'RSA',
+      paySign: 'uwTz6T3wJJB7X/TzrkOynAmOmv7SMmmgHVrcLQi2gbKtwrTDQjhe5TbKd/HVQ7jtpC9IT7tyRSLWwCq0uVuBE/lY8aDm7qGIJO EKaC0NhBOIxdBeyLn5BDoqRdZOQvD6jJGfqH6EsfFOCEN2ygFbI2creXtlYrntrU9q3b82iENL9MuuyvHctV8Y54dQr WAi0hrKTKOtp6cOkR/DNXjgXZbOb7WN8Yzb N9EQVd/vFa1Q28cnZneKj5V33T q1/fEmIR771bc9afivs7ltZQyicFxxlZq//TVKumVDv3owVCh BRkviiPYg/PMK279ozX6KA6JDWOrcvY7bCjMpw==',
+      success(res) { console.info(res)},
+      fail(res) { console.info(res)}
     })
+
+
+    // var that = this;
+    // var currentTab = that.data.currentTab;
+    // console.log(currentTab)
+    // if (currentTab == undefined){
+    //   app.hintBox('请选择支付方式','none')
+    // } else if (currentTab == 1 || currentTab == 2){
+    //   console.log(1)
+    //   that.data.wzShow = true
+    // }else{
+    //   app.hintBox('付款成功','success')
+    // }
+    // that.setData({
+    //   wzShow: that.data.wzShow
+    // })
   },
   /**
    * 关闭所有弹框
@@ -156,6 +190,10 @@ Page({
       memberShow:false
     })
   },
+
+  /**
+   * 支付相关
+   */
   payWay:function(e){
     var that = this;
     var type = e.currentTarget.dataset.type;

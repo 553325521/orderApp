@@ -42,7 +42,7 @@
   </view>
    <view class='fd-end-1'>
       <button class="fd-end-bt">空台</button>
-      <view class="weui-badge bg-a9 fd-end-lr">23</view>
+      <view class="weui-badge fd-tb-1 fd-end-lr">23</view>
   </view>
    <view class='fd-end-1'>
       <button class="fd-end-bt">已开台</button>

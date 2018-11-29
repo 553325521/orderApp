@@ -2,7 +2,7 @@
 @import "../template/chosenPosition.wxss";
 page{
   background-color: #fff;
-  padding-bottom: 92rpx
+  padding-bottom: 418rpx
 }
 .head-top{
   padding: 20rpx 0 0 456rpx
@@ -69,14 +69,13 @@ page{
   height: 30rpx
 }
 .remark textarea{
-  background-color: #ccc;
+  background-color: #eee;
   margin-top: 10rpx;
   height: 180rpx;
   line-height: 140%;
 }
 /*  */
-.pay-way{
-}
+
 .pay-way .title{
   line-height: 50rpx;
   padding-left: 28rpx;

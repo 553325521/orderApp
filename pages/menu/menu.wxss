@@ -86,7 +86,7 @@
   z-index: 50
 }
 .box-content{
-   bottom: 188rpx; left: 0;
+   bottom: 90rpx; left: 0;
    z-index: 60;
 }
 .box-content .head{
@@ -262,8 +262,9 @@ view.on{
   line-height:42rpx;
   border-radius:42rpx;
   font-size:26rpx;
-  border-color:red;
+  border-color:#EB8A86;
   border-width:1px;
   border-style:solid;
   text-align:center;
+  color:#EB8A86;
 }

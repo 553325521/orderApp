@@ -1,4 +1,6 @@
 <!--pages/indent/indentDateil.wxml-->
+<wxs module="math" src="../../utils/math.wxs"></wxs>
+
 <view wx:if="{{type == '0'}}" class='top-oper dp-flex'>
     <view class='cf tc font-30'>补单</view>
     <view class='cf tc font-30'>退单</view>
@@ -20,7 +22,7 @@
     <view class='item dp-flex font-28 c6 pr  viewBottomBorder'  data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
-      <view class='moeny c2821 tr'>￥{{item.ORDER_DETAILS_GMONEY/100}}</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
       <view wx:if="{{item.show}}" class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
     </view>
   </block>
@@ -28,7 +30,7 @@
     <view class='item dp-flex font-28 c6 pr' >
       <view class='name' style='padding-left:52rpx'>应付金额合计</view>
       <view class='part tr'>{{orderDetailMap.totalFS}}份菜品</view>
-      <view class='moeny c2821 tr'>￥{{orderDetailMap.totalMoney}}</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.totalMoney)}}</view>
     </view>
     <view class='item dp-flex font-28 c6 pr'>
       <view class='name'>优惠金额</view>
@@ -56,10 +58,10 @@
   <view class='total dp-flex c6 font-28 viewTopBorder' style='height:70rpx;padding-top:20rpx;'>
     <text>合计</text>
     <view class='deal'>{{orderDetailMap.totalFS}}份菜品</view>
-    <view class='total-prices c2821'>￥{{orderDetailMap.totalMoney}}</view>
+    <view class='total-prices c2821'>￥{{math.toFix(orderDetailMap.totalMoney/1.0)}}</view>
   </view>
   <view class='oper dp-flex font-38 cf tc'>
     <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>
-    <view class='confirm-btn flex-1 bg-EF9B'>确定</view>
+    <view class='confirm-btn flex-1 bg-EF9B' bindtap='navTo'>确定</view>
   </view>
 </view>

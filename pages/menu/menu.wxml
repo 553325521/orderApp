@@ -1,3 +1,5 @@
+<wxs module="math" src="../../utils/math.wxs"></wxs>
+
 <!-- 引用模板  -->
 <import scr="../template/chosenPosition.wxml"/>
 <!-- 菜单导航  -->
@@ -42,7 +44,7 @@
       <block wx:for = "{{ordersList}}" wx:key="{{index}}">
         <view class='item dp-flex' id="orders-item">
           <view class='name font-28 c3'>{{item.GOODS_NAME}}{{item.GOODS_RECIPE == undefined ? '' : '('+item.GOODS_RECIPE+')'}}</view>
-          <view class='price font-28 c2821'>￥{{item.GOODS_PRICE / 100}}.00/{{item.GOODS_DW}}</view>
+          <view class='price font-28 c2821'>￥{{math.toFix(item.GOODS_PRICE / 100.0)}}/{{item.GOODS_DW}}</view>
           <view class='quantity1 font-28 c3'>
             <image class='add'  data-type="-" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/minus-icon.png'></image>
             <text class='font-26 num' style='line-height: 40rpx'>{{item.qity}}</text>
@@ -83,7 +85,7 @@
       </view>
     </view>
     <view class='bottom btc dp-flex flex-jc-sb'>
-      <text class='c60 font-30'>共￥{{currentGood.LAST_PIRCE}}.00</text>
+      <text class='c60 font-30'>共￥{{currentGood.LAST_PIRCE}}</text>
       <view class='spec-btn font-32 cf tc' bindtap='addToCart2'>确定</view>
     </view>
   </view>
@@ -133,7 +135,7 @@
                 <view class='info pr'>
                   <view class='greens-name1 c3 font-28'>{{every.GOODS_NAME}}</view>
                   <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
-                  <view class='price1 font-28 c2821'>￥{{every.GOODS_PRICE / 100}}.00/{{every.GOODS_DW}}</view>
+                  <view class='price1 font-28 c2821'>￥{{math.toFix(every.GOODS_PRICE / 100)}}/{{every.GOODS_DW}}</view>
                   <view class='quantity1 pa dp-flex'>
                     <block wx:if="{{every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]'}}">
                       <image class='add' wx:if="{{every.qity>0}}" data-type="-" data-index="{{index}}" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/minus-icon.png'></image>

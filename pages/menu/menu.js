@@ -131,11 +131,16 @@ Component({
           }
           // 查询购物车
           that.getOrdersList();
-
+          //如果没有类别，就不set类别了
+          if (res.data.data.navList.length != 0){
+            that.setData({
+                currentTab: res.data.data.navList[0].GTYPE_PK,
+            })
+          }
           that.setData({
             navList: res.data.data.navList,
             greensList: res.data.data.greensList,
-            currentTab: res.data.data.navList[0].GTYPE_PK,
+            
             qityArr: qityArr,
             allQiry: that.data.allQiry
           })
@@ -263,7 +268,7 @@ Component({
             height: that.data.height,
             entryShow: true,
             slide: false,
-            allMoney: allMoney / 100 + '.00'
+            allMoney: (allMoney / 100.0).toFixed(2)
           })
         }
       },
@@ -312,7 +317,7 @@ Component({
           }
           that.setData({
             ordersList: that.data.ordersList,
-            allMoney: allMoney / 100 + '.00',
+            allMoney: (allMoney / 100.0).toFixed(2),
             loadingHidden: true
           })
         }
@@ -606,7 +611,7 @@ Component({
     var index = e.currentTarget.dataset.index;
     var data = that.data.greensList;
     var info = data[item].infos[index];
-    info.LAST_PIRCE = info.GOODS_PRICE / 100;
+    info.LAST_PIRCE = (info.GOODS_PRICE / 100.0).toFixed(2);
     that.data.goodsGuige.guige = JSON.parse(info.GOODS_SPECIFICATION);
     that.data.goodsGuige.zuofa = JSON.parse(info.GOODS_RECIPE);
     that.data.goodsGuige.kouwei = JSON.parse(info.GOODS_TASTE);
@@ -619,6 +624,7 @@ Component({
     })
   },
   selectGg: function(e) {
+    
     var that = this;
     var index = e.currentTarget.dataset.index;
     var _type = e.currentTarget.dataset.type;
@@ -652,18 +658,28 @@ Component({
         for (var _index in list.guige) {
           if (list.guige[_index].checked) {
             var price = list.guige[_index].price;
-            price = parseInt(price.substring(1, price.length));
-            _price += price;
+            var opera = price.substring(0, 1);//运算符
+            price = parseFloat(price.substring(1, price.length));
+            if(opera == "-"){
+              _price -= price
+            } else if (opera == "+"){
+              _price += price
+            }
+            
           }
         }
       }
-
       if (list.zuofa.length > 0) {
         for (var _index in list.zuofa) {
           if (list.zuofa[_index].checked) {
             var price = list.zuofa[_index].price;
-            price = parseInt(price.substring(1, price.length));
-            _price += price;
+            var opera = price.substring(0, 1);//运算符
+            price = parseFloat(price.substring(1, price.length));
+            if (opera == "-") {
+              _price -= price
+            } else if (opera == "+") {
+              _price += price
+            }
           }
         }
       }
@@ -672,8 +688,13 @@ Component({
         for (var _index in list.kouwei) {
           if (list.kouwei[_index].checked) {
             var price = list.kouwei[_index].price;
-            price = parseInt(price.substring(1, price.length));
-            _price += price;
+            var opera = price.substring(0, 1);//运算符
+            price = parseFloat(price.substring(1, price.length));
+            if (opera == "-") {
+              _price -= price
+            } else if (opera == "+") {
+              _price += price
+            }
           }
         }
       }
@@ -682,7 +703,7 @@ Component({
           title: '请选择规格、做法或口味~',
         })
       } else {
-        that.data.currentGood.LAST_PIRCE = that.data.currentGood.GOODS_PRICE / 100 + _price;
+        that.data.currentGood.LAST_PIRCE = (that.data.currentGood.GOODS_PRICE / 100.0 + _price).toFixed(2);
         that.setData({
           goodsGuige: that.data.goodsGuige,
           currentGood: that.data.currentGood,
@@ -803,6 +824,12 @@ Component({
       }
     })
   },
+
+  /**
+   * 加载订单里边已经买了的菜的数量
+   * 
+   * lps  2018年11月29日02:24:21
+   */
   loadCountOrderWei: function() {
     wx.request({
       url: app.globalData.basePath + 'json/Order_select_loadCountOrderWei.json',

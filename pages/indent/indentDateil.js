@@ -1,5 +1,7 @@
 // pages/indent/indentDateil.js
 var app = getApp()
+var totalMoney = 0;
+
 Page({
   data: {
     cardTeams: [],
@@ -129,7 +131,7 @@ dealOrderDetailData:function(data){
   orderDetailMap.set("ORDER_YMD",data[0].CREATE_TIME.substring(0,10));
   orderDetailMap.set("CREATE_TIME", data[0].CREATE_TIME.substring(11));
   orderDetailMap.set("ARRIVE_TIME", data[0].CREATE_TIME.substring(11));
-  var totalMoney = 0;
+  
   var totalFS = 0;
   for(var i = 0;i < data.length;i++){
     totalMoney = totalMoney + (data[i].ORDER_DETAILS_GMONEY * data[i].ORDER_DETAILS_FS/100);
@@ -161,12 +163,11 @@ dealOrderDetailData:function(data){
    * 加菜
    */
   addDish: function (){
+    console.info("点了")
     var that = this;
     wx.setStorageSync('ORDER_PK', that.data.ORDER_PK);
     wx.setStorageSync('ORDER_TYPE', that.data.type);
-    wx.switchTab({
-      url: '../menu/menu'
-    })
+    app.pageTurns('../index/index?page=../menu/menu')
   },
   //退菜
   tuicai: function (e) {
@@ -195,6 +196,6 @@ dealOrderDetailData:function(data){
     })
   },
   navTo:function(){
-    app.pageTurns(`../entryOrders/entryOrders`)
+    app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney +'&orderId=3')
   } 
 })

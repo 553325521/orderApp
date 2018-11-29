@@ -8,86 +8,96 @@
   <view class='pay-money'>
     <view class='reality-pay dp-flex'>
       <text class='font-28 c6'>实收金额</text>
-      <view class='money c2821 font-28'>￥<text class='font-34'>120.00</text> <text class='c6'>元</text> </view>
+      <view class='money c2821 font-28'>￥<text class='font-34'>{{trueMoney}}</text> <text class='c6'> 元</text> </view>
     </view>
     <view class='should-pay dp-flex'>
-      <text class='font-28 c6'>实收金额</text>
-      <view class='money c2821 font-26'>￥<text class='font-26'>128.00</text></view>
+      <text class='font-28 c6'>应收金额</text>
+      <view class='money c2821 font-26'>￥<text class='font-26'>{{shouldMoney}}</text></view>
     </view>
   </view>
 </view>
 <view class='pay-option'>
-  <view class='coupon option dp-flex flex-jc-sb'>
-    <text class='font-28 c6'>优惠金额</text>
-    <view class='font-28 c2821'>￥8.20</view>
-  </view>
-  <view class='coupon option dp-flex flex-jc-sb'>
-    <text class='font-28 c6'>优惠券</text>
-    <view class='font-28 dp-flex'>
-      <view class='usable font-20 cf'>
-        <view bindtap='couponList'>10张可用</view>
-      </view>
-      <view class='check pr'>
-        <checkbox-group  bindchange="checkboxChange" data-index="0">
-            <checkbox value="0" checked="true"/>
-        </checkbox-group>
-        <view class='check-img'>
-          <image wx:if = "{{operList[0]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
-          <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+  <block wx:if='{{discountsMoneyShow}}'>
+    <view class='coupon option dp-flex flex-jc-sb'>
+      <text class='font-28 c6'>优惠金额</text>
+      <view class='font-28 c2821'>￥8.20</view>
+    </view>
+  </block>
+  <block wx:if='{{discountCouponShow}}'>
+    <view class='coupon option dp-flex flex-jc-sb'>
+      <text class='font-28 c6'>优惠券</text>
+      <view class='font-28 dp-flex'>
+        <view class='usable font-20 cf'>
+          <view bindtap='couponList'>10张可用</view>
+        </view>
+        <view class='check pr'>
+          <checkbox-group  bindchange="checkboxChange" data-index="0">
+              <checkbox value="0" checked="true"/>
+          </checkbox-group>
+          <view class='check-img'>
+            <image wx:if = "{{operList[0]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+            <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+          </view>
         </view>
       </view>
     </view>
-  </view>
-  <view class='integral option dp-flex flex-jc-sb'>
-    <text class='font-28 c6'>积分抵现</text>
-    <view class='font-28 dp-flex'>
-      <view class='hint font-20 c9'>可用积分1531，可抵45.5元</view>
-      <view class='check pr'>
-        <checkbox-group  bindchange="checkboxChange" data-index="1">
-            <checkbox value="0" checked="true"/>
-        </checkbox-group>
-        <view class='check-img'>
-          <image wx:if = "{{operList[1]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
-          <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+  </block>
+  <block wx:if='{{jfdxShow}}'>
+    <view class='integral option dp-flex flex-jc-sb'>
+      <text class='font-28 c6'>积分抵现</text>
+      <view class='font-28 dp-flex'>
+        <view class='hint font-20 c9'>可用积分1531，可抵45.5元</view>
+        <view class='check pr'>
+          <checkbox-group  bindchange="checkboxChange" data-index="1">
+              <checkbox value="0" checked="true"/>
+          </checkbox-group>
+          <view class='check-img'>
+            <image wx:if = "{{operList[1]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+            <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+          </view>
         </view>
       </view>
     </view>
-  </view>
-  <view class='stored option dp-flex flex-jc-sb'>
-    <text class='font-28 c6'>储值支付</text>
-    <view class='font-28 dp-flex'>
-      <view class='hint font-20 c9'>可用储值120.00元，已用120.00元</view>
-      <view class='check pr'>
-        <checkbox-group  bindchange="checkboxChange" data-index="2">
-            <checkbox value="0" checked="true"/>
-        </checkbox-group>
-        <view class='check-img'>
-          <image wx:if = "{{operList[2]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
-          <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+  </block>
+  <block wx:if='{{czzfShow}}'>
+    <view class='stored option dp-flex flex-jc-sb'>
+      <text class='font-28 c6'>储值支付</text>
+      <view class='font-28 dp-flex'>
+        <view class='hint font-20 c9'>可用储值120.00元，已用120.00元</view>
+        <view class='check pr'>
+          <checkbox-group  bindchange="checkboxChange" data-index="2">
+              <checkbox value="0" checked="true"/>
+          </checkbox-group>
+          <view class='check-img'>
+            <image wx:if = "{{operList[2]==1}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+            <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
+          </view>
         </view>
       </view>
     </view>
-  </view>
+  </block>
   <view class='remark option'>
     <view class='font-28 c6'>添加备注</view>
     <textarea class='w100 font-28 c3'></textarea>
   </view>
 </view>
-<view class='pay-way'>
-  <view class='title c6 font-24'>选择支付方式</view>
-  <view class='way-list dp-flex flex-wrap'>
-    <block wx:for="{{payWayList}}" wx:key="{{index}}">
-      <view class="item dp-flex bc pr {{currentTab==index?'on':''}}" data-index='{{index}}' bindtap='selectPay'>
-        <image class='icon' src='{{item.img}}' style='width:{{item.w}}rpx;height:{{item.h}}rpx'></image>
-        <text class='c6 font-28'>{{item.text}}</text>
-        <image wx:if="{{currentTab==index}}" class='sele-on pa' src="../../images/icon/way-sele.png"></image>
-      </view>
-    </block>
+<view class='bottom-fixed'>
+  <view class='pay-way'>
+    <view class='title c6 font-24'>选择支付方式</view>
+    <view class='way-list dp-flex flex-wrap bg-fff'>
+      <block wx:for="{{payWayList}}" wx:key="{{index}}">
+        <view class="item dp-flex bc pr {{currentTab==index?'on':''}}" data-index='{{index}}' bindtap='selectPay'>
+          <image class='icon' src='{{item.img}}' style='width:{{item.w}}rpx;height:{{item.h}}rpx'></image>
+          <text class='c6 font-28'>{{item.text}}</text>
+          <image wx:if="{{currentTab==index}}" class='sele-on pa' src="../../images/icon/way-sele.png"></image>
+        </view>
+      </block>
+    </view>
   </view>
-</view>
-<view class='oper bottom-fixed bg-fff dp-flex font-38 cf tc'>
-  <view class='add-dish bg-EF9B'>抹零</view>
-  <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts'>立即结账</view>
+  <view class='oper bg-fff dp-flex font-38 cf tc'>
+    <view class='add-dish bg-EF9B'>抹零</view>
+    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts'>立即结账</view>
+  </view>
 </view>
 <!-- 微信和支付宝  结账  -->
 <view wx:if="{{wzShow}}"  class='wx-zfb full-fixed' style='width:{{W}};height:{{H}};z-index:999999;'>
