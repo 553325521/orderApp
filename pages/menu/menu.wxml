@@ -94,7 +94,7 @@
 <view class="selected font-28 tc cf {{allQiry>0?'on':''}}" bindtap="{{allQiry>0?'chosen':''}}">
   选好了
 </view>
-<!-- 选择餐位  -->
+<!-- 选择就餐餐位  -->
 <view wx:if="{{reserveShow}}" class='reserve footfixed' style='width:{{width}};heigth:{{heigth}}'>
   <view class='font-34 cf tc mt24'>请选择餐位号</view>
   <view class='reserve-list dp-flex flex-wrap'>
@@ -107,15 +107,13 @@
     <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>
   </view>
 </view>
-<!-- 选择人数  -->
+<!-- 选择就餐人数  -->
 <view wx:if="{{quorumShow}}" class='quorum footfixed' style='width:{{W}};heigth:{{H}}'>
   <view class='font-34 cf tc mt24'>请选就餐人数</view>
   <view class='quorum-list dp-flex flex-wrap'>
-    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
-    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
-    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
-    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
-    <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum'>1</view>
+  <block wx:for="{{currentTable.TABLES_NUM-0}}" wx:key="keys"> 
+      <view class='quorum-item font-34 cf tc' bindtap='reserveQuorum' data-index='{{index+1}}'>{{index+1}}</view>
+  </block> 
   </view>
   <view class='colse-btn' style='bottom:48rpx' bindtap='closePop'>
     <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>

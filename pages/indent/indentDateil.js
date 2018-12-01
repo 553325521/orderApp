@@ -1,7 +1,8 @@
 // pages/indent/indentDateil.js
 var app = getApp()
 var totalMoney = 0;
-var ORDER_PK;
+var ORDER_PK;//订单的id
+var orderType;//订单的类型
 
 Page({
   data: {
@@ -13,9 +14,9 @@ Page({
   onLoad: function (options) {
     var that = this;
     ORDER_PK = options.ORDER_PK
+    orderType = options.type
     that.setData({
-      type : options.type,
-      ORDER_PK: ORDER_PK
+      type: orderType
     })
   },
   onReady: function () {
@@ -168,7 +169,7 @@ dealOrderDetailData:function(data){
     console.info("点了")
     var that = this;
     wx.setStorageSync('ORDER_PK', ORDER_PK);
-    wx.setStorageSync('ORDER_TYPE', that.data.type);
+    wx.setStorageSync('ORDER_TYPE', orderType);
     app.pageTurns('../index/index?page=../menu/menu')
   },
   //退菜

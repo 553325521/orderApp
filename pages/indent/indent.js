@@ -2,6 +2,7 @@
 var app = getApp()
 var pageTitle = "订单";
 var currentTab = 0;
+var orderArray = {};//订单的数组
 
 var common = require('../../utils/common.js');
 Component({
@@ -26,7 +27,7 @@ Component({
     startIndex: [],
     endIndex: [],
     year: 2015,
-    orderArray: {},
+    orderArray: orderArray,
     orderCount: {}
   },
 /**
@@ -66,8 +67,10 @@ methods:{
     var myDate = new Date();
     var month = myDate.getMonth() + 1;
     var year = myDate.getFullYear();
-    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 2, 23, 0, 0]
-    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
+    console.info("日子")
+    console.info(myDate.getDate())
+    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 0, 0, 0]
+    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 23, 0, 59]
     if (date == '') {
       date = [];
       var yeas = common.getYears();
@@ -187,13 +190,11 @@ methods:{
           that.dealOrderDate(res.data.data);
           console.info("res");
           console.info(res.data.data);
-          that.data.orderArray = that.dealOrderDate(res.data.data);
-          console.info("array");
-          console.info(that.data.orderArray);
+          orderArray = that.dealOrderDate(res.data.data);
+          console.info(orderArray);
           that.setData({
-            orderArray: that.data.orderArray
+            orderArray: orderArray
           });
-          console.info(that.data.orderArray);
         }
       },
       fail: function (error) {

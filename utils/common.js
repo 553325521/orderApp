@@ -149,7 +149,7 @@ function getDays() {
  */
 function getHours() {
   var hours = [];
-  for (let i = 1; i <= 24; i++) {
+  for (let i = 0; i <= 23; i++) {
     i = i < 10 ? '0' + i : i + ''
     hours.push(i)
   }

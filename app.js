@@ -493,5 +493,51 @@ pushSession:function(){
     wx.showToast({
       title: message,
     })
+  },
+  /**
+   * 模态对话框
+   * title:提示的标题
+   * content：提示的内容
+   * showCancel：是否显示取消按钮，默认为显示
+   * cancelText：取消按钮的文字：最多四个字，默认为取消
+   * confirmText：确认按钮的文字，最多四个字吗，默认为确认
+   * confirmColor：确认按钮的颜色，默认为#EF9BA0
+   */
+  modal:function(message){
+    let showCancel = message.showCancel;
+    let cancelText = message.cancelText;
+    let confirmText = message.confirmText;
+    let confirmColor = message.confirmColor;
+
+    wx.showModal({
+      title: title,
+      content: content,
+      showCancel: showCancel == undefined ? true : false,
+      cancelText: cancelText == undefined ? '取消' : cancelText,
+      confirmText: confirmText == undefined ? '确定' : confirmText,
+      confirmColor: confirmColor == undefined ? "#EF9BA0" : confirmColor,
+      success(res){
+        if (message.success != undefined){
+          message.success(res)
+        }
+      },
+      fail(res){
+        if (message.fail != undefined) {
+          message.fail(res)
+        }
+      }, 
+      complete(res){
+        if (message.complete != undefined) {
+          message.complete(res)
+        }
+      }
+    })
+  },
+  setStorage:function(key,data){
+    wx.setStorage({
+      key: key,
+      data: data
+    })
   }
+
 })

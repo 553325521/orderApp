@@ -1,14 +1,17 @@
 // pages/entryOrders/entryOrders.js
+var app = getApp()
+var cardTeams = [//挂单的列表，每个属性是按日期分开的
+  {
+    list: [{ right: 0, show: false }, { right: 0, show: false }, { right: 0, show: false }]
+  },
+  {
+    list: [{ right: 0, show: false }, { right: 0, show: false }, { right: 0, show: false }]
+  }
+]
+
 Page({
   data: {
-    cardTeams: [
-      {
-        list: [{ right: 0, show: false }, { right: 0, show: false }, { right: 0, show: false }]
-      },
-      {
-        list: [{ right: 0, show: false }, { right: 0, show: false }, { right: 0, show: false }]
-      }
-    ],
+    cardTeams: cardTeams,
   },
   onLoad: function (options) {
   

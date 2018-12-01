@@ -9,10 +9,10 @@
   <view class='info flex-1 dp-flex'>
     <view class='reserve'>
       <view class='site font-28 c6 tc'>{{queryBean.TABLES_NAME}}</view>
-      <view class='entry-orders cf tc font-18' bindtap='settleAccounts' data-type="guadan">挂单</view>
+      <view class='entry-orders cf tc font-18' bindtap='settleAccounts' data-type='2'>挂单</view>
     </view>
     <view class='quorum c6 tc font-28'>
-      <view>5人</view>
+      <view>{{currentEatPersonNum}}人</view>
     </view>
     <view class='empty c6 tc font-28'>
       <view>清空</view>
@@ -40,7 +40,7 @@
   </view>
   <view class='oper dp-flex font-38 cf tc'>
     <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>
-    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts' data-type="confirm">确定</view>
+    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts' data-type='3'>确定</view>
   </view>
 </view>
 

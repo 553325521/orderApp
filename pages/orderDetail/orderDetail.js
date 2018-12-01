@@ -5,6 +5,7 @@ var allMoney=0.0;//订单总金额
 var queryBean;
 var ordersList;
 var currentTime;
+var currentEatPersonNum = 0;
 
 Page({
   data: {
@@ -19,13 +20,16 @@ Page({
     ordersList = JSON.parse(options.ordersList);
     currentTime = util.nowTime().split(' ');
     allMoney = parseFloat(options.allMoney)
+    currentEatPersonNum = options.currentEatPersonNum;
+
     that.setData({
       queryBean: queryBean,
       currentDay: currentTime[0],
       currentTimes: currentTime[1],
       allMoney: allMoney.toFixed(2),
       ordersList: ordersList,
-      loadingHidden: true
+      loadingHidden: true,
+      currentEatPersonNum: currentEatPersonNum
     })
   },
   onReady: function () {
@@ -112,15 +116,16 @@ Page({
         FK_SHOP: app.globalData.shopid,
         FK_USER: wx.getStorageSync('openid'),
         ORDER_POSITION: queryBean.TABLES_PK,
-        ORDER_STATE: '2',
-        ORDER_RS: '5'
+        ORDER_STATE: _type,
+        ORDER_RS: currentEatPersonNum,
+        ORDER_XDZD: 2 //设备终端：2为店员端
       },
       header: {
         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
       success: function (res) {
         if (res.data.code == '0000') {
-          if (_type == 'confirm') {
+          if (_type == 3) {
             // 验证是否开启堂点带出收银
             if (_open == 'on') {
               app.pageTurns(`../checkOut/checkOut?shouldMoney=`+allMoney)

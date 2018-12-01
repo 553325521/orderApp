@@ -3,7 +3,7 @@ var app = getApp();
 var pageTitle = "菜单";//当前页面title
 var greensList;//商品列表，一个map，里边两个key 一个是放的是列表，为每个商品的数量及该商品的属性的集合；另一个存放的是该类别下的数量
 var navList;//分类列表，里边有分类名称和PK
-var qityArr = [];//一个列表，存放的是每个分类下点的商品的数量的集合
+var qityArr = null;//一个列表，存放的是每个分类下点的商品的数量的集合
 var allQiry=0;//商品总数量
 var ordersList = [];//购物车列表吧？
 var allMoney = 0.0;//订单总金额
@@ -17,6 +17,11 @@ var height = '';//还不知道是什么高度
 var ordersFalg = true;//隐藏挂单按钮
 var currentGood;//当前商品
 var isSelected = false;//选择规格了吗
+var reserveShow = false;//显示选择餐位
+var quorumShow = false;//显示选择人数
+var selectPersonNum = true;//选择人数开关是否开启
+var currentTable = null;//当前桌位
+var currentEatPersonNum = 0;//当前餐桌就餐的人数
 
 Component({
   options: {
@@ -27,8 +32,8 @@ Component({
     navList:null,
     currentTab:0,
     currentTabInit: 0,
-    // greensList:null,
-    // qityArr:null,//一个数组，里边装的是每个分类点的菜的数量
+    greensList: greensList,
+    qityArr: qityArr,//一个数组，里边装的是每个分类点的菜的数量
     scrollTop:0,
     allQiry: allQiry,
     allMoney: allMoney.toFixed(2),
@@ -36,8 +41,8 @@ Component({
     height:height,
     entryShow:false,//购物车显示
     popShow:false,
-    reserveShow:false,
-    quorumShow:false,
+    reserveShow: reserveShow,
+    quorumShow: quorumShow,
     currentGood: currentGood,
     currentIndex: null,
     currentItem: null,
@@ -54,7 +59,18 @@ Component({
   lifetimes: {
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
-    attached: function () {
+    attached: function (options) {
+      console.info(options)
+      //看是否有参数传过来  当前桌位和当前桌位人数
+      if (options != undefined && options.currentTable != null && options.currentTable != undefined && options.currentTable != ''){
+        currentTable = JSON.parse(currentTable);
+      }
+      if (options != undefined && options.currentEatPersonNum != null && options.currentEatPersonNum != undefined && options.currentEatPersonNum != '') {
+        currentEatPersonNum = JSON.parse(currentEatPersonNum);
+      }
+
+      console.info("1111")
+      console.info(qityArr)
       app.updateTitle(pageTitle)
       this.pageInit();
     },
@@ -88,8 +104,25 @@ Component({
       that.loadGoodsInfo();
       // 查询餐桌
       that.loadTables();
+      //TODO 查询开关设置，比如选择人数是否开启
+      //。。。。。。。
+
+
+      // wx.getStorage({
+      //   key: 'currentTableMessage',
+      //   success(res) {
+      //     var currentTableMessage = res.data
+      //     currentTable = currentTableMessage.currentTable,
+      //     currentEatPersonNum = currentTableMessage.currentEatPersonNum
+      //     console.info(currentTable)
+      //     console.info(currentEatPersonNum)
+      //   }
+      // })
+
+
     },
   loadTables: function() {
+    
     let that = this;
     app.sendRequest({
       url: 'Tables_select_loadTableList',
@@ -128,6 +161,7 @@ Component({
       },
       success: function (res) {
         if (res.data.code == '0000') {
+          qityArr = [];
           allQiry = 0;
           greensList = res.data.data.greensList;
           navList = res.data.data.navList;
@@ -231,9 +265,10 @@ Component({
         if (res.data.code == '0000') {
           allMoney = 0;
           ordersList = res.data.data;
+          console.info(ordersList)
           if (res.data.data.length > 0) {
             for (var _index in ordersList) {
-              allMoney += parseFloat(ordersList[_index].GOODS_PRICE)/100.0;
+              allMoney += parseFloat(ordersList[_index].GOODS_PRICE) * ordersList[_index].GOODS_NUM/100.0;
             }
 
             for (let i = 0; i < greensList.length; i++) {
@@ -284,7 +319,7 @@ Component({
           ordersList = res.data.data;
           if (res.data.data.length > 0) {
             for (var _index in ordersList) {
-              allMoney += parseFloat(ordersList[_index].GOODS_PRICE)/100.0;
+              allMoney += parseFloat(ordersList[_index].GOODS_PRICE) * ordersList[_index].GOODS_NUM/100.0;
             }
 
             for (let i = 0; i < greensList.length; i++) {
@@ -327,14 +362,22 @@ Component({
    * 清空购物车
    */
   emptyCat:function(){
+    //清除当前桌位信息
+    // wx.removeStorage({
+    //   key: 'currentTableMessage',
+    //   success(res) {
+    //   }
+    // })
+    currentTable = null;//当前桌位
+    currentEatPersonNum = 0;//当前餐桌就餐的人数
+
     var that = this;
-    var greensList = greensList
     for (let i = 0; i < greensList.length; i++) {
       for (let j = 0; j < greensList[i].infos.length; j++) {
         greensList[i].infos[j].qity = 0
       }
     }
-    let qityArr = [];
+    qityArr = [];
     for (let i = 0; i < greensList.length; i++) {
       qityArr.push(0);
     }
@@ -387,6 +430,8 @@ Component({
    * 查看挂单修改数量
    */
   alterCount:function(e){
+    console.info("order_list")
+    console.info(ordersList)
     var that = this;
     var that = this;
     that.setData({
@@ -412,9 +457,7 @@ Component({
       ordersList[index].qity--;
       greensList[i].infos[j].qity--;
       allMoney = parseFloat(allMoney) - parseFloat(ordersList[index].GOODS_PRICE) / 100.0;
-      if (tpnum <= 0) {
-        ordersList.splice(index, 1)
-      }
+      
       _url = 'ShoppingCart_update_updateCartNum';
     }
     app.sendRequest({
@@ -428,6 +471,9 @@ Component({
       },
       success: function (res) {
         if (res.data.code == '0000') {
+          if (tpnum <= 0) {//如果该商品为0，那么清除它
+            ordersList.splice(index, 1)
+          }
           that.setData({
             greensList: greensList,
             qityArr: qityArr,
@@ -455,11 +501,13 @@ Component({
    */
   closePop:function(){
     var that = this;
+    quorumShow = false;
+    reserveShow = false;
     that.setData({
       popShow:false,
-      reserveShow: false,
+      reserveShow: reserveShow,
       entryShow: false,
-      quorumShow: false
+      quorumShow: quorumShow
     })
   },
   /**
@@ -467,75 +515,162 @@ Component({
    */
   chosen: function (){
     var that = this;
+    app.sendRequest({
+      url: 'ShoppingCart_load_loadCartDataByUser',
+      method: "post",
+      data: {
+        FK_SHOP: app.globalData.shopid,
+        FK_USER: wx.getStorageSync('openid'),
+        CART_STATE: 'zancun'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          allMoney = 0;
+          ordersList = res.data.data;
+          console.info("list")
+          console.info(ordersList)
+          if (res.data.data.length > 0) {
+            for (var _index in ordersList) {
+              allMoney += parseFloat(ordersList[_index].GOODS_PRICE) * ordersList[_index].GOODS_NUM / 100.0;
+            }
 
-    this.getOrdersList()
-
-    var orderId = wx.getStorageSync('ORDER_PK');
-    if (orderId != null && orderId != undefined && orderId != '') {
-      // 直接加入订单里面
-      that.setData({
-        loadingHidden: false
-      })
-      app.sendRequest({
-        url: 'Order_update_updateCartToOrderMore',
-        method: 'POST',
-        data: {
-          FK_ORDER: orderId,
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid')
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            let _type = wx.getStorageSync('ORDER_TYPE', '');
-            app.toast('操作成功')
-            that.setData({
-              loadingHidden: true
-            })
-            wx.setStorageSync('ORDER_PK', '');
-            wx.setStorageSync('ORDER_TYPE', '');
-            app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId + `&type=` + _type)
-          } else {
-            app.toast('操作失败')
+            for (let i = 0; i < greensList.length; i++) {
+              for (let j = 0; j < greensList[i].infos.length; j++) {
+                if (greensList[i].infos[j].qity > 0) {
+                  for (var _index in ordersList) {
+                    if (ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
+                      ordersList[_index].i = i;
+                      ordersList[_index].j = j;
+                    }
+                  }
+                }
+              }
+            }
           }
-        },
-        fail: function (error) {
           that.setData({
+            ordersList: ordersList,
+            allMoney: allMoney.toFixed(2),
             loadingHidden: true
           })
-          app.toast('操作失败')
         }
-      });
-    } else {
-      that.setData({
-        reserveShow: true,
-        entryShow: false
-      })
-    }
+
+        //改bug改的实在太乱了，没办法，只能这样下去了
+        var orderId = wx.getStorageSync('ORDER_PK');
+        if (orderId != null && orderId != undefined && orderId != '') {
+          // 直接加入订单里面
+          that.setData({
+            loadingHidden: false
+          })
+          app.sendRequest({
+            url: 'Order_update_updateCartToOrderMore',
+            method: 'POST',
+            data: {
+              FK_ORDER: orderId,
+              FK_SHOP: app.globalData.shopid,
+              FK_USER: wx.getStorageSync('openid')
+            },
+            success: function (res) {
+              if (res.data.code == '0000') {
+                let _type = wx.getStorageSync('ORDER_TYPE', '');
+                app.toast('操作成功')
+                that.setData({
+                  loadingHidden: true
+                })
+                wx.setStorageSync('ORDER_PK', '');
+                wx.setStorageSync('ORDER_TYPE', '');
+                app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId + `&type=` + _type)
+              } else {
+                app.toast('操作失败')
+              }
+            },
+            fail: function (error) {
+              that.setData({
+                loadingHidden: true
+              })
+              app.toast('操作失败')
+            }
+          });
+        } else {
+          if (currentTable == null) {
+            reserveShow = true;
+            that.setData({
+              reserveShow: reserveShow,
+              entryShow: false
+            })
+            return;
+          }
+
+          if (selectPersonNum && currentEatPersonNum == 0) {
+            quorumShow = true;
+            that.setData({
+              quorumShow: quorumShow,
+              entryShow: false
+            })
+            return;
+          }
+          app.pageTurns(`../orderDetail/orderDetail?queryBean=` + JSON.stringify(currentTable) + '&ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney + '&currentEatPersonNum=' + currentEatPersonNum)
+
+        }
+      },
+      fail: function (error) {
+        app.toast('操作失败')
+      }
+    })
+
+    
   },
   /**
    * 选择餐位
    */
   reserveConfirm:function(e){
+    currentTable = tableList[e.target.dataset.index]//当前桌位信息
+    currentEatPersonNum = currentTable.TABLES_NUM;//当前桌位就餐人数
+
+    // var currentTableMessage = {
+    //   currentTable: currentTable,
+    //   currentEatPersonNum: currentEatPersonNum
+    // }
+    // //把当前桌位信息存储在本地缓存里边
+    // app.setStorage('currentTableMessage', currentTableMessage)
+
+    console.info(currentTable)
     var that = this;
-    var index = e.currentTarget.dataset.index;
-    var queryBean = JSON.stringify(tableList[index]);
+    // var index = e.currentTarget.dataset.index;
+    // var queryBean = JSON.stringify(tableList[index]);
+    var queryBean = JSON.stringify(currentTable);
     var orders = JSON.stringify(ordersList);
+    if(selectPersonNum){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
+      quorumShow = true;
+    }
+    reserveShow = false;
+    console.info(currentTable.TABLES_NUM)
     that.setData({
-      reserveShow: false
-      //quorumShow: true
+      currentTable: currentTable,
+      reserveShow: reserveShow,
+      quorumShow: quorumShow
     })
-    app.pageTurns(`../orderDetail/orderDetail?queryBean=` + queryBean + '&ordersList=' + orders + '&allMoney=' + allMoney)
+    if (!quorumShow){
+      app.pageTurns(`../orderDetail/orderDetail?queryBean=` + queryBean + '&ordersList=' + orders + '&allMoney=' + allMoney + '&currentEatPersonNum=' + currentEatPersonNum)
+    }
   },
   /**
-   * 
+   * 选择就餐人数
    */
   reserveQuorum:function(e){
     var that = this;
-    
-    // that.setData({
-    //   quorumShow: false
-    // })
-    // app.pageTurns(`../orderDetail/orderDetail`)
+    currentEatPersonNum = e.target.dataset.index
+    // var currentTableMessage = {
+    //   currentTable: currentTable,
+    //   currentEatPersonNum: currentEatPersonNum
+    // }
+    // //把当前桌位信息存储在本地缓存里边
+    // app.setStorage('currentTableMessage', currentTableMessage)
+
+    quorumShow = false;
+    that.setData({
+      quorumShow: quorumShow
+    })
+    app.pageTurns(`../orderDetail/orderDetail?queryBean=` + JSON.stringify(currentTable) + '&ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney + '&currentEatPersonNum=' + currentEatPersonNum)
   },
   /**
    * 查看挂单
@@ -776,6 +911,7 @@ Component({
             loadingHidden: true
           })
           that.closePop();
+          isSelected = false;//清除规格选择状态
           app.toast('添加成功')
         } else {
           app.toast('操作失败')
@@ -793,6 +929,7 @@ Component({
    * lps  2018年11月29日02:24:21
    */
   loadCountOrderWei: function() {
+    var that = this;
     app.sendRequest({
       url: 'Order_select_loadCountOrderWei',
       method: 'POST',
@@ -803,9 +940,8 @@ Component({
       success: function (res) {
         if (res.data.code == '0000') {
           console.info(res.data);
-          if (res.data.ORDER_COUNT > 0) {
+          if (Number(res.data.data.ORDER_COUNT) > 0) {
             ordersFalg = false;
-            console.info("哈哈")
             that.setData({
               ordersFalg: ordersFalg
             });
