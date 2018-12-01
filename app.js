@@ -504,18 +504,13 @@ pushSession:function(){
    * confirmColor：确认按钮的颜色，默认为#EF9BA0
    */
   modal:function(message){
-    let showCancel = message.showCancel;
-    let cancelText = message.cancelText;
-    let confirmText = message.confirmText;
-    let confirmColor = message.confirmColor;
-
     wx.showModal({
-      title: title,
-      content: content,
-      showCancel: showCancel == undefined ? true : false,
-      cancelText: cancelText == undefined ? '取消' : cancelText,
-      confirmText: confirmText == undefined ? '确定' : confirmText,
-      confirmColor: confirmColor == undefined ? "#EF9BA0" : confirmColor,
+      title: message.title == undefined ? '提示' : message.title,
+      content: message.content,
+      showCancel: message.showCancel == undefined ? true : message.showCancel,
+      cancelText: message.cancelText == undefined ? '取消' : message.cancelText,
+      confirmText: message.confirmText == undefined ? '确定' : message.confirmText,
+      confirmColor: message.confirmColor == undefined ? "#EF9BA0" : message.confirmColor,
       success(res){
         if (message.success != undefined){
           message.success(res)
@@ -537,6 +532,17 @@ pushSession:function(){
     wx.setStorage({
       key: key,
       data: data
+    })
+  },
+
+  reLaunch: function(url){
+    wx.reLaunch({
+      url: url
+    })
+  },
+  redirectTo: function(url){
+    wx.redirectTo({
+      url: url
     })
   }
 

@@ -371,8 +371,10 @@ methods:{
   },
   navTo:function (e){
     var orderPK = e.currentTarget.dataset.id;
+    var payStatus = e.currentTarget.dataset.status;
     console.info(orderPK);
-    app.pageTurns(`../indent/indentDateil?type=${currentTab}&ORDER_PK=${orderPK}`)
+    console.info(payStatus)
+    app.pageTurns(`../indent/indentDateil?type=${payStatus}&ORDER_PK=${orderPK}`)
   }
 }
 })

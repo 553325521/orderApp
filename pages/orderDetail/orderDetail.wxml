@@ -8,13 +8,13 @@
   </view>
   <view class='info flex-1 dp-flex'>
     <view class='reserve'>
-      <view class='site font-28 c6 tc'>{{queryBean.TABLES_NAME}}</view>
+      <view class='site font-28 c6 tc' bindtap='clickTables'>{{currentTable.TABLES_NAME}}</view>
       <view class='entry-orders cf tc font-18' bindtap='settleAccounts' data-type='2'>挂单</view>
     </view>
-    <view class='quorum c6 tc font-28'>
+    <view class='quorum c6 tc font-28' bindtap='clickPersonNum'>
       <view>{{currentEatPersonNum}}人</view>
     </view>
-    <view class='empty c6 tc font-28'>
+    <view class='empty c6 tc font-28' bindtap='clickClear'>
       <view>清空</view>
     </view>
   </view>

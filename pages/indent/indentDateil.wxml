@@ -6,6 +6,12 @@
     <view class='cf tc font-30'>退单</view>
     <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
 </view>
+<view wx:if="{{orderType == '1'}}" class='top-oper dp-flex'>
+    <view class='cf tc font-30'>补单</view>
+    <view class='cf tc font-30'>开台</view>
+    <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
+</view>
+
 <view class='order-info dp-flex'>
   <view class='date c6 tc font-28 viewTopBorder viewBottomBorder'>
     <view class=''>{{orderDetailMap.ORDER_POSITION}}<text class='font-18'>({{orderDetailMap.ORDER_RS}}人)</text> </view>
@@ -32,25 +38,25 @@
       <view class='part tr'>{{orderDetailMap.totalFS}}份菜品</view>
       <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.totalMoney)}}</view>
     </view>
-    <view class='item dp-flex font-28 c6 pr'>
+    <view class='item dp-flex font-28 c6 pr' wx:if="{{math.toFix(orderDetailMap.data[0].ORDER_YHMONEY) > 0}}">
       <view class='name'>优惠金额</view>
       <view class='part tr'> </view>
-      <view class='moeny c2821 tr'>￥13.00</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.data[0].ORDER_YHMONEY)}}</view>
     </view>
-    <view class='item dp-flex font-28 c6 pr'>
+    <view class='item dp-flex font-28 c6 pr' wx:if="{{math.toFix(orderDetailMap.data[0].ORDER_JFDXMONEY) > 0}}">
       <view class='name'>积分抵现</view>
       <view class='part tr'></view>
-      <view class='moeny c2821 tr'>￥5.00</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.data[0].ORDER_JFDXMONEY)}}</view>
     </view>
-    <view class='item dp-flex font-28 c6 pr'>
+    <view class='item dp-flex font-28 c6 pr' wx:if="{{math.toFix(orderDetailMap.data[0].ORDER_MLMONEY) > 0}}">
       <view class='name'>抹零金额</view>
       <view class='part tr'></view>
-      <view class='moeny c2821 tr'>￥0.15</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.data[0].ORDER_MLMONEY)}}</view>
     </view>
     <view class='item dp-flex font-28 c6 pr'>
-      <view class='name' style='padding-left:52rpx'>实付金额(支付宝)</view>
+      <view class='name' style='padding-left:52rpx'>实付金额({{orderDetailMap.data[0].ORDER_PAY_WAY == '0'?'微信':orderDetailMap.data[0].ORDER_PAY_WAY == '1'?'支付宝':orderDetailMap.data[0].ORDER_PAY_WAY == '2'?'POS支付':orderDetailMap.data[0].ORDER_PAY_WAY == '3'?'现金':'其他'}})</view>
       <view class='part tr'></view>
-      <view class='moeny c2821 tr'>￥128.00</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.data[0].ORDER_SHOPMONEY)}}</view>
     </view>
   </block>   
 </scroll-view>

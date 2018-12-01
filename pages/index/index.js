@@ -21,8 +21,12 @@ Page({
   onLoad: function (options) {
     if (options != undefined && options.page != undefined) {
       currentPage = options.page;
+      if (currentPage == '../menu/menu') {
+        this.menu = this.selectComponent("#menu");
+        this.menu.setOptions(options);
+      }
       this.setData({
-        currentPage: currentPage
+        currentPage
       })
     }
   },
@@ -80,6 +84,11 @@ Page({
    * 用户点击下方的tabBar以后
    */
   switchTab:function(e){
+    if (e.currentTarget.dataset.currentPage == '../cashier/cashier'){
+      app.pageTurns('../cashier/cashier')
+      return;
+    }
+   
     currentPage = e.currentTarget.dataset.currentPage;
     this.setData({
       currentPage

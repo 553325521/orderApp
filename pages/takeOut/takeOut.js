@@ -173,7 +173,7 @@ Component({
      * 订单详情
      */
     navTo:function(){
-      app.pageTurns(`takeOutDateil?type=${this.data.currentTab}`)
+      app.pageTurns(`../takeOut/takeOutDateil?type=${this.data.currentTab}`)
     }
   }
 })

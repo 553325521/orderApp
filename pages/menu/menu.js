@@ -46,6 +46,7 @@ Component({
     currentGood: currentGood,
     currentIndex: null,
     currentItem: null,
+    currentTable: currentTable,
     ordersFalg: ordersFalg,//隐藏购买了的订单信息
     goodsGuige: goodsGuige,
     // isSelected: isSelected,
@@ -59,18 +60,7 @@ Component({
   lifetimes: {
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
-    attached: function (options) {
-      console.info(options)
-      //看是否有参数传过来  当前桌位和当前桌位人数
-      if (options != undefined && options.currentTable != null && options.currentTable != undefined && options.currentTable != ''){
-        currentTable = JSON.parse(currentTable);
-      }
-      if (options != undefined && options.currentEatPersonNum != null && options.currentEatPersonNum != undefined && options.currentEatPersonNum != '') {
-        currentEatPersonNum = JSON.parse(currentEatPersonNum);
-      }
-
-      console.info("1111")
-      console.info(qityArr)
+    attached: function () {
       app.updateTitle(pageTitle)
       this.pageInit();
     },
@@ -83,7 +73,11 @@ Component({
    */
   pageLifetimes: {
     // 组件所在页面的生命周期函数
-    show: function () {console.log("页面show") },
+    show: function () {
+      // app.updateTitle(pageTitle)
+      this.pageInit();
+      console.log("页面show") 
+      },
     hide: function () { },
     resize: function () { },
   },
@@ -106,18 +100,30 @@ Component({
       that.loadTables();
       //TODO 查询开关设置，比如选择人数是否开启
       //。。。。。。。
-
-
-      // wx.getStorage({
-      //   key: 'currentTableMessage',
-      //   success(res) {
-      //     var currentTableMessage = res.data
-      //     currentTable = currentTableMessage.currentTable,
-      //     currentEatPersonNum = currentTableMessage.currentEatPersonNum
-      //     console.info(currentTable)
-      //     console.info(currentEatPersonNum)
-      //   }
-      // })
+console.info("7777777")
+      wx.getStorage({
+        key: 'currentTableMessage',
+        success(res) {
+          var currentTableMessage = res.data
+          currentTable = currentTableMessage.currentTable,
+          currentEatPersonNum = currentTableMessage.currentEatPersonNum
+          console.info("currentTableMessage")
+          console.info(currentTableMessage)
+         
+          that.setData({
+            currentTable
+          })
+        },
+        fail(error){
+          currentTable = null;
+          currentEatPersonNum = 0;
+          var currentTableMessage = {
+            currentTable,
+            currentEatPersonNum
+          }
+          app.setStorage('currentTableMessage', currentTableMessage)
+        }
+      })
 
 
     },
@@ -363,11 +369,11 @@ Component({
    */
   emptyCat:function(){
     //清除当前桌位信息
-    // wx.removeStorage({
-    //   key: 'currentTableMessage',
-    //   success(res) {
-    //   }
-    // })
+    wx.removeStorage({
+      key: 'currentTableMessage',
+      success(res) {
+      }
+    })
     currentTable = null;//当前桌位
     currentEatPersonNum = 0;//当前餐桌就餐的人数
 
@@ -576,6 +582,12 @@ Component({
                 that.setData({
                   loadingHidden: true
                 })
+                //清除当前桌位信息
+                wx.removeStorage({
+                  key: 'currentTableMessage',
+                  success(res) {
+                  }
+                })
                 wx.setStorageSync('ORDER_PK', '');
                 wx.setStorageSync('ORDER_TYPE', '');
                 app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId + `&type=` + _type)
@@ -608,7 +620,7 @@ Component({
             })
             return;
           }
-          app.pageTurns(`../orderDetail/orderDetail?queryBean=` + JSON.stringify(currentTable) + '&ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney + '&currentEatPersonNum=' + currentEatPersonNum)
+          app.pageTurns('../orderDetail/orderDetail?ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney)
 
         }
       },
@@ -623,25 +635,31 @@ Component({
    * 选择餐位
    */
   reserveConfirm:function(e){
-    currentTable = tableList[e.target.dataset.index]//当前桌位信息
-    currentEatPersonNum = currentTable.TABLES_NUM;//当前桌位就餐人数
-
-    // var currentTableMessage = {
-    //   currentTable: currentTable,
-    //   currentEatPersonNum: currentEatPersonNum
-    // }
-    // //把当前桌位信息存储在本地缓存里边
-    // app.setStorage('currentTableMessage', currentTableMessage)
-
-    console.info(currentTable)
+   
     var that = this;
     // var index = e.currentTarget.dataset.index;
     // var queryBean = JSON.stringify(tableList[index]);
     var queryBean = JSON.stringify(currentTable);
     var orders = JSON.stringify(ordersList);
-    if(selectPersonNum){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
+    if (selectPersonNum && currentEatPersonNum == 0){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
       quorumShow = true;
     }
+
+    currentTable = tableList[e.target.dataset.index]//当前桌位信息
+//如果当前餐位人数等于0或者大于该餐桌容纳的数量，自动赋值
+    if (currentEatPersonNum == 0 || currentEatPersonNum > currentTable.TABLES_NUM) {
+      currentEatPersonNum = currentTable.TABLES_NUM;//当前桌位就餐人数
+    }
+    var currentTableMessage = {
+      currentTable: currentTable,
+      currentEatPersonNum: currentEatPersonNum
+    }
+    //把当前桌位信息存储在本地缓存里边
+    app.setStorage('currentTableMessage', currentTableMessage)
+
+    console.info(currentTable)
+
+
     reserveShow = false;
     console.info(currentTable.TABLES_NUM)
     that.setData({
@@ -650,7 +668,7 @@ Component({
       quorumShow: quorumShow
     })
     if (!quorumShow){
-      app.pageTurns(`../orderDetail/orderDetail?queryBean=` + queryBean + '&ordersList=' + orders + '&allMoney=' + allMoney + '&currentEatPersonNum=' + currentEatPersonNum)
+      app.pageTurns('../orderDetail/orderDetail?ordersList=' + orders + '&allMoney=' + allMoney)
     }
   },
   /**
@@ -659,18 +677,18 @@ Component({
   reserveQuorum:function(e){
     var that = this;
     currentEatPersonNum = e.target.dataset.index
-    // var currentTableMessage = {
-    //   currentTable: currentTable,
-    //   currentEatPersonNum: currentEatPersonNum
-    // }
-    // //把当前桌位信息存储在本地缓存里边
-    // app.setStorage('currentTableMessage', currentTableMessage)
+    var currentTableMessage = {
+      currentTable,
+      currentEatPersonNum
+    }
+    //把当前桌位信息存储在本地缓存里边
+    app.setStorage('currentTableMessage', currentTableMessage)
 
     quorumShow = false;
     that.setData({
-      quorumShow: quorumShow
+      quorumShow
     })
-    app.pageTurns(`../orderDetail/orderDetail?queryBean=` + JSON.stringify(currentTable) + '&ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney + '&currentEatPersonNum=' + currentEatPersonNum)
+    app.pageTurns('../orderDetail/orderDetail?ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney)
   },
   /**
    * 查看挂单
@@ -952,8 +970,25 @@ Component({
         app.toast('操作失败')
       }
     });
-  }
+  },
+  setOptions:function(options){
+    if (options != undefined) {
+      if (options.reserveShow != undefined && options.reserveShow) {
+        reserveShow = true;
+        quorumShow = false;
+      } else if (options.quorumShow != undefined && options.quorumShow) {
+        quorumShow = true;
+      } else if (options.clearCart != undefined && options.clearCart){
+        this.emptyCat();
+        app.toast('购物车已清空')
+      }
+    }
 
+    this.setData({
+      reserveShow,
+      quorumShow
+    })
+  }
  
   }
 })

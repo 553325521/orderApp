@@ -2,7 +2,7 @@
 var app = getApp()
 var pageTitle = "收银";
 
-Component({
+Page({
   options: {
     addGlobalClass: true,
   },
@@ -13,32 +13,14 @@ Component({
     newStr:''
   },
 
-  /**
-     * 组件周期函数
-     */
-  lifetimes: {
-    // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
-    //组件被加载
-    attached: function () {
-      app.updateTitle(pageTitle)
-    },
-    moved: function () { console.log("组件被moved") },
-    //组件被移除
-    detached: function () { console.log("detached") },
-  },
-  /**
-   * page的生命周期
-   */
-  pageLifetimes: {
+
+
     // 组件所在页面的生命周期函数
-    show: function () { console.log("页面show") },
-    hide: function () { },
-    resize: function () { },
-  },
+  onLoad: function () { app.updateTitle(pageTitle); console.log("页面show") },
+  onReady: function () { },
+  onShow: function () { },
 
-
-  methods:{
-    checkboxChange:function(e){
+  checkboxChange:function(e){
       var that = this;
       console.log(e.detail.value.length);
       var isDiscounts = e.detail.value.length > 0 ? true : false;
@@ -140,5 +122,5 @@ Component({
         }
       })
     }
-  }
+  
 })

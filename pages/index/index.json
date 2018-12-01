@@ -4,7 +4,6 @@
     "indent":"../indent/indent",
     "statement":"../statement/statement",
     "takeOut":"../takeOut/takeOut",
-    "cashier":"../cashier/cashier",
     "menu":"../menu/menu"
   }
 }

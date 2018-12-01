@@ -16,7 +16,7 @@ Page({
     ORDER_PK = options.ORDER_PK
     orderType = options.type
     that.setData({
-      type: orderType
+      orderType: orderType
     })
   },
   onReady: function () {
@@ -98,6 +98,8 @@ loadOrderDetail:function(){
           res.data.data[_index].show = false;
         }
         that.data.orderDetailMap = that.dealOrderDetailData(res.data.data);
+        console.info("easfdaeseew")
+        console.info(that.data.orderDetailMap)
         that.setData({
           orderDetailMap: that.data.orderDetailMap
         });
@@ -170,7 +172,7 @@ dealOrderDetailData:function(data){
     var that = this;
     wx.setStorageSync('ORDER_PK', ORDER_PK);
     wx.setStorageSync('ORDER_TYPE', orderType);
-    app.pageTurns('../index/index?page=../menu/menu')
+    app.reLaunch('../index/index?page=../menu/menu')
   },
   //退菜
   tuicai: function (e) {
