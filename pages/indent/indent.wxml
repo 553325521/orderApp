@@ -41,7 +41,7 @@
     </view>
     <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
       <view class='item dp-flex font-30 c3 pr' style='border-bottom:1rpx solid rgba(0, 0, 0, 0.1);' bindtap='navTo' data-id='{{item.ORDER_PK}}'>
-        <block wx:if="{{item.ORDER_XDZD == '1'}}"><view class='label pa'>*</view></block>
+        <block wx:if="{{item.ORDER_DIVISION == '2'}}"><view class='label pa'>*</view></block>
         <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>
         <view class='seat' style="width:{{itemName.seatWidth}}">{{item.ORDER_POSITION}}</view>
         <view class='part' style="width:{{itemName.partWidth}}">{{item.TOTAL_FS}}份</view>

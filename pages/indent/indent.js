@@ -70,7 +70,7 @@ methods:{
     console.info("日子")
     console.info(myDate.getDate())
     that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 0, 0, 0]
-    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 23, 0, 59]
+    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
     if (date == '') {
       date = [];
       var yeas = common.getYears();
@@ -104,6 +104,8 @@ methods:{
       startIndex: that.data.startIndex,
       endIndex: that.data.endIndex
     });
+    console.info("日期"); console.info(date);
+    console.info(that.data.startIndex); console.info(that.data.endIndex);
     that.loadOrderNumber();
     that.loadOrderData();
   },
@@ -112,12 +114,6 @@ methods:{
     let that = this;
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
     var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
-    if (that.data.date[5][that.data.startIndex[5]] == 24) {
-      startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.startIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.startIndex[7]];
-    }
-    if (that.data.date[5][that.data.endIndex[5]] == 24) {
-      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.endIndex[7]];
-    }
     var payState = currentTab;
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderNumber.json',
@@ -166,10 +162,10 @@ methods:{
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
     var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
     if (that.data.date[5][that.data.startIndex[5]] == 24) {
-      startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.startIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.startIndex[7]];
+      startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.startIndex[4]])) + " 00:" + that.data.date[7][that.data.startIndex[7]];
     }
     if (that.data.date[5][that.data.endIndex[5]] == 24) {
-      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]]) + 1) + " 00:" + that.data.date[7][that.data.endIndex[7]];
+      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]])) + " 00:" + that.data.date[7][that.data.endIndex[7]];
     }
     var payState = currentTab;
     wx.request({
@@ -239,7 +235,7 @@ methods:{
           if (currentTab == 0){
             orderMap.set("timeWidth", "180rpx");
             orderMap.set("seatWidth", "180rpx");
-            orderMap.set("partWidth", "180rpx");
+            orderMap.set("partWidth", "160rpx");
             orderMap.set("moneyWidth", "auto");
           }else{
             orderMap.set("timeWidth", "140rpx");
