@@ -19,6 +19,7 @@ App({
       // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
       options.query.appid = 'wx3326999f88e7077a';
     }
+    //this.globalData.shopid = 'c3a1f69158e04e0b8d072e5bc1f47b31';
     this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
     this.globalData.appid = options.query.appid;
     that.wxLogin();

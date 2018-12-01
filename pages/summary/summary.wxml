@@ -1,13 +1,13 @@
 <!--pages/summary/summary.wxml-->
 <view class='type-parameter dp-flex font-28 c6 bg-fff'>
-  <view class='flex-1 dp-flex'>
+  <!-- <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
       <view class="picker">
         {{shopArr[shopIndex]}}
       </view>
     </picker>
     <image src='../../images/icon/down-icon.png'></image>
-  </view>
+  </view> -->
   <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
       <view class="picker">

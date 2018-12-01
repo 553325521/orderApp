@@ -31,3 +31,6 @@ page{
 .head{
   padding: 50rpx 26rpx 20rpx 26rpx;
 }
+.indent-list{
+  background: #fff;
+}

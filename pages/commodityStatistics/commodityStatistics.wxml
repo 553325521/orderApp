@@ -1,15 +1,16 @@
 <!--pages/commodityStatistics/commodityStatistics.wxml-->
+<wxs module="math" src="../../utils/math.wxs"></wxs>
 <view class='type-parameter dp-flex font-28 c6 bg-fff'>
-  <view class='flex-1 dp-flex'>
+  <!-- <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
       <view class="picker">
         {{shopArr[shopIndex]}}
       </view>
     </picker>
     <image src='../../images/icon/down-icon.png'></image>
-  </view>
+  </view> -->
   <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindShopChange">
+    <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
       <view class="picker">
         {{dateArr[dateIndex]}}
       </view>
@@ -17,7 +18,7 @@
     <image src='../../images/icon/down-icon.png'></image>
   </view>
   <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{operatorIndex}}" range="{{operatorArr}}" bindchange="bindShopChange">
+    <picker class='w100 tc' value="{{operatorIndex}}" range="{{operatorArr}}" bindchange="bindOperatorChange">
       <view class="picker">
         {{operatorArr[operatorIndex]}}
       </view>
@@ -31,13 +32,16 @@
     <view>商品数量</view>
     <view>商品金额</view>
   </view>
-  <scroll-view scroll-y class='list'>
+  <scroll-view scroll-y class='list' style='display:{{isExistData?"block":"none"}}'>
     <block wx:for = "{{productList}}" wx:key="{{index}}">
       <view class='item dp-flex font-28 c6 pr' data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
-        <view class='name'>青椒肉丝</view>
-        <view class='part tr'>5份</view>
-        <view class='moeny c2821 tr'>￥10.00</view>
+        <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
+        <view class='part tr'>{{item.TOTAL_FS}}份</view>
+        <view class='moeny c2821 tr'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100)}}</view>
       </view>
     </block>
   </scroll-view>
+   <view class="weui-loadmore weui-loadmore_line"  style='display:{{isExistData?"none":"block"}}'>
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+    </view>
 </view>
