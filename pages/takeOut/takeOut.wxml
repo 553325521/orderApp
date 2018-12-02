@@ -1,4 +1,5 @@
 <!--pages/takeOut/takeOut.wxml-->
+<wxs module="math" src="../../utils/math.wxs"></wxs>
 <view class='takeOut-page'>
 <view class='header bg-fff w100'>
   <view class='swiper-tab dp-flex'>
@@ -37,94 +38,20 @@
     </view>
   </view>
 </view>
-<view class='indent-list' wx:if="{{currentTab!=1}}">
-  <view class='indent-item'>
+<view class='indent-list' wx:if="{{currentTab!=5}}">
+  <view class='indent-item' wx:for="{{wmOrderData}}" wx:key="keys"  wx:for-item="itemName">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
+      <text>{{itemName.keyName}}</text>
+      <text>总计:{{math.toFix(itemName.totalMoney/100)}}元</text>
     </view>
-    <view class='item-list'>
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-        <text>*</text> 
-      </view>
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-        <text>*</text> 
-      </view>
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-        <text>*</text> 
-      </view>
-    </view>
-  </view>
-  <view class='indent-item'>
-    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
-    </view>
-    <view class='item-list'>
-      <view class='item dp-flex font-30 c3 pr'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-      </view>
-    </view>
-  </view>
-  <view class='indent-item'>
-    <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
-    </view>
-    <view class='item-list'>
-      <view class='item dp-flex font-30 c3 pr'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
-      </view>
-      <view class='item dp-flex font-30 c3'>
-        <view class='platform'>智慧云</view>
-        <view class='time'>17:23</view>
-        <view class='money'>128.00元</view>
-        <view class='horseman'>王家军</view>
-        <view class='number'>07775</view>
+    <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
+      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'  data-id='{{item.ORDER_PK}}'>
+        <view class='platform'>{{item.SOURCENAME}}</view>
+        <view class='time'>{{item.SF}}</view>
+        <view class='money'>{{math.toFix(item.ORDER_SHOPMONEY/100)}}元</view>
+        <view class='horseman'>{{item.WM_ORDER_USERNAME}}</view>
+        <view class='number'>{{item.WM_USERPHONE}}</view>
+        <!-- <text>*</text>  -->
       </view>
     </view>
   </view>
