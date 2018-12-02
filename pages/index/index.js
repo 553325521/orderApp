@@ -21,13 +21,14 @@ Page({
   onLoad: function (options) {
     if (options != undefined && options.page != undefined) {
       currentPage = options.page;
+      this.setData({
+        currentPage
+      })
       if (currentPage == '../menu/menu') {
         this.menu = this.selectComponent("#menu");
         this.menu.setOptions(options);
       }
-      this.setData({
-        currentPage
-      })
+    
     }
   },
 

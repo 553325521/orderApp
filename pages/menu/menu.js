@@ -451,7 +451,7 @@ console.info("7777777")
     var tpnum = 0;
     if (type == "+") {
       qityArr[i]++;
-      tpnum = greensList[i].infos[j].qity++;
+      tpnum = ++greensList[i].infos[j].qity;
       allQiry++;
       ordersList[index].qity++;
       allMoney = parseFloat(allMoney) + parseFloat(ordersList[index].GOODS_PRICE) / 100.0;

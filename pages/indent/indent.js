@@ -69,8 +69,15 @@ methods:{
     var year = myDate.getFullYear();
     console.info("日子")
     console.info(myDate.getDate())
-    that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 0, 0, 0]
-    that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 22, 0, 59]
+    console.info("当前时间");
+    if (wx.getStorageSync("order_current_startIndex") == "" && wx.getStorageSync("order_current_endIndex") == "")
+    {
+      that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 0, 0, 0]
+      that.data.endIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 23, 0, 59]
+    }else{
+      that.data.startIndex = wx.getStorageSync("order_current_startIndex");
+      that.data.endIndex = wx.getStorageSync("order_current_endIndex");
+    }
     if (date == '') {
       date = [];
       var yeas = common.getYears();
@@ -329,6 +336,8 @@ methods:{
     this.setData({
       startIndex: e.detail.value
     });
+    wx.setStorageSync("order_current_startIndex",that.data.startIndex);
+    wx.setStorageSync("order_current_endIndex", that.data.endIndex);
     that.loadOrderData();
     that.loadOrderNumber();
   },
@@ -337,6 +346,7 @@ methods:{
     this.setData({
       endIndex: e.detail.value
     });
+    wx.setStorageSync("order_current_endIndex", that.data.endIndex);
     that.loadOrderData();
     that.loadOrderNumber();
   },
