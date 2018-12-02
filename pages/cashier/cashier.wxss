@@ -1,4 +1,7 @@
 /* pages/cashier/cashier.wxss */
+page{
+  background-color: #fff;
+}
 .cashier-page{
   background-color: #fff;
 }

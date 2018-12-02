@@ -3,13 +3,15 @@ var app = getApp()
 var totalMoney = 0;
 var ORDER_PK;//订单的id
 var orderType;//订单的类型
+var smallButton = true;//显示按钮吗还,需要从后台查询
 
 Page({
   data: {
     cardTeams: [],
     startY:0,
     startRight:0,
-    orderDetailMap:{}
+    orderDetailMap:{},
+    smallButton
   },
   onLoad: function (options) {
     var that = this;
@@ -18,12 +20,13 @@ Page({
     that.setData({
       orderType: orderType
     })
+    that.loadOrderDetail();
+    //获取一些设置的参数，比如多久就不能显示开台补单退单开台了
   },
   onReady: function () {
   },
   onShow: function () {
-    var that = this;
-    that.loadOrderDetail();
+    
   },
   drawStart: function (e) {
     let that = this;
@@ -129,6 +132,8 @@ mapToJson: function (map) {
 dealOrderDetailData:function(data){
   let that = this;
   var orderDetailMap = new Map();
+  console.info("订单")
+  console.info(data)
   orderDetailMap.set("ORDER_POSITION",data[0].ORDER_POSITION);
   orderDetailMap.set("ORDER_RS",data[0].ORDER_RS);
   orderDetailMap.set("ORDER_CODE", data[0].ORDER_CODE);
@@ -168,10 +173,31 @@ dealOrderDetailData:function(data){
    * 加菜
    */
   addDish: function (){
-    console.info("点了")
+    app.clearCart()
     var that = this;
     wx.setStorageSync('ORDER_PK', ORDER_PK);
     wx.setStorageSync('ORDER_TYPE', orderType);
+
+
+    // app.sendRequest({
+    //   url: 'Order_load_loadOrderDetailTableByOrderPK',
+    //   data:{
+    //     ORDER_PK: ORDER_PK,
+    //     openid: wx.getStorageSync('openid')
+    //   },
+    //   success:function(res){
+    //     console.info(res)
+    //     var currentTableMessage = {
+    //       currentTable: res.data.data,
+    //       currentEatPersonNum: res.data.data
+    //     }
+    //     app.setStorage('currentTableMessage', currentTableMessage)
+
+
+    //     app.reLaunch('../index/index?page=../menu/menu')
+    //   }
+    // })
+
     app.reLaunch('../index/index?page=../menu/menu')
   },
   //退菜
@@ -202,5 +228,61 @@ dealOrderDetailData:function(data){
   },
   navTo:function(){
     app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney + '&ORDER_PK='+ORDER_PK)
-  } 
+  },
+  /**
+   * 点击了右上角小按钮
+   */
+  clickSmallButton:function(e){
+    let opera = e.currentTarget.dataset.opera
+    let text = '';
+    if (opera == '1'){
+      text = '补单'
+    } else if (opera == '2'){
+      text = '退单'
+    } else if (opera == '3'){
+      text = '开台'
+    } else if (opera == '4'){
+      text = '空台'
+    }else{
+      return;
+    }
+    let that = this;
+    app.modal({
+      content:'确定' + text + '？',
+      success:function(res){
+        if (res.confirm){
+          if (opera == '1') {
+            //补单，打印机操作
+          } else if (opera == '2') {
+            that.cancalOrder()
+          } else if (opera == '3') {
+            that.setTable('','1')
+          } else if (opera == '4') {
+            that.setTable('', '0')
+          }
+         
+        }
+      }
+    })
+
+  },
+  /**
+   * 退单操作
+   */
+  cancalOrder: function (orderId){
+    console.info("退单成功")
+  },
+  /**
+   * 补单操作
+   */
+  supplementOrder: function (orderId){
+    console.info("补单成功，请查看打印机")
+  },
+  /**
+   * 开台 空台操作
+   * status:台开还是空台 1：开台 0：空台
+   */
+  setTable: function (orderId,status) {
+    console.info("开台空台成功"+status)
+  }
 })

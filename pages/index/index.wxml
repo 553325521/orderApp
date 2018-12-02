@@ -1,7 +1,7 @@
 <!--单页面化-->
 <view style="margin-bottom:80rpx;">
   <!--加载哪个页面？-->
-  <block wx:if="{{currentPage=='../founding/founding'}}"><founding></founding></block>
+  <block wx:if="{{currentPage=='../founding/founding'}}"><founding bind:switchPage="switchPage"></founding></block>
   <block wx:elif="{{currentPage=='../indent/indent'}}"><indent></indent></block>
   <block wx:elif="{{currentPage=='../statement/statement'}}"><statement></statement></block>
   <block wx:elif="{{currentPage=='../takeOut/takeOut'}}"><takeOut></takeOut></block>

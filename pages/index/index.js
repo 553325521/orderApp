@@ -1,6 +1,6 @@
 // pages/index/index.js
 var app = getApp();
-var currentPage = "../menu/menu";//当前是哪个页面
+var currentPage = "../founding/founding";//当前是哪个页面
 
 
 //引入单页面页面的js
@@ -21,6 +21,7 @@ Page({
   onLoad: function (options) {
     if (options != undefined && options.page != undefined) {
       currentPage = options.page;
+      //set数据在上边，不然页面没出来，下边后去不到
       this.setData({
         currentPage
       })
@@ -28,7 +29,6 @@ Page({
         this.menu = this.selectComponent("#menu");
         this.menu.setOptions(options);
       }
-    
     }
   },
 
@@ -121,5 +121,13 @@ Page({
     
   // }
 
+
+  /**
+   * 切换当前页面
+   */
+  switchPage:function(page){
+    currentPage = page.detail.page
+    this.setData({currentPage})
+  }
 
 })

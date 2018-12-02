@@ -473,16 +473,20 @@ pushSession:function(){
   sendRequest:function(data){
     wx.request({
       url: this.globalData.basePath + 'json/' + data.url + '.json',
-      method: data.method,
+      method: data.method == undefined ? 'POST' : data.method,
       data: data.data,
       header: {
         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
       success: function (res) {
-        data.success(res)
+        if(data.success != undefined){
+          data.success(res)
+        }
       },
       fail: function (error) {
-        data.fail(error)
+        if(data.fail != undefined){
+          data.fail(error)
+        }
       }
     })
   },
@@ -544,6 +548,34 @@ pushSession:function(){
     wx.redirectTo({
       url: url
     })
-  }
+  },
 
+  /**
+   * 清空购物车
+   */
+  clearCart:function(message){
+    var that = this;
+    this.sendRequest({
+      url: 'ShoppingCart_update_removeAllCart',
+      data: {
+        shopid: that.globalData.shopid,
+        openid: wx.getStorageSync('openid')
+      },
+      success: function (res) {
+        if (message != undefined && message.success != undefined){
+          message.success(res)
+        }
+      },
+      fail: function (error) {
+        if (message != undefined &&message.fail != undefined) {
+          message.fail(res)
+        }else{
+          that.toast('系统错误')
+        }
+      }
+    })
+
+
+   
+  }
 })

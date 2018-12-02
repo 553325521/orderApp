@@ -1,7 +1,10 @@
 /* pages/founding/founding.wxss */
+page{
+  background-color: #fff
+}
 .founding-page{
   background-color: #fff;
-  padding: 94rpx 0rpx 90rpx 0;
+  padding: 0rpx 0rpx 90rpx 0;
 }
 
 .fd-scroll{
@@ -65,7 +68,7 @@
 .fd-tb-2 .fd-one-1{
   justify-content:flex-end;
   padding-right:18rpx;
-  font-size:40rpx;
+  font-size:26rpx;
 }
 
 .fd-tb-2 .fd-one-2{
@@ -124,7 +127,7 @@
 
 
 .fd-bt{
-  border:1px solid #454545;
+  border:1px solid #5c5b5b;
   color:#454545;
   line-height:2.3;
   display:inline-block;
@@ -142,7 +145,7 @@
 .select-bt{
   background-color:#EF9BA0;
   color:#fff;
-  border:0px solid #454545;
+  border:1px solid #EF9BA0;
 }
 
 .fd-end{
@@ -189,5 +192,5 @@
 
 .fd-scroll .select-bt:active{
   color: #EEE;
-  border:0px solid #686868;
+  border:1px solid rgb(243, 150, 156);
 }

@@ -1,14 +1,14 @@
 <!--pages/indent/indentDateil.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 
-<view wx:if="{{orderType == '0'}}" class='top-oper dp-flex'>
-    <view class='cf tc font-30'>补单</view>
-    <view class='cf tc font-30'>退单</view>
+<view wx:if="{{orderType == '0'}}" wx:if="{{smallButton}}" class='top-oper dp-flex'>
+    <view class='cf tc font-30' bindtap='clickSmallButton' data-opera='1'>补单</view>
+    <view class='cf tc font-30' bindtap='clickSmallButton' data-opera='2'>退单</view>
     <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
 </view>
 <view wx:if="{{orderType == '1'}}" class='top-oper dp-flex'>
-    <view class='cf tc font-30'>补单</view>
-    <view class='cf tc font-30'>开台</view>
+    <view class='cf tc font-30' wx:if="{{smallButton}}" bindtap='clickSmallButton' data-opera='1'>补单</view>
+    <view class='cf tc font-30' wx:if="{{smallButton}}" bindtap='clickSmallButton' data-opera='3'>开台</view>
     <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
 </view>
 

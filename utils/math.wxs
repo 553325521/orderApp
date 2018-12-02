@@ -1,8 +1,40 @@
 var filters = {
   toFix: function (value) {
     return parseFloat(value).toFixed(2)//此处2为保留两位小数
+  },
+  calcDate: function (date, currentDate){
+    date = date.split(' ')
+    currentDate = currentDate.split(' ')
+
+    var dateMS = date[1].split(':')
+    var currentMS = currentDate[1].split(':')
+
+    var dateYMD = date[0].split('-')
+    var currentYMD = currentDate[0].split('-')
+
+    if (date[0] == currentDate[0] || currentYMD[2] - dateYMD[2] == 1 && currentMS[0] - dateMS[0] < 0) {
+      var subHours = currentMS[0] - dateMS[0]
+      if (subHours < 0) {
+        subHours += 24
+      }
+      var subMin = currentMS[1] - dateMS[1]
+      if (subMin < 0) {
+        subHours--;
+        subMin = -subMin;
+      }
+      if (subHours < 10) {
+        subHours = '0' + subHours;
+      }
+      if (subMin < 10) {
+        subMin = '0' + subMin
+      }
+      return subHours + ":" + subMin + "h"
+    } else {
+      return ">1天"
+    }
   }
 }
 module.exports = {
-  toFix: filters.toFix
+  toFix: filters.toFix,
+  calcDate: filters.calcDate
 }

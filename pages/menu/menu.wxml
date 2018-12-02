@@ -90,6 +90,10 @@
     </view>
   </view>
 </view>
+<!--取消加菜-->
+<view class="selected font-28 tc cf on" wx:if="{{menuStatus != '0'}}" style='right:200rpx;width:170rpx;' bindtap="cancalAddCai" data-meunstatus='{{menuStatus}}'>
+  取消{{menuStatus == '1' ? '点菜' : menuStatus == '2' ? '加菜' : ''}}
+</view>
 <!-- 选好了  -->
 <view class="selected font-28 tc cf {{allQiry>0?'on':''}}" bindtap="{{allQiry>0?'chosen':''}}">
   选好了
