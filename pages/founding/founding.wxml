@@ -26,7 +26,7 @@
       </view>
       <!--开台的样式-->
       <view style='position:relative;' class='fd-tb fd-tb-2' bindtap='clickTable' data-table="{{table}}" data-usestatus='1' wx:if="{{currentLookStatus != '1' && table.TABLES_ISUSE == '1'}}">
-      <image wx:if="{{table.ORDER_PAY_STATE == 1}}" src='../../images/icon/yzf.webp' style='position:absolute;top:5rpx;right:5rpx;height:33rpx;width:40rpx;'></image>
+      <image wx:if="{{table.ORDER_PAY_STATE == 1}}" src='../../images/icon/yzf.webp' style='position:absolute;top:5rpx;right:5rpx;height:44rpx;width:55rpx;'></image>
         <view class='fd-one'>
           <view class='fd-one-1'>{{table.TABLES_SHORT_NAME == undefined ? table.TABLES_NAME:table.TABLES_SHORT_NAME}}</view>
           <view class='fd-one-2'>{{table.ORDER_RS}}/{{table.TABLES_NUM}}</view>

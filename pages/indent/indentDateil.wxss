@@ -58,6 +58,7 @@ page{
 /*  */
 .order-bottom{
   padding: 0 50rpx;
+  background-color: #fff
 }
 .total{
   padding-bottom: 13rpx 
