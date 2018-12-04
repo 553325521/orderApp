@@ -1,5 +1,5 @@
 /* pages/takeOut/takeOut.wxss */
-
+@import '../../weui.wxss';
 .takeOut-page{
   background-color: #fff;
   padding-top: 186rpx
@@ -91,13 +91,13 @@
 }
 .item:last-child{border-bottom: none}
 .item .platform{
-  width: 120rpx
+  width: 140rpx
 }
 .item .time{
-  width: 100rpx;
+  width: 130rpx;
 }
 .item .money{
-  width: 183rpx
+  width: 130rpx
 }
 .item .horseman{
   width: 171rpx

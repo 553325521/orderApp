@@ -7,7 +7,7 @@
       <view class="flex-1 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
         <text>{{item.title}}</text>
         <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
-        <view wx:if="{{item.type!=2}}" class='num circle cf tc pa bg-d137'>5</view>
+        <view wx:if="{{item.type!=2}}" class='num circle cf tc pa bg-d137'>{{item.orderNumber}}</view>
       </view>
     </block>
   </view>
@@ -38,14 +38,21 @@
     </view>
   </view>
 </view>
-<view class='indent-list' wx:if="{{currentTab!=5}}">
+<view class="weui-loadmore" style='display:{{pageShow?"none":"block"}}'>
+            <view class="weui-loading"></view>
+            <view class="weui-loadmore__tips">正在加载</view>
+</view>
+ <view class="weui-loadmore weui-loadmore_line"  style='display:{{isExistData?"none":"block"}}'>
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+</view>
+<view class='indent-list' wx:if="{{currentTab!=5}}" style='display:{{pageShow?"block":"none"}};border-top:{{isExistData?"1px #EAD5D7 solid":"none"}};'>
   <view class='indent-item' wx:for="{{wmOrderData}}" wx:key="keys"  wx:for-item="itemName">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
       <text>{{itemName.keyName}}</text>
       <text>总计:{{math.toFix(itemName.totalMoney/100)}}元</text>
     </view>
     <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'  data-id='{{item.ORDER_PK}}'>
+      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'  data-id='{{item}}'>
         <view class='platform'>{{item.SOURCENAME}}</view>
         <view class='time'>{{item.SF}}</view>
         <view class='money'>{{math.toFix(item.ORDER_SHOPMONEY/100)}}元</view>
@@ -56,50 +63,27 @@
     </view>
   </view>
 </view>
-<view class='indent-list' wx:else>
-  <view class='indent-item'>
+<view class='indent-list' wx:else style='display:{{pageShow?"block":"none"}};border-top:{{isExistData?"1px #EAD5D7 solid":"none"}};'>
+  <view class='indent-item'  wx:for="{{wmOrderData}}" wx:key="keys"  wx:for-item="itemName">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-      <text>2016-08-18</text>
-      <text>共计186.00元</text>
+      <text>{{itemName.keyName}}</text>
+      <text>总计:{{math.toFix(itemName.totalMoney/100)}}元</text>
     </view>
-    <view class='item-list'>
-      <view class='item1 font-30 c3 pr' bindtap='navTo'>
+    <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
+      <view class='item1 font-30 c3 pr' bindtap='navTo' data-id='{{item}}'>
         <view class='dp-flex'>
-          <view class='horseman'>王家军</view>
-          <view class='phone'>13562487954</view>
-          <view class='platform'>智慧云</view>
-          <view class='time'>17:23</view>
+          <view class='horseman'>{{item.WM_ORDER_USERNAME}}</view>
+          <view class='phone'>{{item.WM_USERPHONE}}  </view>
+          <view class='platform'>{{item.SOURCENAME}}</view>
+          <view class='time'>{{item.SF}}</view>
         </view>
         <view class='dp-flex'>
-          <view class='weight'>1分菜品</view>
-          <view class='money'>128.00元</view>
-          <view class='delivery-method'>商家自配</view>
-        </view>
-      </view>
-      <view class='item1 font-30 c3 pr' bindtap='navTo'>
-        <view class='dp-flex'>
-          <view class='horseman'>王家军</view>
-          <view class='phone'>13562487954</view>
-          <view class='platform'>智慧云</view>
-          <view class='time'>17:23</view>
-        </view>
-        <view class='dp-flex'>
-          <view class='weight'>1分菜品</view>
-          <view class='money'>128.00元</view>
-          <view class='delivery-method'>商家自配</view>
-        </view>
-      </view>
-      <view class='item1 font-30 c3 pr' bindtap='navTo'>
-        <view class='dp-flex'>
-          <view class='horseman'>王家军</view>
-          <view class='phone'>13562487954</view>
-          <view class='platform'>智慧云</view>
-          <view class='time'>17:23</view>
-        </view>
-        <view class='dp-flex'>
-          <view class='weight'>1分菜品</view>
-          <view class='money'>128.00元</view>
-          <view class='delivery-method'>商家自配</view>
+          <view class='weight'>{{item.GOODS_FS}}份菜品</view>
+          <view class='money'>{{math.toFix(item.ORDER_SHOPMONEY/100)}}元</view>
+          <view class='delivery-method' wx:if="item.WM_ORDER_DELIVERY_PARTY == '0' }}">商家自配</view>
+          <view class='delivery-method' wx:elif="{{item.WM_ORDER_DELIVERY_PARTY == '1'}}">平台配送</view>
+          <view class='delivery-method' wx:elif="{{item.WM_ORDER_DELIVERY_PARTY == '6' }}">商家自配</view>
+           <view class='delivery-method' wx:else>平台配送</view>
         </view>
       </view>
     </view>

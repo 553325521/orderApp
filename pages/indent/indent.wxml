@@ -53,6 +53,7 @@
     </view>
   </view>
   <view>
-  <button id="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">123</button></view>
+  <!-- <button id="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">123</button> -->
+  </view>
 </view>
 </view>

@@ -11,13 +11,16 @@ Component({
     nav: [
       {
         type: 1,
-        title: '待确定'
+        title: '待确定',
+        orderNumber:5
       }, {
         type: 5,
-        title: '待配送'
+        title: '待配送',
+        orderNumber: 15
       }, {
         type: 9,
-        title: '已完成'
+        title: '已完成',
+        orderNumber: 25
       }
     ],
     currentTab: 1,
@@ -26,13 +29,13 @@ Component({
         isIn: false,
         title: '智慧云',
       }, {
-        isIn: true,
+        isIn: false,
         title: '饿了么'
       }, {
         isIn: true,
         title: '美团外卖'
       }, {
-        isIn: true,
+        isIn: false,
         title: '百度外卖'
       }
     ],
@@ -40,7 +43,9 @@ Component({
     date: '',
     startIndex:[],
     endIndex: [],
-    year:2015
+    year:2015,
+    pageShow:false,
+    isExistData:true
   },
 
   /**
@@ -90,7 +95,9 @@ Component({
       that.setData({
         date: date,
         startIndex: that.data.startIndex,
-        endIndex: that.data.endIndex
+        endIndex: that.data.endIndex,
+        pageShow:false,
+        isExistData: true
       })
       this.loadWMData();
     },
@@ -121,19 +128,30 @@ Component({
       var types = e.currentTarget.dataset.type;
       that.setData({
         currentTab: types,
+        wmOrderData: []
+      });
+      that.setData({
+        pageShow: false,
+        isExistData: true
       })
+      this.loadWMData();
     },
     // 选择时间段
     bindStartDateChange:function(e){
       this.setData({
         startIndex: e.detail.value,
-        endIndex: e.detail.value
-      })
+        pageShow: false,
+        isExistData: true
+      });
+      this.loadWMData();
     },
     bindEndDateChange: function (e) {
       this.setData({
-        endIndex: e.detail.value
-      })
+        endIndex: e.detail.value,
+        pageShow: false,
+        isExistData: true
+      });
+      this.loadWMData();
     },
     // 
     bindDateColumnChange:function(e){
@@ -172,8 +190,14 @@ Component({
       var index = e.currentTarget.dataset.index;
       that.data.deliveryType[index].isIn = !that.data.deliveryType[index].isIn;
       that.setData({
-        deliveryType: that.data.deliveryType 
+        deliveryType: that.data.deliveryType,
+        wmOrderData: []
+      });
+      that.setData({
+        pageShow: false,
+        isExistData: true
       })
+      this.loadWMData();
     },
     // 加载外卖数据
     loadWMData: function () {
@@ -182,11 +206,9 @@ Component({
       var orderState = that.data.currentTab;
       //选择时间
       var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" +
-
         that.data.date[7][that.data.startIndex[7]];
       var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7]
-
-      [that.data.endIndex[7]];
+    [that.data.endIndex[7]];
       //选择外卖来源
       var pt = that.data.deliveryType;
       var selectPt = [];
@@ -202,19 +224,40 @@ Component({
         url: "Order_select_loadWMOrderData",
         method: "post",
         data: {
-          selectSource: selectPtStr
+          FK_SHOP: app.globalData.shopid,
+          selectSource: selectPtStr,
+          startTime: startTime,
+          endTime: endTime,
+          orderStatus: that.data.currentTab
         },
         success: function (res) {
-          console.info("拿到外卖数据如下：");
-          console.info(res.data);
-          if (res.data.code == '0000' && res.data.data.length != 0) {
-            var orderArray = that.dealOrderDate(res.data.data);
-            that.setData({
-              wmOrderData: orderArray
-            })
-            console.info("123");
-            console.info(that.data.wmOrderData);
+          var orderNumberMap = res.data.data.orderNumber;
+          var tabNumberData = that.data.nav;
+          for (var i = 0; i < tabNumberData.length; i++) {
+            if (tabNumberData[i].title == '待确定') {
+              tabNumberData[i].orderNumber = orderNumberMap.noConfirmNumber;
+            } else if (tabNumberData[i].title == '待配送') {
+              tabNumberData[i].orderNumber = orderNumberMap.isConfirmNumber;
+            } else {
+              tabNumberData[i].orderNumber = orderNumberMap.isFinishNumber;
+            }
           }
+          that.setData({
+            nav: tabNumberData
+          })
+          if (res.data.code == '0000' && res.data.data.orderData.length != 0) {
+            var orderArray = that.dealOrderDate(res.data.data.orderData);
+            that.setData({
+              wmOrderData: orderArray,
+            })
+          }else{
+            that.setData({
+              isExistData: false
+            })
+          }
+          that.setData({
+            pageShow:true
+          })
         },
         fail: function (error) {
           console.info(error);
@@ -237,7 +280,7 @@ Component({
           orderMap.clear();
           for (var j = 0; j < data.length; j++) {
             if (data[j].CREATE_TIME.indexOf(dateStr) != -1) {
-              data[j].SF = data[j].CREATE_TIME.substring(10, 15);
+              data[j].SF = data[j].CREATE_TIME.substring(10, 16);
               data[j].WM_USERPHONE = "*" + data[j].WM_USERPHONE.substring(7);
               orderList.push(data[j]);
               allMoney = allMoney + parseFloat(data[j].ORDER_SHOPMONEY);
@@ -268,8 +311,10 @@ Component({
     /**
      * 订单详情
      */
-    navTo:function(){
-      app.pageTurns(`../takeOut/takeOutDateil?type=${this.data.currentTab}`)
+    navTo:function(e){
+      var currentItem = e.currentTarget.dataset.id;
+      console.info(currentItem.SOURCENAME);
+      app.pageTurns(`../takeOut/takeOutDateil?type=${this.data.currentTab}&ORDER_PK=${currentItem.ORDER_PK}&SOURCE_NAME=${currentItem.SOURCENAME}`)
     }
   }
 })

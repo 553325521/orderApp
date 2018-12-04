@@ -1,62 +1,53 @@
 <!--pages/takeOut/takeOutDateil.wxml-->
+<wxs module="math" src="../../utils/math.wxs"></wxs>
 <view class='indent-info font-28'>
   <view class='dp-flex flex-jc-sb'>
-    <text>订单编号：2016070100001001</text>
-    <view>饿了么</view>
+    <text>订单编号：{{orderDetails.ORDER_CODE}}</text>
+    <view>{{SOURCENAME}}</view>
   </view>
   <view class='dp-flex flex-jc-sb'>
-    <text>下单时间：17:58</text>
-    <view>配送时间：12:30-13:00</view>
+    <text>下单时间：{{orderDetails.CREATE_TIME}}</text>
+    <view>配送时间：{{orderDetails.WM_ORDER_SEND_TIME}}</view>
   </view>
 </view>
 <view class='indent-dateil font-28'>
   <view class='title font-24'>消费明细</view>
   <view class='menu-list'>
-    <view class='menu-item dp-flex'>
-      <view class='menu-name flex-2'>青椒肉丝(大份)</view>
-      <view class='number flex-1'>1份</view>
-      <view class='money'>￥11.80</view>
-    </view>
-    <view class='menu-item dp-flex'>
-      <view class='menu-name flex-2'>青椒肉丝</view>
-      <view class='number flex-1'>1份</view>
-      <view class='money'>￥11.80</view>
-    </view>
-    <view class='menu-item dp-flex'>
-      <view class='menu-name flex-2'>青椒肉丝</view>
-      <view class='number flex-1'>1份</view>
-      <view class='money'>￥11.80</view>
+    <view class='menu-item dp-flex' wx:for = "{{orderDetails.orderDetailList}}"  wx:key="keys"  wx:for-item="goods">
+      <view class='menu-name flex-2'>{{goods.ORDER_DETAILS_GNAME}}</view>
+      <view class='number flex-1'>{{goods.ORDER_DETAILS_FS}}份</view>
+      <view class='money'>￥{{math.toFix(goods.ORDER_DETAILS_GMONEY/100)}}</view>
     </view>
     <view class='total number dp-flex flex-jc-sb'>
-      <view>3份菜品</view>
-      <view>配送费5.00/餐盒费2.00</view>
+      <view>{{orderDetails.GOODS_NUMBER}}份菜品</view>
+      <view>配送费{{math.toFix(orderDetails.WM_ORDER_SEND_FEE/100)}}/餐盒费{{math.toFix(orderDetails.WM_ORDER_PACKAGE_FEE/100)}}</view>
     </view>
   </view>
   <view class='dateil-list'>
     <view class='total-prices dp-flex flex-jc-sb'>
-      <view>优惠金额5.00</view>
-      <view>应付￥135.00/实付￥130.00</view>
+      <view>优惠金额￥{{math.toFix(orderDetails.ORDER_YHMONEY/100)}}</view>
+      <view>应付￥{{math.toFix(orderDetails.ORDER_YFMONEY/100)}}/实付￥{{math.toFix(orderDetails.ORDER_SHOPMONEY/100)}}</view>
     </view>
     <view class='dateil-item dp-flex'>
       订单备注：
       <view class='dp-flex flex-wrap flex-1'>
-        <text>不加香菜</text>
+        <!-- <text>不加香菜</text>
         <text style='margin-left:16rpx'>不加香菜</text>
-        <text style='margin-left:16rpx'>不加香菜</text>
-        <text style='margin-left:16rpx'>不加香菜</text>
+        <text style='margin-left:16rpx'>不加香菜</text> -->
+        <text style='margin-left:16rpx'>{{orderDetails.WM_ORDER_REMARK}}</text>
       </view>
     </view>
     <view class='dateil-item dp-flex'>
       联系方式：
       <view>
-        王先生 <text style='margin-left:35rpx'>13883107775</text>
+        {{orderDetails.WM_ORDER_USERNAME}} <text style='margin-left:35rpx'>{{orderDetails.WM_USERPHONE}}</text>
       </view>
     </view>
     <view class='dateil-item dp-flex'>
       详情地址：
-      <view class='flex-1' style='word-wrap:break-word; word-break:break-all; '>XXXXXXXXXXXXXXXXXXXXXXXXXX</view>
+      <view class='flex-1' style='word-wrap:break-word; word-break:break-all; '>{{orderDetails.WM_USER_ADDRESS}}</view>
     </view>
-    <view class='dateil-item dp-flex' wx:if="{{type==1}}">
+    <view class='dateil-item dp-flex' wx:if="{{type==5}}">
       配送人员：
       <view>
         王先生 <text style='margin-left:35rpx'>13883107775</text>
@@ -64,16 +55,18 @@
     </view>
     <view class='dateil-item dp-flex'>
       <text class='flex-1'>订单状态</text>
-      <text class='flex-1'>退单状态</text>
+      <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '1'}}">待确认</text>
+       <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}">待配送</text>
+        <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '9'}}">已完成</text>
     </view>
   </view>
 </view>
- <view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==0}}">
-  <view class='flex-1  tc'>商家自送</view>
-  <view class='flex-1  tc'>平台配送</view>
+ <view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==1}}">
+  <view class='flex-1  tc' bindtap='changeType'>商家自送</view>
+  <!-- <view class='flex-1  tc'>平台配送</view> -->
   <view class='flex-1  tc'>取消订单</view>
 </view> 
-<view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==1}}">
+<view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==5}}">
   <view class='flex-1 tc' style='background-color:#fff'></view>
   <view class='flex-1  tc'>确定送达</view>
   <view class='flex-1  tc'>取消订单</view>
