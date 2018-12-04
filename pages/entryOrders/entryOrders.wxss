@@ -1,13 +1,24 @@
 /* pages/entryOrders/entryOrders.wxss */
 @import "../indent/indent.wxss";
 page{
-  padding-top: 0
+  padding-top: 0;
+  background-color: #fff;
+ 
 }
 .delete-btn{
-  width: 100rpx;
-  margin-left: 20rpx
+  width: 120rpx;
+  position:absolute;
+  right:0rpx;
+
+  line-height: 98rpx;
 }
 .item{
-  width: 116%;
+  width: 100%;
   position: relative;
+  justify-content:space-between; 
+  font-size: 28rpx;
+  transition: all 0.1s;
+}
+.item-head{
+  background-color: #fefefe
 }

@@ -12,15 +12,15 @@ Component({
       {
         type: 1,
         title: '待确定',
-        orderNumber:5
+        orderNumber:0
       }, {
         type: 5,
         title: '待配送',
-        orderNumber: 15
+        orderNumber: 0
       }, {
         type: 9,
         title: '已完成',
-        orderNumber: 25
+        orderNumber: 0
       }
     ],
     currentTab: 1,

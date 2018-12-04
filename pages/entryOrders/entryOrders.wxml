@@ -1,22 +1,26 @@
 <!--pages/entryOrders/entryOrders.wxml-->
+<wxs module="math" src="../../utils/math.wxs"></wxs>
+
 <view class='indent-list'>
-  <block wx:for="{{cardTeams}}" wx:key="index" wx:for-index='index'>
+  <block wx:for="{{cardTeams}}" wx:key="item" wx:for-index='i'>
     <view class='indent-item'>
       <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-        <text>2016-08-18</text>
-        <text>共计186.00元</text>
+        <text>{{math.getYMD(item.CREATE_TIME)}}</text>
+        <text>共计{{math.toFix(item.totalMoney/100.0)}}元</text>
       </view>
-      <view class='item-list'>
-        <block wx:for="{{item.list}}" wx:key="index" wx:for-item="every" wx:for-index='item'>
-          <view class='item dp-flex font-30 c3 pr' style="right:{{every.right}}px" data-index='{{index}}' data-item='{{item}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd">
-            <view class='label pa'>*</view>
-            <view class='time'>17:23</view>
-            <view class='seat'>A02号餐位</view>
-            <view class='part'>5份</view>
-            <view class='money'>128.00元</view>
-            <view class='pay-way'>现付</view>
-            <view wx:if="{{every.show}}" class='delete-btn bg-EF9B tc'>删除</view>
+      <view class=''>
+        <block wx:for="{{item.list}}" wx:key="order" wx:for-item="order" wx:for-index='j'>
+          <view class='dp-flex font-30 c3'>
+            <view class='item dp-flex bg-fff' data-i='{{i}}' data-j='{{j}}' style="transform: translate({{currentIJ.i == i && currentIJ.j == j ? movedistance:'0'}}rpx,0)" bindtap='clickOrder' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd">
+              <view class='time'>{{math.subString(order.saveOrderDate,11,16)}}</view>
+              <view style='min-width:180rpx;' class='seat'>{{order.table.TABLES_TRUE_NAME == undefined ? order.table.TABLES_NAME : order.table.TABLES_TRUE_NAME}}</view>
+              <view class='part'>{{order.totalNumber}}份</view>
+              <view class='part'>{{order.personNum}}人</view>
+              <view style='min-width:120rpx;text-align:right;' class='money'>{{math.toFix(order.totalMoney/100.0)}}元</view>
+            </view>
+            <view style="z-index:{{currentIJ.i == i && currentIJ.j == j && movedistance == -sliderWidth?'0':'-1'}}" class='delete-btn bg-EF9B tc' bindtap='deleteOrder' data-i='{{i}}' data-j='{{j}}'>删除</view>
           </view>
+          
         </block>
       </view>
     </view>

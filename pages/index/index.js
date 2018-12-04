@@ -1,7 +1,6 @@
 // pages/index/index.js
 var app = getApp();
-var currentPage = "../founding/founding";//当前是哪个页面
-
+var currentPage = app.globalData.tabBar.list[0].pagePath;//当前是哪个页面
 
 //引入单页面页面的js
 // var indent = require('../indent/indent.js');//引入modul
@@ -30,6 +29,9 @@ Page({
         this.menu.setOptions(options);
       }
     }
+
+    this.pageInit()
+
   },
 
   /**
@@ -82,27 +84,55 @@ Page({
 
   },
   /**
+   * 页面初始化
+   */
+  pageInit:function(){
+    var that = this;
+    var menu = wx.getStorageSync('menu')
+    if (menu == undefined || menu == ''){
+      menu = app.globalData.tabBar.list[0].pagePath;
+    }
+    currentPage = menu;
+    if (currentPage == '../menu/menu' || currentPage == '../founding/founding'){
+      if (currentPage == '../menu/menu') {
+        app.globalData.tabBar.list[0].pagePath = "../menu/menu"
+        app.globalData.tabBar.list[0].text = "首页"
+      } else if(currentPage == '../founding/founding') {
+        app.globalData.tabBar.list[0].pagePath = "../founding/founding"
+        app.globalData.tabBar.list[0].text = "开台"
+      }
+      that.setData({
+        currentPage,
+        tabBar: app.globalData.tabBar//获取tabBar
+      })
+    }
+    
+  },
+  /**
    * 用户点击下方的tabBar以后
    */
   switchTab:function(e){
-    if (e.currentTarget.dataset.currentPage == '../cashier/cashier'){
+    let clickPage = e.currentTarget.dataset.currentPage
+    var that = this
+    if (clickPage == '../cashier/cashier'){
       app.pageTurns('../cashier/cashier')
       return;
     }
-   
-    currentPage = e.currentTarget.dataset.currentPage;
-    this.setData({
+
+    //判断是不是点了第一个按钮
+    if (clickPage == currentPage && currentPage == '../menu/menu'){
+      that.switchMenu('../founding/founding')
+    } else if (clickPage == currentPage && currentPage == '../founding/founding'){
+      that.switchMenu('../menu/menu')
+    }else{
+      currentPage = clickPage
+    }
+
+    that.setData({
+      tabBar: app.globalData.tabBar,
       currentPage
     })
 
-    //切换Tab
-    switch (currentPage){
-      case '../founding/founding':
-        console.info("加载../founding/founding");break;
-      case '../indent/indent':
-        console.info("加载../indent/indent"); break;
-    }
-  
   },
   /**
    * 加载开台页面
@@ -112,22 +142,32 @@ Page({
 
   },
   /**
-   * 加载订单页面
-   */
-  // loadIndent:function(){
-  //   console.log("加载了哦")
-  //   var common = require('../../utils/common.js');
-  //   var tabBar = require('../template/tabBar.js');
-    
-  // }
-
-
-  /**
    * 切换当前页面
    */
   switchPage:function(page){
+    var switchPage = page.detail.page
+    this.switchMenu(switchPage)
     currentPage = page.detail.page
-    this.setData({currentPage})
-  }
-
+    this.setData({ currentPage})
+  },
+  /**
+   * 切换菜单:根据当前页面判断是否需要切换页面,返回是否切换了
+   */
+  switchMenu:function(page){
+    if (page == "../menu/menu" && app.globalData.tabBar.list[0].pagePath == "../founding/founding") {
+      app.globalData.tabBar.list[0].pagePath = "../menu/menu"
+      app.globalData.tabBar.list[0].text = "首页"
+      currentPage = "../menu/menu"
+      wx.setStorageSync("menu", currentPage)
+    } else if (page == "../founding/founding" && app.globalData.tabBar.list[0].pagePath == "../menu/menu") {
+      app.globalData.tabBar.list[0].pagePath = "../founding/founding"
+      app.globalData.tabBar.list[0].text = "开台"
+      currentPage = "../founding/founding"
+      wx.setStorageSync("menu", currentPage)
+    }else{
+      return false
+    }
+    this.setData({tabBar: app.globalData.tabBar})
+    return true
+  } 
 })

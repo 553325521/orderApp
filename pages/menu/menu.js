@@ -4,7 +4,7 @@ var pageTitle = "菜单";//当前页面title
 var greensList;//商品列表，一个map，里边两个key 一个是放的是列表，为每个商品的数量及该商品的属性的集合；另一个存放的是该类别下的数量
 var navList;//分类列表，里边有分类名称和PK
 var qityArr = null;//一个列表，存放的是每个分类下点的商品的数量的集合
-var allQiry=0;//商品总数量
+// var allQiry=0;//商品总数量
 var ordersList = [];//购物车列表吧？
 var allMoney = 0.0;//订单总金额
 var tableList = [];//桌位列表
@@ -14,29 +14,29 @@ var goodsGuige = {
   kouwei: []
 }//当前弹框的属性 规格做法和口味  
 var height = '';//还不知道是什么高度
-var ordersFalg = true;//隐藏挂单按钮
+var saveOrdersFalg = false;//挂单按钮是否显示
 var currentGood;//当前商品
 var isSelected = false;//选择规格了吗
 var reserveShow = false;//显示选择餐位
 var quorumShow = false;//显示选择人数
 var selectPersonNum = true;//选择人数开关是否开启
-var currentTable = null;//当前桌位
+var currentTable = {};//当前桌位
 var currentEatPersonNum = 0;//当前餐桌就餐的人数
 var menuStatus = 0;//当前菜单页面状态（0：没状态 1：点菜 2：加菜）
+var shoppingCart = {};//购物车信息
 
 Component({
   options: {
     addGlobalClass: true,
   },
   data: {
-    loadingHidden:true,
     navList:null,
     currentTab:0,
     currentTabInit: 0,
     greensList,
     qityArr: qityArr,//一个数组，里边装的是每个分类点的菜的数量
     scrollTop:0,
-    allQiry,
+    // allQiry,
     allMoney: allMoney.toFixed(2),
     ordersList,
     height,
@@ -48,11 +48,12 @@ Component({
     currentIndex: null,
     currentItem: null,
     currentTable,
-    ordersFalg,//隐藏购买了的订单信息
+    saveOrdersFalg,//挂单按钮是否显示
     goodsGuige,
     // isSelected: isSelected,
     tableList,
-    menuStatus
+    menuStatus,
+    shoppingCart
   },
 
 
@@ -65,6 +66,17 @@ Component({
     attached: function () {
       app.updateTitle(pageTitle)
       this.pageInit();
+      // app.addShoppingCart({
+      //   GOODS_PK: 'fdfd',//商品主键
+      //         GOODS_NAME: '鱼香肉丝',//商品名字
+      //         GOODS_NUMBER: 1,//商品的数量
+      //         GOODS_PRICE: '200',//商品单价
+      //         GOODS_TRUE_PRICE: '180',//商品特价，为空则不为特价商品
+      //         GOODS_FORMAT: '好吃',//规格
+      //         GOODS_MAKING: '不好',//做法
+      //         GOODS_TASTE: '好吃',//口味
+      //         GOODS_DW: '份'
+      // })
     },
     moved: function () { console.log("组件被moved") },
     //组件被移除
@@ -80,6 +92,7 @@ Component({
       // this.getOrdersList();
       this.loadGoodsInfo();
       this.flushStroageData()
+      this.flushShoppingCart()
       },
     hide: function () { },
     resize: function () { },
@@ -88,9 +101,7 @@ Component({
     //自定义页面初始化函数
     pageInit:function(){
       var that = this;
-      that.setData({
-        loadingHidden: false
-      })
+      app.showLoading();
       var mobInfo = app.getSystemInfo();
       
       that.setData({
@@ -106,6 +117,7 @@ Component({
       //。。。。。。。
 
       that.flushStroageData()
+      that.flushShoppingCart()
     },
     /**
      * 刷新缓存数据
@@ -119,37 +131,44 @@ Component({
       }else{
         menuStatus = 0
       }
-      wx.getStorage({
-        key: 'currentTableMessage',
-        success(res) {
-          var currentTableMessage = res.data
-          currentTable = currentTableMessage.currentTable,
-            currentEatPersonNum = currentTableMessage.currentEatPersonNum
-          console.info("currentTableMessage")
-          console.info(currentTableMessage)
-          //判断是加菜还是点菜
-          if (menuStatus != 2){
-            menuStatus = 1;
-          }
-          that.setData({
-            currentTable,
-            menuStatus
-          })
-        },
-        fail(error) {
-          //判断是加菜还是点菜
-          if (menuStatus != 2) {
-            menuStatus = 0;
-          }
-          that.setData({
-            menuStatus
-          })
-        }
+
+      shoppingCart = app.getShoppingCart()
+      if (shoppingCart != undefined && shoppingCart.table != undefined && shoppingCart.table != ''){
+        menuStatus = 1;
+        currentTable = shoppingCart.table,
+        currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
+      }
+
+      that.setData({
+        menuStatus,
+        currentTable
+      })
+    },
+    /**
+     * 刷新购物车信息
+     */
+    flushShoppingCart:function(){
+      var that = this;
+      shoppingCart = app.getShoppingCart()
+      if (shoppingCart.totalNumber == undefined){
+        shoppingCart.totalNumber = 0
+      }
+      if (shoppingCart.goods == undefined){
+        shoppingCart.goods = []
+      }
+      if (shoppingCart.totalMoney == undefined) {
+        shoppingCart.totalMoney = 0;
+      }
+      currentTable = shoppingCart.table == undefined ? {} : shoppingCart.table,
+        currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
+
+      that.setData({
+        shoppingCart,
+        currentTable
       })
     },
 
     loadTables: function() {
-      
       let that = this;
       app.sendRequest({
         url: 'Tables_select_loadTableList',
@@ -163,7 +182,6 @@ Component({
             tableList = res.data.data;
             that.setData({
               tableList: tableList,
-              loadingHidden: true
             })
             // 查询挂单数量
             that.loadCountOrderWei();
@@ -176,9 +194,7 @@ Component({
     },
     loadGoodsInfo: function () {
       let that = this;
-      that.setData({
-        loadingHidden: false
-      })
+      app.showLoading()
       app.sendRequest({
         url: 'GoodsType_select_loadGoodsTypeByShopId',
         method: 'POST',
@@ -188,16 +204,26 @@ Component({
         },
         success: function (res) {
           if (res.data.code == '0000') {
+            app.hideLoading()
+            // 查询购物车
+            that.getOrdersList();
             qityArr = [];
-            allQiry = 0;
+            // allQiry = 0;
             greensList = res.data.data.greensList;
             navList = res.data.data.navList;
             for (let i = 0; i < greensList.length; i++) {
-              qityArr.push(parseFloat(greensList[i].GTYPE_QITY));
-              allQiry += parseFloat(greensList[i].GTYPE_QITY);
+              var count = 0;
+              if (shoppingCart != undefined && shoppingCart.goods != undefined){
+                shoppingCart.goods.forEach(function (good, index) {
+                  if (navList[i].GTYPE_PK = good.GOODS_TYPE) {
+                    count++
+                  }
+                })
+              }
+             
+              qityArr.push(count);
+              // allQiry += parseFloat(greensList[i].GTYPE_QITY);
             }
-            // 查询购物车
-            that.getOrdersList();
             //如果没有类别，就不set类别了
             if (navList.length != 0) {
               that.setData({
@@ -208,7 +234,7 @@ Component({
               navList: navList,
               greensList: greensList,
               qityArr: qityArr,
-              allQiry: allQiry
+              // allQiry: allQiry
             })
           }
         },
@@ -223,10 +249,9 @@ Component({
      * 添加购物车和删除购物车
      */
     addQity:function(e){
+      console.info("添加购物车和删除后无车")
       var that = this;
-      that.setData({
-        loadingHidden: false
-      })
+      app.showLoading()
       var item = e.currentTarget.dataset.item;
       var index = e.currentTarget.dataset.index;
       var type = e.currentTarget.dataset.type;
@@ -242,139 +267,77 @@ Component({
       if (type == "+"){
         qityArr[item] = qityArr + 1
         List[index].qity = qity + 1;
-        allQiry++;
-        _url = 'ShoppingCart_insert_insertCart';
+        // allQiry++;
+        // _url = 'ShoppingCart_insert_insertCart';
       }else{
         qityArr[item] = qityArr - 1
         List[index].qity = qity - 1;
-        allQiry--
-        _url = 'ShoppingCart_update_removeCart';
+        // allQiry--
+        // _url = 'ShoppingCart_update_removeCart';
       }
       List[index].FK_SHOP = app.globalData.shopid;
       List[index].FK_USER = wx.getStorageSync('openid');
-      app.sendRequest({
-        url: _url,
-        method: 'POST',
-        data: List[index],
-        success: function (res) {
-          if (res.data.code == '0000') {
-            that.setData({
-              greensList: greensList,
-              qityArr: qityArr,
-              allQiry: allQiry
-            })
-            // 查询购物车
-            that.getOrdersList();
-            app.toast('操作成功')
-          } else {
-            app.toast('操作失败')
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
-        }
+
+      that.setData({
+        greensList: greensList,
+        qityArr: qityArr,
+        // allQiry: allQiry
       })
+      // 查询购物车
+      that.getOrdersList();
+
+      // app.sendRequest({
+      //   url: _url,
+      //   method: 'POST',
+      //   data: List[index],
+      //   success: function (res) {
+      //     if (res.data.code == '0000') {
+      //       that.setData({
+      //         greensList: greensList,
+      //         qityArr: qityArr,
+      //         allQiry: allQiry
+      //       })
+      //       // 查询购物车
+      //       that.getOrdersList();
+      //       app.toast('操作成功')
+      //     } else {
+      //       app.toast('操作失败')
+      //     }
+      //   },
+      //   fail: function (error) {
+      //     app.toast('操作失败')
+      //   }
+      // })
     },
     /**
      *  查看购物车
      */
     entryOrders:function(){
       var that = this;
-      app.sendRequest({
-        url: 'ShoppingCart_load_loadCartDataByUser',
-        method: 'POST',
-        data: {
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid'),
-          CART_STATE: 'zancun'
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            allMoney = 0;
-            ordersList = res.data.data;
-            console.info(ordersList)
-            if (res.data.data.length > 0) {
-              for (var _index in ordersList) {
-                allMoney += parseFloat(ordersList[_index].GOODS_PRICE) * ordersList[_index].GOODS_NUM/100.0;
-              }
 
-              for (let i = 0; i < greensList.length; i++) {
-                for (let j = 0; j < greensList[i].infos.length; j++) {
-                  if (greensList[i].infos[j].qity > 0) {
-                    for (var _index in ordersList) {
-                      if (ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
-                        ordersList[_index].i = i;
-                        ordersList[_index].j = j;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            if (ordersList.length > 4) {
-              height = 384 + 'rpx';
-            } else {
-              height = ''
-            }
-            that.setData({
-              ordersList: ordersList,
-              height: height,
-              entryShow: true,
-              slide: false,
-              allMoney: allMoney.toFixed(2)
-            })
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
-        }
-      });
+      shoppingCart = app.getShoppingCart()
+
+      if (shoppingCart.goods.length > 4) {
+        height = 384 + 'rpx';
+      } else {
+        height = ''
+      }
+      that.setData({
+        // ordersList: ordersList,
+        height: height,
+        entryShow: true,
+        slide: false,
+        allMoney: allMoney.toFixed(2)
+      })
+
     },
     getOrdersList:function() {
       var that = this;
-      app.sendRequest({
-        url: 'ShoppingCart_load_loadCartDataByUser',
-        method: "post",
-        data: {
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid'),
-          CART_STATE: 'zancun'
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            allMoney = 0;
-            ordersList = res.data.data;
-            if (res.data.data.length > 0) {
-              for (var _index in ordersList) {
-                allMoney += parseFloat(ordersList[_index].GOODS_PRICE) * ordersList[_index].GOODS_NUM/100.0;
-              }
+      that.flushShoppingCart
 
-              for (let i = 0; i < greensList.length; i++) {
-                for (let j = 0; j < greensList[i].infos.length; j++) {
-                  if (greensList[i].infos[j].qity > 0) {
-                    for (var _index in ordersList) {
-                      if (ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
-                        ordersList[_index].i = i;
-                        ordersList[_index].j = j;
-                      }
-                    }
-                  }
-                }
-              }
-            }else{
-              that.closePop()
-            }
-            that.setData({
-              ordersList: ordersList,
-              allMoney: allMoney.toFixed(2),
-              loadingHidden: true
-            })
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
-        }
-      })
+      console.info("购物车")
+      console.info(shoppingCart)
+    
 
     
     },
@@ -401,108 +364,47 @@ Component({
       for (let i = 0; i < greensList.length; i++) {
         qityArr.push(0);
       }
-      app.clearCart({
-        success: function (res) {
-          if (res.data.code == '0000') {
-            that.setData({
-              greensList: greensList,
-              qityArr: qityArr,
-              allQiry: allQiry,
-              ordersList: ordersList,
-              allMoney: allMoney.toFixed(2)
-            })
-            // 购物车里面空的时候隐藏购物车列表
-            if (ordersList.length == 0) {
-              that.setData({
-                entryShow: false
-              })
-            }
-          } else {
-            app.toast(res.data.data)
-          }
-        }
-      })
-      
-      allMoney = 0;
-      allQiry = 0;
+      app.clearShoppingCart()
+      that.flushShoppingCart()
+    
       that.setData({
         greensList: greensList,
         qityArr: qityArr,
-        allQiry: allQiry,
         entryShow: false,
-        ordersList:[],
-        allMoney: allMoney.toFixed(2)
       })
+    },
+    /**
+     * 移除购物车,和清除购物车最大的区别就是也清除桌位和就餐人员信息
+     */
+    removeShoppingCart:function(){
+      shoppingCart = app.removeShoppingCart()
+      this.flushShoppingCart()
     },
     /**
      * 查看挂单修改数量
      */
     alterCount:function(e){
-      console.info("order_list")
-      console.info(ordersList)
       var that = this;
       var that = this;
-      that.setData({
-        loadingHidden: false
-      })
       var index = e.currentTarget.dataset.index;
       var type = e.currentTarget.dataset.type;
-      var i = e.currentTarget.dataset.i;
-      var j = e.currentTarget.dataset.j;
       var _url = '';
       var tpnum = 0;
       if (type == "+") {
-        qityArr[i]++;
         tpnum = ++greensList[i].infos[j].qity;
-        allQiry++;
-        ordersList[index].qity++;
-        allMoney = parseFloat(allMoney) + parseFloat(ordersList[index].GOODS_PRICE) / 100.0;
-        _url = 'ShoppingCart_update_updateCartNum';
       }else{
         tpnum = greensList[i].infos[j].qity - 1;
-        qityArr[i]--;
-        allQiry--;
-        ordersList[index].qity--;
+       
         greensList[i].infos[j].qity--;
-        allMoney = parseFloat(allMoney) - parseFloat(ordersList[index].GOODS_PRICE) / 100.0;
-        
-        _url = 'ShoppingCart_update_updateCartNum';
+       
       }
-      app.sendRequest({
-        url: _url,
-        method: "post",
-        data: {
-          CART_PK: ordersList[index].CART_PK,
-          GOODS_NUM: tpnum,
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid')
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            if (tpnum <= 0) {//如果该商品为0，那么清除它
-              ordersList.splice(index, 1)
-            }
-            that.setData({
-              greensList: greensList,
-              qityArr: qityArr,
-              allQiry: allQiry,
-              ordersList: ordersList,
-              allMoney: allMoney.toFixed(2),
-              loadingHidden: true
-            })
-            // 购物车里面空的时候隐藏购物车列表
-            if (ordersList.length == 0) {
-              that.setData({
-                entryShow: false
-              })
-            }
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
-        }
+      that.setData({
+        greensList: greensList,
+        qityArr: qityArr,
+              
+        // ordersList: ordersList,
+        allMoney: allMoney.toFixed(2),
       })
-    
     },
     /**
      * 关闭弹框
@@ -523,126 +425,25 @@ Component({
      */
     chosen: function (){
       var that = this;
-      app.sendRequest({
-        url: 'ShoppingCart_load_loadCartDataByUser',
-        method: "post",
-        data: {
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid'),
-          CART_STATE: 'zancun'
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            allMoney = 0;
-            ordersList = res.data.data;
-            console.info("list")
-            console.info(ordersList)
-            if (res.data.data.length > 0) {
-              for (var _index in ordersList) {
-                allMoney += parseFloat(ordersList[_index].GOODS_PRICE) * ordersList[_index].GOODS_NUM / 100.0;
-              }
-
-              for (let i = 0; i < greensList.length; i++) {
-                for (let j = 0; j < greensList[i].infos.length; j++) {
-                  if (greensList[i].infos[j].qity > 0) {
-                    for (var _index in ordersList) {
-                      if (ordersList[_index].FK_GOODS == greensList[i].infos[j].GOODS_PK) {
-                        ordersList[_index].i = i;
-                        ordersList[_index].j = j;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            that.setData({
-              ordersList: ordersList,
-              allMoney: allMoney.toFixed(2),
-              loadingHidden: true
-            })
-          }
-
-          //改bug改的实在太乱了，没办法，只能这样下去了
-          var orderId = wx.getStorageSync('ORDER_PK');
-          if (orderId != null && orderId != undefined && orderId != '') {
-            // 直接加入订单里面
-            that.setData({
-              loadingHidden: false
-            })
-
-            app.modal({
-              content: '确定加菜？',
-              success: function (res){
-                if(res.confirm){
-                  app.sendRequest({
-                    url: 'Order_update_updateCartToOrderMore',
-                    method: 'POST',
-                    data: {
-                      FK_ORDER: orderId,
-                      FK_SHOP: app.globalData.shopid,
-                      FK_USER: wx.getStorageSync('openid')
-                    },
-                    success: function (res) {
-                      if (res.data.code == '0000') {
-                        let _type = wx.getStorageSync('ORDER_TYPE', '');
-                        app.toast('操作成功')
-                        that.setData({
-                          loadingHidden: true
-                        })
-                        // //清除当前桌位信息
-                        // wx.removeStorage({
-                        //   key: 'currentTableMessage',
-                        //   success(res) {
-                        //   }
-                        // })
-                        wx.setStorageSync('ORDER_PK', '');
-                        wx.setStorageSync('ORDER_TYPE', '');
-                        app.pageTurns(`../indent/indentDateil?ORDER_PK=` + orderId + `&type=` + _type)
-                      } else {
-                        app.toast('操作失败')
-                      }
-                    },
-                    fail: function (error) {
-                      that.setData({
-                        loadingHidden: true
-                      })
-                      app.toast('操作失败')
-                    }
-                  });
-                }
-              }
-
-            })
-
-            
-          } else {
-            if (currentTable == null) {
-              reserveShow = true;
-              that.setData({
-                reserveShow: reserveShow,
-                entryShow: false
-              })
-              return;
-            }
-
-            if (selectPersonNum && currentEatPersonNum == 0) {
-              quorumShow = true;
-              that.setData({
-                quorumShow: quorumShow,
-                entryShow: false
-              })
-              return;
-            }
-            app.pageTurns('../orderDetail/orderDetail?ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney)
-
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
+      if(menuStatus == 2){
+        //加菜
+        app.pageTurns('../indent/indentDateil')
+        return;
+      }else{
+        if (currentTable == undefined || currentTable == '' || JSON.stringify(currentTable) == '{}'){
+          reserveShow = true;//显示选择餐位
+          this.setData({
+            reserveShow
+          })
+        } else if (currentEatPersonNum == 0){
+          quorumShow = true;
+          this.setData({
+            quorumShow
+          })
+        }else{
+          app.pageTurns('../orderDetail/orderDetail')
         }
-      })
-
-      
+      }   
     },
     /**
      * 选择餐位
@@ -650,11 +451,8 @@ Component({
     reserveConfirm:function(e){
     
       var that = this;
-      // var index = e.currentTarget.dataset.index;
-      // var queryBean = JSON.stringify(tableList[index]);
-      var queryBean = JSON.stringify(currentTable);
-      var orders = JSON.stringify(ordersList);
-      if (selectPersonNum && currentEatPersonNum == 0){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
+      // var queryBean = JSON.stringify(currentTable);
+      if (selectPersonNum !=undefined && selectPersonNum != '' && currentEatPersonNum == 0){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
         quorumShow = true;
       }
 
@@ -663,25 +461,24 @@ Component({
       if (currentEatPersonNum == 0 || currentEatPersonNum > currentTable.TABLES_NUM) {
         currentEatPersonNum = currentTable.TABLES_NUM;//当前桌位就餐人数
       }
-      var currentTableMessage = {
-        currentTable: currentTable,
-        currentEatPersonNum: currentEatPersonNum
-      }
-      //把当前桌位信息存储在本地缓存里边
-      app.setStorage('currentTableMessage', currentTableMessage)
-
+      // var currentTableMessage = {
+      //   currentTable: currentTable,
+      //   currentEatPersonNum: currentEatPersonNum
+      // }
+      // //把当前桌位信息存储在本地缓存里边
+      // app.setStorage('currentTableMessage', currentTableMessage)
+      shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
       console.info(currentTable)
-
-
+      that.flushStroageData()
       reserveShow = false;
       console.info(currentTable.TABLES_NUM)
       that.setData({
-        currentTable: currentTable,
-        reserveShow: reserveShow,
-        quorumShow: quorumShow
+        currentTable,
+        reserveShow,
+        quorumShow
       })
       if (!quorumShow){
-        app.pageTurns('../orderDetail/orderDetail?ordersList=' + orders + '&allMoney=' + allMoney)
+        app.pageTurns('../orderDetail/orderDetail')
       }
     },
     /**
@@ -690,18 +487,13 @@ Component({
     reserveQuorum:function(e){
       var that = this;
       currentEatPersonNum = e.target.dataset.index
-      var currentTableMessage = {
-        currentTable,
-        currentEatPersonNum
-      }
-      //把当前桌位信息存储在本地缓存里边
-      app.setStorage('currentTableMessage', currentTableMessage)
+      shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
 
       quorumShow = false;
       that.setData({
         quorumShow
       })
-      app.pageTurns('../orderDetail/orderDetail?ordersList=' + JSON.stringify(ordersList) + '&allMoney=' + allMoney)
+      app.pageTurns('../orderDetail/orderDetail')
     },
     /**
      * 查看挂单
@@ -873,13 +665,13 @@ Component({
       }
       qityArr[item] = qityArr[item] + 1;
       List[index].qity = qity + 1;
-      allQiry++;
+      // allQiry++;
       // _url = app.globalData.basePath + 'json/.json';
 
       let reqObj = {
-        GOODS_SPECIFICATION: [],
-        GOODS_RECIPE: [],
-        GOODS_TASTE: []
+        GOODS_SPECIFICATION: '',
+        GOODS_RECIPE: '',
+        GOODS_TASTE: ''
       };
       if (list.guige.length > 0) {
         for (var _index in list.guige) {
@@ -905,84 +697,46 @@ Component({
         }
       }
       var that = this;
-      that.setData({
-        loadingHidden: false
+
+      app.addShoppingCart({
+        GOODS_PK: List[index].GOODS_PK,
+        GOODS_NAME: List[index].GOODS_NAME,
+        GOODS_PRICE: currentGood.LAST_PIRCE * 100,
+        GOODS_FORMAT: reqObj.GOODS_SPECIFICATION,
+        GOODS_TASTE: reqObj.GOODS_TASTE,
+        GOODS_MAKING: reqObj.GOODS_RECIPE,
+        GOODS_DW: List[index].GOODS_DW,
+        GOODS_TYPE: List[index].GOODS_TYPE,
+        GTYPE_NAME: List[index].GTYPE_NAME,
       })
 
-      app.sendRequest({
-        url: 'ShoppingCart_insert_insertCart',
-        method: 'POST',
-        data: {
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid'),
-          GOODS_CODE: List[index].GOODS_CODE,
-          GOODS_DESC: List[index].GOODS_DESC,
-          GOODS_DW: List[index].GOODS_DW,
-          GOODS_LABEL: List[index].GOODS_LABEL,
-          GOODS_NAME: List[index].GOODS_NAME,
-          GOODS_NUM: List[index].GOODS_NUM,
-          GOODS_PK: List[index].GOODS_PK,
-          GOODS_PRICE: currentGood.LAST_PIRCE * 100,
-          GOODS_PXXH: List[index].GOODS_PXXH,
-          GOODS_RECIPE: reqObj.GOODS_RECIPE,
-          GOODS_SPECIFICATION: reqObj.GOODS_SPECIFICATION,
-          GOODS_TASTE: reqObj.GOODS_TASTE,
-          GOODS_TYPE: List[index].GOODS_TYPE,
-          GTYPE_NAME: List[index].GTYPE_NAME,
-          GTYPE_PK: List[index].GTYPE_PK,
-          PICTURE_URL: List[index].PICTURE_URL,
-          SHOW_RANGE: List[index].SHOW_RANGE
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            that.setData({
-              greensList: greensList,
-              qityArr: qityArr,
-              allQiry: allQiry,
-              loadingHidden: true
-            })
-            that.closePop();
-            isSelected = false;//清除规格选择状态
-            app.toast('添加成功')
-          } else {
-            app.toast('操作失败')
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
-        }
-      });
+      shoppingCart = app.getShoppingCart()
+      that.setData({
+        greensList,
+        qityArr,
+        // allQiry,
+        shoppingCart
+      })
+      that.closePop();
+      isSelected = false;//清除规格选择状态
     },
 
     /**
-     * 加载订单里边已经买了的菜的数量
+     * 加载挂单数量
      * 
      * lps  2018年11月29日02:24:21
      */
     loadCountOrderWei: function() {
       var that = this;
-      app.sendRequest({
-        url: 'Order_select_loadCountOrderWei',
-        method: 'POST',
-        data: {
-          FK_SHOP: app.globalData.shopid,
-          FK_USER: wx.getStorageSync('openid')
-        },
-        success: function (res) {
-          if (res.data.code == '0000') {
-            console.info(res.data);
-            if (Number(res.data.data.ORDER_COUNT) > 0) {
-              ordersFalg = false;
-              that.setData({
-                ordersFalg: ordersFalg
-              });
-            }
-          }
-        },
-        fail: function (error) {
-          app.toast('操作失败')
-        }
-      });
+      var shopStorageOrder = app.getStorageOrder()
+      console.info("挂单熟练")
+      console.info(shopStorageOrder)
+      if (shopStorageOrder.length > 0){
+        saveOrdersFalg = true;
+        that.setData({
+          saveOrdersFalg
+        });
+      }
     },
     setOptions:function(options){
       if (options != undefined) {
@@ -991,10 +745,11 @@ Component({
           quorumShow = false;
         } else if (options.quorumShow != undefined && options.quorumShow) {
           quorumShow = true;
-        } else if (options.clearCart != undefined && options.clearCart){
-          this.emptyCat();
-          app.toast('购物车已清空')
-        }
+        } 
+        // else if (options.clearCart != undefined && options.clearCart){
+        //   this.emptyCat();
+        //   app.toast('购物车已清空')
+        // }
       }
 
       this.setData({
@@ -1013,16 +768,12 @@ Component({
         success:function(res){
           if(res.confirm){
             if (status == 1) {
-              //清除当前桌位信息
-              wx.removeStorage({
-                key: 'currentTableMessage',
-                success(res) {
-                }
-              })
-              currentTable = null;//当前桌位
+              currentTable = {};//当前桌位
               currentEatPersonNum = 0;//当前餐桌就餐的人数
-              that.emptyCat()
+              that.removeShoppingCart()
             } else if (status == 2) {
+              //清除当前桌位信息
+              that.removeShoppingCart()
               wx.setStorageSync('ORDER_PK', '');
               wx.setStorageSync('ORDER_TYPE', '');
             }
@@ -1032,7 +783,44 @@ Component({
         }
 
       })
+    },
+    /**
+     * 增加或者减少购物车商品数量
+     */
+    operaGoodsNumber: function (e) {
+      var opera = e.currentTarget.dataset.type
+      var good = e.currentTarget.dataset.good
+      if (opera == '1'){
+        app.subShoppingCart(good)
+      }else{
+        app.addShoppingCart(good)
+      }
+      shoppingCart = app.getShoppingCart()
+      this.flushPageData()
+      this.setData({
+        shoppingCart,
+        qityArr
+      })
+      
+    },
+    /**
+     * 刷新数据
+     */
+    flushPageData:function(){
+      qityArr = []
+      for (let i = 0; i < greensList.length; i++) {
+        var count = 0;
+        if (shoppingCart != undefined && shoppingCart.goods != undefined)
+        shoppingCart.goods.forEach(function (good, index) {
+          if (navList[i].GTYPE_PK = good.GOODS_TYPE) {
+            count += good.GOODS_NUMBER
+          }
+        })
+        qityArr.push(count);
+        // allQiry += parseFloat(greensList[i].GTYPE_QITY);
+      }
     }
-    
+
+
   }
 })

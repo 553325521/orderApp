@@ -14,7 +14,10 @@ Component({
     addGlobalClass: true,
   },
   data:{
-    currentClickArea
+    currentClickArea,
+    isUseTableNum,
+    allTableNum,
+    currentLookStatus
   },
   
   /**
@@ -36,6 +39,7 @@ Component({
      * 页面初始化方法,加载所有区域和桌位
      */
     pageInit:function(){
+      app.showLoading()
       //先获取时间
       currentDate = util.nowTime()
       this.setData({
@@ -59,8 +63,10 @@ Component({
           }else{
             app.toast(res.data.data)
           }
+          app.hideLoading()
         },
         fail:function(error){
+          app.hideLoading()
           app.toast(error)
         }
 
@@ -113,6 +119,8 @@ Component({
      * 点击了桌子
      */
     clickTable:function(e){
+      console.info("点击了桌子")
+      console.info(e)
       var status = e.currentTarget.dataset.usestatus
       var table = e.currentTarget.dataset.table
       if(status == '0'){
@@ -125,12 +133,14 @@ Component({
           //监听函数可以通过e.detail查看传递的数据;
           page: '../menu/menu'
         }  　　
+        //创建一个空的购物车
+        app.createShoppingCart(table, 0)
         //先把当前桌子数据放进去
-        var currentTableMessage = {
-          currentTable: table,
-          currentEatPersonNum:0
-        }
-        app.setStorage('currentTableMessage', currentTableMessage)
+        // var currentTableMessage = {
+        //   currentTable: table,
+        //   currentEatPersonNum:0
+        // }
+        // app.setStorage('currentTableMessage', currentTableMessage)
 
         this.triggerEvent('switchPage', myEventDetail);
         
@@ -140,8 +150,5 @@ Component({
       }
 
     }
-
-
-
   }
 })

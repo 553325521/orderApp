@@ -1,5 +1,6 @@
 <!--pages/checkOut/checkOut.wxml-->
 <import scr="../template/chosenPosition.wxml"/>
+<wxs module="math" src="../../utils/math.wxs"></wxs>
 <view class='head'> 
   <view class='head-top dp-flex tc cf font-26'>
     <view class='bg-EF9B' bindtap='showCoupon'>优惠</view>
@@ -8,11 +9,11 @@
   <view class='pay-money'>
     <view class='reality-pay dp-flex'>
       <text class='font-28 c6'>实收金额</text>
-      <view class='money c2821 font-28'>￥<text class='font-34'>{{trueMoney}}</text> <text class='c6'> 元</text> </view>
+      <view class='money c2821 font-28'>￥<text class='font-34'>{{math.toFix(trueMoney/100.0)}}</text> <text class='c6'> 元</text> </view>
     </view>
     <view class='should-pay dp-flex'>
       <text class='font-28 c6'>应收金额</text>
-      <view class='money c2821 font-26'>￥<text class='font-26'>{{shouldMoney}}</text></view>
+      <view class='money c2821 font-26'>￥<text class='font-26'>{{math.toFix(shouldMoney/100.0)}}</text></view>
     </view>
   </view>
 </view>

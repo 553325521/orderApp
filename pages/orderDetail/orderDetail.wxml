@@ -8,11 +8,11 @@
   </view>
   <view class='info flex-1 dp-flex'>
     <view class='reserve'>
-      <view class='site font-28 c6 tc' bindtap='clickTables'>{{currentTable.TABLES_NAME}}</view>
-      <view class='entry-orders cf tc font-18' bindtap='settleAccounts' data-type='2'>挂单</view>
+      <view class='site font-28 c6 tc' bindtap='clickTables'>{{shoppingCart.table.TABLES_SHORT_NAME == undefined ? shoppingCart.table.TABLES_NAME : shoppingCart.table.TABLES_SHORT_NAME}}</view>
+      <view class='entry-orders cf tc font-18' bindtap='saveCartOrder'>挂单</view>
     </view>
     <view class='quorum c6 tc font-28' bindtap='clickPersonNum'>
-      <view>{{currentEatPersonNum}}人</view>
+      <view>{{shoppingCart.personNum}}人</view>
     </view>
     <view class='empty c6 tc font-28' bindtap='clickClear'>
       <view>清空</view>
@@ -20,14 +20,14 @@
   </view>
 </view>
 <scroll-view scroll-y class='list' style='height:{{height}}'>
-  <block wx:for = "{{ordersList}}" wx:key="{{index}}">
+  <block wx:for = "{{shoppingCart.goods}}" wx:key="{{index}}">
     <view class='item dp-flex'>
       <view class='name font-28 c3'>{{item.GOODS_NAME}}{{item.GOODS_RECIPE == undefined ? '' : '('+item.GOODS_RECIPE+')'}}</view>
       <view class='price font-28 c2821'>￥{{math.toFix(item.GOODS_PRICE / 100.0)}}/{{item.GOODS_DW}}</view>
       <view class='quantity font-28 c3 dp-flex'>
-        <image class='add' src='../../images/icon/minus-icon.png' data-type="-" data-index="{{index}}" catchtap='alterCount'></image>
-        <text class='font-26 num c2821'>{{item.qity}}</text>
-        <image class='minus'src='../../images/icon/add-icon.png' data-type="+" data-index="{{index}}" catchtap='alterCount'></image> 
+        <image class='add' src='../../images/icon/minus-icon.png' data-type="-" data-good="{{item}}" catchtap='alterCount'></image>
+        <text class='font-26 num c2821'>{{item.GOODS_NUMBER}}</text>
+        <image class='minus'src='../../images/icon/add-icon.png' data-type="+" data-good="{{item}}" catchtap='alterCount'></image> 
       </view>
     </view>
   </block>  
@@ -35,30 +35,11 @@
 <view class='order-bottom bottom-fixed'>
   <view class='total dp-flex c6 font-28'>
     <text>合计</text>
-    <view class='deal'>{{ordersList.length}}份菜品</view>
-    <view class='total-prices c2821'>￥{{allMoney}}</view>
+    <view class='deal'>{{shoppingCart.totalNumber}}份菜品</view>
+    <view class='total-prices c2821'>￥{{math.toFix(shoppingCart.totalMoney/100.0)}}</view>
   </view>
   <view class='oper dp-flex font-38 cf tc'>
     <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>
-    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts' data-type='3'>确定</view>
+    <view class='confirm-btn flex-1 bg-EF9B' bindtap='settleAccounts'>确定</view>
   </view>
-</view>
-
-<!--index.wxml-->
-<view class="container">
-    <view id="loading" hidden="{{loadingHidden}}">
-        <view id="loading-center">
-            <view id="loading-center-absolute">
-                <view class="object" id="object_one"></view>
-                <view class="object" id="object_two"></view>
-                <view class="object" id="object_three"></view>
-                <view class="object" id="object_four"></view>
-                <view class="object" id="object_five"></view>
-                <view class="object" id="object_six"></view>
-                <view class="object" id="object_seven"></view>
-                <view class="object" id="object_eight"></view>
-                <view class="object" id="object_big"></view>
-            </view>
-        </view>
-    </view>
 </view>

@@ -53,7 +53,7 @@ page{
 .retreat-food{
   width: 100rpx;
   background-color: #EF9BA0;
-  top: 0;right: -34rpx;
+  top: 0;right: -50rpx;
 }
 /*  */
 .order-bottom{

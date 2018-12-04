@@ -20,7 +20,7 @@ var filters = {
       var subMin = currentMS[1] - dateMS[1]
       if (subMin < 0) {
         subHours--;
-        subMin = -subMin;
+        subMin += 60;
       }
       if (subHours < 10) {
         subHours = '0' + subHours;
@@ -32,9 +32,17 @@ var filters = {
     } else {
       return ">1天"
     }
+  },
+  getYMD: function(date){
+    return date.substring(0,10)
+  },
+  subString:function(data,strIndex,endIndex){
+    return data.substring(strIndex,endIndex)
   }
 }
 module.exports = {
   toFix: filters.toFix,
-  calcDate: filters.calcDate
+  calcDate: filters.calcDate,
+  getYMD: filters.getYMD,
+  subString: filters.subString
 }

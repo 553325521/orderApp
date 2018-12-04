@@ -4,6 +4,11 @@ var totalMoney = 0;
 var ORDER_PK;//订单的id
 var orderType;//订单的类型
 var smallButton = true;//显示按钮吗还,需要从后台查询
+var jiacai = false;//是加菜状态
+var shoppingCart={
+  totalMoney:0,
+  totalNumber:0
+};//购物车
 
 Page({
   data: {
@@ -17,8 +22,24 @@ Page({
     var that = this;
     ORDER_PK = options.ORDER_PK
     orderType = options.type
+    if (ORDER_PK == undefined || ORDER_PK == ''){
+      ORDER_PK = wx.getStorageSync('ORDER_PK');
+      if (ORDER_PK != undefined && ORDER_PK != ''){
+        jiacai = true;
+        shoppingCart = app.getShoppingCart()
+      }
+      orderType = 0
+    }else{
+      jiacai = false;//是加菜状态
+      shoppingCart = {
+        totalMoney: 0,
+        totalNumber: 0
+      };//购
+    }
     that.setData({
-      orderType: orderType
+      orderType,
+      jiacai,
+      shoppingCart
     })
     that.loadOrderDetail();
     //获取一些设置的参数，比如多久就不能显示开台补单退单开台了
@@ -96,6 +117,7 @@ loadOrderDetail:function(){
     },
     success: function (res) {
       if (res.data.code == '0000') {
+        console.info(res.data.data[0])
         for (var _index in res.data.data) {
           res.data.data[_index].right = 0;
           res.data.data[_index].show = false;
@@ -150,26 +172,6 @@ mapToJson: function (map) {
     wx.setStorageSync('ORDER_PK', ORDER_PK);
     wx.setStorageSync('ORDER_TYPE', orderType);
 
-
-    // app.sendRequest({
-    //   url: 'Order_load_loadOrderDetailTableByOrderPK',
-    //   data:{
-    //     ORDER_PK: ORDER_PK,
-    //     openid: wx.getStorageSync('openid')
-    //   },
-    //   success:function(res){
-    //     console.info(res)
-    //     var currentTableMessage = {
-    //       currentTable: res.data.data,
-    //       currentEatPersonNum: res.data.data
-    //     }
-    //     app.setStorage('currentTableMessage', currentTableMessage)
-
-
-    //     app.reLaunch('../index/index?page=../menu/menu')
-    //   }
-    // })
-
     app.reLaunch('../index/index?page=../menu/menu')
   },
   //退菜
@@ -198,8 +200,56 @@ mapToJson: function (map) {
       }
     })
   },
+  /**
+   * 确定订单
+   */
   navTo:function(){
-    app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney + '&ORDER_PK='+ORDER_PK)
+    var that = this
+    if (jiacai){
+      app.modal({
+        content:'确定加菜？',
+        success(res) {
+          if (res.confirm) {
+            app.sendRequest({
+              url:'Order_insert_OrderAddGoods',
+              data:{
+                FK_SHOP: app.globalData.shopid,
+                FK_USER: wx.getStorageSync('openid'),
+                ORDER_PK: ORDER_PK,
+                SHOPPING_CART:JSON.stringify(app.getShoppingCart())
+              },
+              success: function (res) {
+               if(res.code='0000'){
+                  //清空购物车
+                 app.removeShoppingCart()
+                 wx.setStorageSync('ORDER_PK', '');
+                 wx.setStorageSync('ORDER_TYPE', '');
+                 jiacai = false;
+                 var shoppingMoney = shoppingCart.totalMoney;
+                 shoppingCart = {
+                   totalMoney: 0,
+                   totalNumber: 0
+                  }
+
+                  that.setData({
+                    jiacai,
+                    shoppingCart
+                  })
+                 that.loadOrderDetail();
+                 if (app.globalData.appSetting.tddcsy){
+                   app.pageTurns('../checkOut/checkOut?shouldMoney=' + (totalMoney + shoppingMoney) + '&ORDER_PK=' + ORDER_PK)
+                 }
+               }else{
+                 app.toast(res.data.data)
+               }
+              },
+            })
+          }
+        }
+      })
+    }else{
+      app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney + '&ORDER_PK=' + ORDER_PK)
+    }
   },
   /**
    * 点击了右上角小按钮
@@ -228,9 +278,9 @@ mapToJson: function (map) {
           } else if (opera == '2') {
             that.cancalOrder()
           } else if (opera == '3') {
-            that.setTable('','1')
+            that.setTable(that.data.orderDetailMap.TABLES_PK,'1')
           } else if (opera == '4') {
-            that.setTable('', '0')
+            that.setTable(that.data.orderDetailMap.TABLES_PK, '0')
           }
          
         }
@@ -254,7 +304,22 @@ mapToJson: function (map) {
    * 开台 空台操作
    * status:台开还是空台 1：开台 0：空台
    */
-  setTable: function (orderId,status) {
-    console.info("开台空台成功"+status)
+  setTable: function (tableId,status) {
+
+    app.sendRequest({
+      url:'Tables_update_updateTableIsUseByTableId',
+      data:{
+        TABLES_PK: tableId,
+        TABLES_ISUSE: status
+      },
+      success:function(res){
+        if(res.data.code == '0000'){
+          app.toast('操作成功')
+        }else{
+          app.toast(res.data.data)
+        }
+      }
+    })
+    
   }
 })

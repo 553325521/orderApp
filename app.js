@@ -1,4 +1,5 @@
 //app.js
+var util = require('utils/util.js');  
 
 App({
   data: {   
@@ -116,13 +117,11 @@ App({
         "iconPath": "../../images/icon/shouyin.png",
         "selectedIconPath": "../../images/icon/shouyin.png",
         "text": "收银"
-      },
-      {
-        "pagePath": "../menu/menu",
-        "iconPath": "../../images/icon/caidan.png",
-        "selectedIconPath": "../../images/icon/caidan.png",
-        "text": "首页"
-      }]
+      }
+      ]
+    },
+    appSetting:{
+      tddcsy:true//堂点带出收银
     }
   },
   /**
@@ -377,7 +376,7 @@ pushSession:function(){
   showLoading: function (title) {
     if (wx.showLoading) {
       wx.showLoading({
-        title: title,
+        title: title == undefined ? '正在加载' : title,
         mask: true,
       })
     }
@@ -574,8 +573,263 @@ pushSession:function(){
         }
       }
     })
+  },
+  /**
+   * 添加商品到购物车（本地版）
+   */
+  addShoppingCart: function (good) {
+    //从购物车获取数据
+    var shoppingCart = wx.getStorageSync('shopping_cart')
+    var that = this;
+    if (shoppingCart[that.globalData.shopid]) {
+      var isSameGoods = false;
+      var currentShopShoppingCart = shoppingCart[that.globalData.shopid].goods
+      currentShopShoppingCart.forEach(function (cart, index) {
+        if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+          cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
+          //判断为同一商品
+          if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
+            shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_TRUE_PRICE)
+          } else {
+            shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_PRICE)
+          }
+          shoppingCart[that.globalData.shopid].totalNumber += 1
+          cart.GOODS_NUMBER++;
+          isSameGoods = true
+          wx.setStorageSync('shopping_cart', shoppingCart)
+        }
+      })
+
+      if (!isSameGoods) {
+        //不是相同的商品
+        if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
+          shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_TRUE_PRICE)
+        } else {
+          shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_PRICE)
+        }
+        shoppingCart[that.globalData.shopid].totalNumber += 1
+        currentShopShoppingCart.push({
+          GOODS_PK: good.GOODS_PK,//商品主键
+          GOODS_NAME: good.GOODS_NAME,//商品名字
+          GOODS_NUMBER: 1,//商品的数量
+          GOODS_PRICE: good.GOODS_PRICE,//商品单价
+          // GOODS_TRUE_PRICE: good.GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+          GOODS_FORMAT: good.GOODS_FORMAT,//规格
+          GOODS_MAKING: good.GOODS_MAKING,//做法
+          GOODS_TASTE: good.GOODS_TASTE,//口味
+          GOODS_DW: good.GOODS_DW,
+          GOODS_TYPE: good.GOODS_TYPE,
+          GTYPE_NAME: good.GTYPE_NAME
+        })
+        wx.setStorageSync('shopping_cart', shoppingCart)
+      }
+    } else {
+      console.info("没有购物车")
+      var currentShopShoppingCart = {}
+      currentShopShoppingCart[that.globalData.shopid] = {
+        totalMoney: good.GOODS_TRUE_PRICE == undefined || good.GOODS_TRUE_PRICE == '' ? good.GOODS_PRICE : good.GOODS_TRUE_PRICE,
+        totalNumber: 1,
+        goods: [
+          {
+            GOODS_PK: good.GOODS_PK,//商品主键
+            GOODS_NAME: good.GOODS_NAME,//商品名字
+            GOODS_NUMBER: 1,//商品的数量
+            GOODS_PRICE: good.GOODS_PRICE,//商品单价
+            // GOODS_TRUE_PRICE: good.GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+            GOODS_FORMAT: good.GOODS_FORMAT,//规格
+            GOODS_MAKING: good.GOODS_MAKING,//做法
+            GOODS_TASTE: good.GOODS_TASTE,//口味
+            GOODS_DW: good.GOODS_DW,
+            GOODS_TYPE: good.GOODS_TYPE,
+            GTYPE_NAME: good.GTYPE_NAME
+          }
+        ]
+      }
+      wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+
+      //购物车数据结构
+      // shopping_cart:{
+      //   shopid:{
+      //     totalMoney:'800',
+      //     totalNumber:'10',
+      //     goods:[
+      //       {
+      //         GOODS_PK: GOODS_PK,//商品主键
+      //         GOODS_NAME: GOODS_NAME,//商品名字
+      //         GOODS_NUMBER: GOODS_NUMBER,//商品的数量
+      //         GOODS_PRICE: GOODS_PRICE,//商品单价
+      //         GOODS_TRUE_PRICE: GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+      //         GOODS_FORMAT: GOODS_FORMAT,//规格
+      //         GOODS_MAKING: GOODS_MAKING,//做法
+      //         GOODS_TASTE: GOODS_TASTE,//口味
+      //         GOODS_DW: GOODS_DW
+      //       },
+      //       {
+
+      //       },
+      //       {
+
+      //       }
+      //     ]
+
+      //   }
+      // }
+    }
+  },
+  /**
+  * 从购物车减少商品数量（本地版）
+  */
+  subShoppingCart: function (good) {
+    //从购物车获取数据
+    var shoppingCart = wx.getStorageSync('shopping_cart')
+    var that = this;
+    //先判断允许减少商品的数量吗
+    if (shoppingCart == undefined || shoppingCart[that.globalData.shopid] == undefined || shoppingCart[that.globalData.shopid].totalNumber < 1) {
+      return;
+    }
+
+    var shopShoppingCart = shoppingCart[that.globalData.shopid];
+    var goods = shopShoppingCart.goods;
 
 
-   
-  }
+    goods.forEach(function (cart, index) {
+
+      //判断是同一件商品吗
+      if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+        cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
+
+        if (cart.GOODS_TRUE_PRICE != undefined && cart.GOODS_TRUE_PRICE != '') {
+          shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) - Number(cart.GOODS_TRUE_PRICE)
+        } else {
+          shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) - Number(cart.GOODS_PRICE)
+        }
+        shopShoppingCart.totalNumber = Number(shopShoppingCart.totalNumber) - 1
+
+        if (cart.GOODS_NUMBER > 1) {
+          cart.GOODS_NUMBER--;
+        } else {
+          goods.splice(index, 1)
+        }
+
+        wx.setStorageSync('shopping_cart', shoppingCart)
+      }
+    })
+    return shopShoppingCart
+  },
+  /**
+   * 根据桌位和人数创建一个空的购物车
+   */
+  createShoppingCart: function (table, personNum) {
+    var currentShopShoppingCart = {}
+    currentShopShoppingCart[this.globalData.shopid] = {
+      table: table,
+      personNum: personNum,
+      totalMoney: 0,
+      totalNumber: 0,
+      goods: []
+    }
+    wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+    return currentShopShoppingCart[this.globalData.shopid]
+  },
+  /**
+   * 挂单恢复购物车，直接传过来
+   */
+  recoverShoppingCart:function(shoppingCart){
+    var currentShopShoppingCart = {}
+    currentShopShoppingCart[this.globalData.shopid] = shoppingCart;
+    wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+    return currentShopShoppingCart[this.globalData.shopid]
+  },
+  /**
+   * 清除购物车(只清除商品)
+   */
+  clearShoppingCart: function () {
+    //从购物车获取数据
+    var shoppingCart = wx.getStorageSync('shopping_cart')
+    var shopShoppingCart = shoppingCart[this.globalData.shopid]
+    shopShoppingCart.totalMoney = 0;
+    shopShoppingCart.totalNumber = 0;
+    shopShoppingCart.goods = [];
+    wx.setStorageSync('shopping_cart', shoppingCart)
+  },
+  /**
+   * 移除购物车(移除购物车)
+   */
+  removeShoppingCart: function () {
+    wx.removeStorageSync('shopping_cart')
+    return {};
+  },
+  /**
+   * 获取购物车
+   */
+  getShoppingCart:function(){
+    var shoppingCart = wx.getStorageSync('shopping_cart')
+    if (shoppingCart == undefined || shoppingCart == ""){
+      return {}
+    }
+    if (shoppingCart[this.globalData.shopid] == undefined){
+      return {}
+    }
+    return shoppingCart[this.globalData.shopid]
+  },
+  /**
+   * 购物车添加当前桌位或者人数信息
+   */
+  addTableInCart:function(table,personNum){
+    var shoppingCart = wx.getStorageSync('shopping_cart')
+    var shopShoppingCart = shoppingCart[this.globalData.shopid]
+    if (table != undefined && table != ''){
+      shopShoppingCart.table = table
+    }
+    if (personNum != undefined && personNum != ''){
+      shopShoppingCart.personNum = personNum
+    }
+
+    wx.setStorageSync('shopping_cart', shoppingCart)
+    return shopShoppingCart;
+  },
+  /**
+   * 获取挂单数据
+   */
+  getStorageOrder:function(){
+    var storageOrder = wx.getStorageSync('storage_order')
+    if (storageOrder){
+      var shopStorageOrder = storageOrder[this.globalData.shopid]
+      return shopStorageOrder
+    }
+    
+    return []
+  },
+  /**
+   * 挂单
+   */
+  setStorageOrder:function(shoppingCart){
+    var storageOrder = wx.getStorageSync('storage_order')
+    if (storageOrder == undefined || storageOrder == ""){
+      storageOrder = {};
+      storageOrder[this.globalData.shopid] = []
+    } 
+    
+    shoppingCart.saveOrderDate = util.nowTime();//添加一个挂单日期
+    storageOrder[this.globalData.shopid].unshift(shoppingCart)
+    wx.setStorageSync('storage_order', storageOrder)
+    wx.removeStorageSync('shopping_cart')
+  },
+  /**
+   * 删除挂单
+   */
+  removeStorageOrder: function (index) {
+    var storageOrder = wx.getStorageSync('storage_order')
+    if (storageOrder) {
+      var shopStorageOrder = storageOrder[this.globalData.shopid]
+      var deleteShoppingCart = shopStorageOrder.splice(index,1)
+    }
+    if (shopStorageOrder.length < 1){
+      wx.removeStorageSync('storage_order')
+      return deleteShoppingCart[0]
+    }
+    wx.setStorageSync('storage_order', storageOrder)
+
+    return deleteShoppingCart[0]
+  },
 })

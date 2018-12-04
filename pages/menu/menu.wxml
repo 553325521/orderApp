@@ -13,25 +13,25 @@
 <!-- 搜索框  -->
 <view class='search-box' id='search-box'>
   <image class='ss-icon pa tf-y50' src='../../images/icon/ss.png'></image>
-  <input class='box-s bg-fff font-26' type='text' placeholder='请输入商品编号或助记码'></input>
+  <input class='box-s bg-fff font-26' type='text' placeholder='请输入商品名称'></input>
 </view>
 <!-- 购物车  -->
-<view class='cat' bindtap="{{allQiry>0?'entryOrders':''}}">
-  <image wx:if="{{allQiry==0}}" class='w100 h100' src='../../images/icon/car-unll.png'></image>
-  <image wx:if="{{allQiry>0}}" class='w100 h100' src='../../images/icon/cat-icon.png'></image>
-  <text wx:if="{{allQiry>0}}" class='font-26 cf tc pa'>{{allQiry}}</text>
+<view class='cat' bindtap="{{shoppingCart.totalNumber>0?'entryOrders':''}}">
+  <image wx:if="{{shoppingCart.totalNumber==0}}" class='w100 h100' src='../../images/icon/car-unll.png'></image>
+  <image wx:if="{{shoppingCart.totalNumber>0}}" class='w100 h100' src='../../images/icon/cat-icon.png'></image>
+  <text wx:if="{{shoppingCart.totalNumber>0}}" class='font-26 cf tc pa'>{{shoppingCart.totalNumber}}</text>
 </view>
 <!-- 挂单按钮  -->
-<view class='entry-orders' bindtap='checkEntryOrders' hidden='{{ordersFalg}}'>
+<view class='entry-orders' bindtap='checkEntryOrders' wx:if='{{saveOrdersFalg}}'>
   <image class='w100 h100' src='../../images/icon/list-icon.png'></image>
 </view>
 <!-- 挂单列表  -->
-<view wx:if="{{entryShow}}"  class='entry-orders-list full-fixed' style='width:{{W}};height:{{H}}'>
+<view wx:if="{{entryShow && shoppingCart.totalNumber>0}}"  class='entry-orders-list full-fixed' style='width:{{W}};height:{{H}}'>
   <view class='footfixed pr' bindtap='vanish'></view>
   <view id='box-content' class='box-content pa w100'>
     <view class='cat orders-cat'>
       <image  class='w100 h100' src='../../images/icon/cat-icon.png'></image>
-      <text class='font-26 cf tc pa'>{{allQiry}}</text>
+      <text class='font-26 cf tc pa'>{{shoppingCart.totalNumber}}</text>
     </view>
     <view class='head font-28 dp-flex'>
       <text>购物车</text>
@@ -41,20 +41,20 @@
       </view>
     </view>
     <scroll-view scroll-y class='list bg-fff' style='height:{{height}}'>
-      <block wx:for = "{{ordersList}}" wx:key="{{index}}">
+      <block wx:for = "{{shoppingCart.goods}}" wx:key="{{index}}">
         <view class='item dp-flex' id="orders-item">
           <view class='name font-28 c3'>{{item.GOODS_NAME}}{{item.GOODS_RECIPE == undefined ? '' : '('+item.GOODS_RECIPE+')'}}</view>
-          <view class='price font-28 c2821'>￥{{math.toFix(item.GOODS_PRICE / 100.0)}}/{{item.GOODS_DW}}</view>
+          <view class='price font-28 c2821'>￥{{math.toFix((item.GOODS_TRUE_PRICE == undefined || item.GOODS_TRUE_PRICE == '' ? item.GOODS_PRICE : item.GOODS_TRUE_PRICE) / 100.0)}}/{{item.GOODS_DW}}</view>
           <view class='quantity1 font-28 c3'>
-            <image class='add'  data-type="-" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/minus-icon.png'></image>
-            <text class='font-26 num' style='line-height: 40rpx'>{{item.qity}}</text>
-            <image class='minus' data-type="+" data-index="{{index}}" data-j="{{item.j}}" data-i="{{item.i}}" catchtap='alterCount' src='../../images/icon/add-icon.png'></image> 
+            <image class='add'  data-index="{{index}}" data-good="{{item}}" catchtap='operaGoodsNumber' data-type='1' src='../../images/icon/minus-icon.png'></image>
+            <text class='font-26 num' style='line-height: 40rpx'>{{item.GOODS_NUMBER}}</text>
+            <image class='minus' data-index="{{index}}" data-good="{{item}}"  catchtap='operaGoodsNumber' data-type='2' src='../../images/icon/add-icon.png'></image> 
           </view>
         </view>
       </block>  
     </scroll-view>
     <view class='bottom bg-fff'>
-      <text class='c60 font-30'>共￥{{allMoney}}</text>
+      <text class='c60 font-30'>共￥{{math.toFix(shoppingCart.totalMoney/100.0)}}</text>
     </view>
   </view>
 </view>
@@ -95,7 +95,7 @@
   取消{{menuStatus == '1' ? '点菜' : menuStatus == '2' ? '加菜' : ''}}
 </view>
 <!-- 选好了  -->
-<view class="selected font-28 tc cf {{allQiry>0?'on':''}}" bindtap="{{allQiry>0?'chosen':''}}">
+<view class="selected font-28 tc cf {{shoppingCart.totalNumber>0?'on':''}}" bindtap="{{shoppingCart.totalNumber>0?'chosen':''}}">
   选好了
 </view>
 <!-- 选择就餐餐位  -->
@@ -137,7 +137,7 @@
                 <view class='info pr'>
                   <view class='greens-name1 c3 font-28'>{{every.GOODS_NAME}}</view>
                   <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
-                  <view class='price1 font-28 c2821'>￥{{math.toFix(every.GOODS_PRICE / 100)}}/{{every.GOODS_DW}}</view>
+                  <view class='price1 font-28 c2821'>￥{{math.toFix((every.GOODS_TRUE_PRICE == undefined || every.GOODS_TRUE_PRICE == '' ? every.GOODS_PRICE : every.GOODS_TRUE_PRICE) / 100.0)}}/{{every.GOODS_DW}}</view>
                   <view class='quantity1 pa dp-flex'>
                     <block wx:if="{{every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]'}}">
                       <image class='add' wx:if="{{every.qity>0}}" data-type="-" data-index="{{index}}" data-item="{{keys}}" catchtap='addQity' src='../../images/icon/minus-icon.png'></image>
@@ -157,7 +157,7 @@
 </view>
 
 <!--index.wxml-->
-<view class="container">
+<!-- <view class="container">
     <view id="loading" hidden="{{loadingHidden}}">
         <view id="loading-center">
             <view id="loading-center-absolute">
@@ -173,4 +173,4 @@
             </view>
         </view>
     </view>
-</view>
+</view> -->
