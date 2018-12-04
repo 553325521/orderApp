@@ -100,11 +100,8 @@ loadOrderDetail:function(){
           res.data.data[_index].right = 0;
           res.data.data[_index].show = false;
         }
-        that.data.orderDetailMap = that.dealOrderDetailData(res.data.data);
-        console.info("easfdaeseew")
-        console.info(that.data.orderDetailMap)
         that.setData({
-          orderDetailMap: that.data.orderDetailMap
+          orderDetailMap: res.data.data[0]
         });
       }
     },
@@ -127,31 +124,6 @@ strMapToObj: function (strMap) {
 */
 mapToJson: function (map) {
   return JSON.stringify(this.strMapToObj(map));
-},
-//处理订单详情数据
-dealOrderDetailData:function(data){
-  let that = this;
-  var orderDetailMap = new Map();
-  console.info("订单")
-  console.info(data)
-  orderDetailMap.set("ORDER_POSITION",data[0].ORDER_POSITION);
-  orderDetailMap.set("ORDER_RS",data[0].ORDER_RS);
-  orderDetailMap.set("ORDER_CODE", data[0].ORDER_CODE);
-  orderDetailMap.set("ORDER_YMD",data[0].CREATE_TIME.substring(0,10));
-  orderDetailMap.set("CREATE_TIME", data[0].CREATE_TIME.substring(11));
-  orderDetailMap.set("ARRIVE_TIME", data[0].CREATE_TIME.substring(11));
-  
-  var totalFS = 0;
-  totalMoney = 0;
-  for(var i = 0;i < data.length;i++){
-    totalMoney = totalMoney + (data[i].ORDER_DETAILS_GMONEY * data[i].ORDER_DETAILS_FS/100.0);
-    totalFS = totalFS + parseInt(data[i].ORDER_DETAILS_FS);
-  }
-  orderDetailMap.set("totalMoney", totalMoney);
-  orderDetailMap.set("totalFS", totalFS);
-  orderDetailMap.set("data",data);
-
-  return JSON.parse(that.mapToJson(orderDetailMap));
 },
   //删除item  
   delItem: function (e) {

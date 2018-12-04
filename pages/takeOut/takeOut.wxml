@@ -61,7 +61,7 @@
         <!-- <text>*</text>  -->
       </view>
     </view>
-  </view>
+  </view>                                                                                                                                                                                                 
 </view>
 <view class='indent-list' wx:else style='display:{{pageShow?"block":"none"}};border-top:{{isExistData?"1px #EAD5D7 solid":"none"}};'>
   <view class='indent-item'  wx:for="{{wmOrderData}}" wx:key="keys"  wx:for-item="itemName">
