@@ -112,6 +112,17 @@ Page({
  * 点击了支付
  */
 clickPay:function (){
+  // wx.requestPayment({
+    //   appId:'wx3326999f88e7077a',
+    //   timeStamp: '1543484072',
+    //   nonceStr: '2727b32b4e0a407e9cf01f9e25120304',
+    //   package: 'prepay_id=wx291734320062914b0f49dade2319482583',
+    //   signType: 'RSA',
+    //   paySign: 'm5TNqqUT/EuU6zBfwPimmYTyMbniVS6fVXf 6 dedENA0YcONNvM/uqPEAu0tpW64Zk3hoC6La5kmL6sQWruDLp GxW1QqaxRxgDC6KZhveYKjI0ORUpXk/hxlQMcgFBkEVBcVCZEwSOyyXqPculaR4QOfFmGVV/wau6Y6vHN8at3zTrb3IuxfV7z66d6eiOAh49Rk 8tx467x3r0zalfgaOtm/ba04coifSx0uXXe7tC4fLr2peKivmUuGXMzZvvi55gxNz8N3TeVb4xeyi 9NI/63ERz3uu67qU2Q4yNm/c6/qHI/vJsjPMrd8puECROKcetwS9H6jRF0h8hewzQ==',
+    //   success(res) { console.info(res)},
+    //   fail(res) { console.info(res)}
+    // })
+
 
   console.info("支付方式为" + currentPayWay)
   wx.request({

@@ -38,11 +38,33 @@ var filters = {
   },
   subString:function(data,strIndex,endIndex){
     return data.substring(strIndex,endIndex)
+  },
+  payWay:function(payWay){
+    if(payWay == '1'){
+      return "现金"
+    }
+    if(payWay.substring(0,1) == '2'){
+      return "微信"
+    }
+    if (payWay.substring(0, 1) == '3') {
+      return "支付宝"
+    }
+    if (payWay == '4') {
+      return "POS"
+    }
+    if (payWay == '5') {
+      return "储值"
+    }
+    if (payWay == '6') {
+      return "其他"
+    }
+
   }
 }
 module.exports = {
   toFix: filters.toFix,
   calcDate: filters.calcDate,
   getYMD: filters.getYMD,
-  subString: filters.subString
+  subString: filters.subString,
+  payWay: filters.payWay
 }

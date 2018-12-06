@@ -9,7 +9,6 @@ page{
   width: 120rpx;
   position:absolute;
   right:0rpx;
-
   line-height: 98rpx;
 }
 .item{

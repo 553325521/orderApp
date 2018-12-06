@@ -1,11 +1,11 @@
 {
   "pages": [
-   
+    
     "pages/index/index",
     "pages/checkOut/checkOut",
     "pages/founding/founding",
     "pages/couponList/couponList",
-    "pages/cashier/cashier",
+    
     "pages/menu/menu",
     "pages/takeOut/takeOut",
     "pages/takeOut/takeOutDateil",
@@ -19,8 +19,8 @@
     "pages/payMent/payMent",
     "pages/orderDetail/orderDetail",
     "pages/template/selectNumber",
-    "pages/payOrders/payOrders"
-    
+    "pages/payOrders/payOrders",
+    "pages/cashier/cashier"
   ],
   "window": {
     "backgroundTextStyle": "light",

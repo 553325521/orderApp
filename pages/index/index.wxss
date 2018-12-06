@@ -2,6 +2,7 @@
 .icon{
   width:54rpx;
   height: 48rpx;
+  margin-top:6rpx;
 }
 
 .icon:active{
@@ -14,7 +15,7 @@
   position: fixed;
   bottom:0;
   padding:10rpx 8rpx 0rpx 10rpx;
-  font-size:19rpx;
+  font-size:22rpx;
   color:#5C5A58;
   box-shadow: 6rpx 6rpx 6rpx 6rpx #aaa;
   display: flex;
@@ -23,13 +24,13 @@
  .tabBar-item{
   float:left;
   flex:1;
-  height:80rpx;
+  height:90rpx;
   text-align: center;
   overflow: hidden;
 }
 
 /*当前字体颜色*/
 .tabBartext{
-  font-size:21rpx;
+  font-size:24rpx;
 }
 

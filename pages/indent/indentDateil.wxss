@@ -33,27 +33,33 @@ page{
   margin: 6rpx 0
 } 
 /*  */
-.list{
-}
+
 .item{
+  width: 100%;
   line-height: 96rpx;
   /* justify-content: space-between; */
-  right: 0
+  right: 0;
+  justify-content:space-between; 
+  transition: all 0.1s;
+  font-size: 28rpx;
+  padding-right: 70rpx;
 }
 .item .name{
   padding-left: 70rpx;
-  width: 280rpx
+  /* width: 280rpx */
 }
-.item .part{
+/* .item .part{
   width: 134rpx
-}
-.item .moeny{
+} */
+/* .item .moeny{
   width: 254rpx
-}
+} */
 .retreat-food{
-  width: 100rpx;
+  width: 120rpx;
   background-color: #EF9BA0;
-  top: 0;right: -50rpx;
+  right:0rpx;
+  line-height: 96rpx;
+  position:absolute;
 }
 /*  */
 .order-bottom{
@@ -91,7 +97,7 @@ page{
   border-top:1rpx solid rgba(0, 0, 0, 0.05)
 }
 .viewBottomBorder{
-  border-bottom:1rpx solid rgba(0, 0, 0, 0.05)
+  border-bottom:1rpx solid rgba(0, 0, 0, 0.05);
 }
 /* //删除线样式 */
 .delete-line{

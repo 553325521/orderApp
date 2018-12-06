@@ -53,7 +53,8 @@ Component({
     // isSelected: isSelected,
     tableList,
     menuStatus,
-    shoppingCart
+    shoppingCart,
+    allowChooseTable: !app.globalData.appSetting.foundingSwitch
   },
 
 
@@ -66,17 +67,6 @@ Component({
     attached: function () {
       app.updateTitle(pageTitle)
       this.pageInit();
-      // app.addShoppingCart({
-      //   GOODS_PK: 'fdfd',//商品主键
-      //         GOODS_NAME: '鱼香肉丝',//商品名字
-      //         GOODS_NUMBER: 1,//商品的数量
-      //         GOODS_PRICE: '200',//商品单价
-      //         GOODS_TRUE_PRICE: '180',//商品特价，为空则不为特价商品
-      //         GOODS_FORMAT: '好吃',//规格
-      //         GOODS_MAKING: '不好',//做法
-      //         GOODS_TASTE: '好吃',//口味
-      //         GOODS_DW: '份'
-      // })
     },
     moved: function () { console.log("组件被moved") },
     //组件被移除
@@ -88,11 +78,11 @@ Component({
   pageLifetimes: {
     // 组件所在页面的生命周期函数
     show: function () {
-      // app.updateTitle(pageTitle)
-      // this.getOrdersList();
       this.loadGoodsInfo();
       this.flushStroageData()
+     
       this.flushShoppingCart()
+      this.backMainPage()
       },
     hide: function () { },
     resize: function () { },
@@ -117,6 +107,7 @@ Component({
       //。。。。。。。
 
       that.flushStroageData()
+     
       that.flushShoppingCart()
     },
     /**
@@ -160,8 +151,8 @@ Component({
         shoppingCart.totalMoney = 0;
       }
       currentTable = shoppingCart.table == undefined ? {} : shoppingCart.table,
-        currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
-
+      currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
+      
       that.setData({
         shoppingCart,
         currentTable
@@ -188,7 +179,7 @@ Component({
           }
         },
         fail: function (error) {
-          app.toast('查询失败')
+          app.hintBox('查询失败', 'none')
         }
       });
     },
@@ -208,7 +199,6 @@ Component({
             // 查询购物车
             that.getOrdersList();
             qityArr = [];
-            // allQiry = 0;
             greensList = res.data.data.greensList;
             navList = res.data.data.navList;
             for (let i = 0; i < greensList.length; i++) {
@@ -222,8 +212,15 @@ Component({
               }
              
               qityArr.push(count);
-              // allQiry += parseFloat(greensList[i].GTYPE_QITY);
+             
             }
+
+            if (greensList.length>1){
+              that.setData({
+                isExistData:true
+              })
+            }
+
             //如果没有类别，就不set类别了
             if (navList.length != 0) {
               that.setData({
@@ -231,15 +228,14 @@ Component({
               })
             }
             that.setData({
-              navList: navList,
-              greensList: greensList,
-              qityArr: qityArr,
-              // allQiry: allQiry
+              navList,
+              greensList,
+              qityArr
             })
           }
         },
         fail: function (error) {
-          app.toast('操作失败')
+          app.hintBox('操作失败', 'none')
         }
       });
 
@@ -255,7 +251,6 @@ Component({
       var item = e.currentTarget.dataset.item;
       var index = e.currentTarget.dataset.index;
       var type = e.currentTarget.dataset.type;
-      // var data = greensList;
       var List = data[item].infos;
       var _url = '';
       // 已点数量
@@ -267,47 +262,19 @@ Component({
       if (type == "+"){
         qityArr[item] = qityArr + 1
         List[index].qity = qity + 1;
-        // allQiry++;
-        // _url = 'ShoppingCart_insert_insertCart';
       }else{
         qityArr[item] = qityArr - 1
         List[index].qity = qity - 1;
-        // allQiry--
-        // _url = 'ShoppingCart_update_removeCart';
       }
       List[index].FK_SHOP = app.globalData.shopid;
       List[index].FK_USER = wx.getStorageSync('openid');
 
       that.setData({
-        greensList: greensList,
-        qityArr: qityArr,
-        // allQiry: allQiry
+        greensList,
+        qityArr
       })
       // 查询购物车
       that.getOrdersList();
-
-      // app.sendRequest({
-      //   url: _url,
-      //   method: 'POST',
-      //   data: List[index],
-      //   success: function (res) {
-      //     if (res.data.code == '0000') {
-      //       that.setData({
-      //         greensList: greensList,
-      //         qityArr: qityArr,
-      //         allQiry: allQiry
-      //       })
-      //       // 查询购物车
-      //       that.getOrdersList();
-      //       app.toast('操作成功')
-      //     } else {
-      //       app.toast('操作失败')
-      //     }
-      //   },
-      //   fail: function (error) {
-      //     app.toast('操作失败')
-      //   }
-      // })
     },
     /**
      *  查看购物车
@@ -379,6 +346,7 @@ Component({
     removeShoppingCart:function(){
       shoppingCart = app.removeShoppingCart()
       this.flushShoppingCart()
+      this.backMainPage()
     },
     /**
      * 查看挂单修改数量
@@ -451,7 +419,6 @@ Component({
     reserveConfirm:function(e){
     
       var that = this;
-      // var queryBean = JSON.stringify(currentTable);
       if (selectPersonNum !=undefined && selectPersonNum != '' && currentEatPersonNum == 0){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
         quorumShow = true;
       }
@@ -461,12 +428,7 @@ Component({
       if (currentEatPersonNum == 0 || currentEatPersonNum > currentTable.TABLES_NUM) {
         currentEatPersonNum = currentTable.TABLES_NUM;//当前桌位就餐人数
       }
-      // var currentTableMessage = {
-      //   currentTable: currentTable,
-      //   currentEatPersonNum: currentEatPersonNum
-      // }
-      // //把当前桌位信息存储在本地缓存里边
-      // app.setStorage('currentTableMessage', currentTableMessage)
+    
       shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
       console.info(currentTable)
       that.flushStroageData()
@@ -649,7 +611,7 @@ Component({
     addToCart2: function (e) {
       var that = this;
       if (!isSelected) {
-        app.toast('请选择规格')
+        app.hintBox('请选择规格', 'none')
         return;
       }
       var item = that.data.currentItem;
@@ -746,10 +708,7 @@ Component({
         } else if (options.quorumShow != undefined && options.quorumShow) {
           quorumShow = true;
         } 
-        // else if (options.clearCart != undefined && options.clearCart){
-        //   this.emptyCat();
-        //   app.toast('购物车已清空')
-        // }
+       
       }
 
       this.setData({
@@ -779,6 +738,14 @@ Component({
             }
             menuStatus = 0;
             that.pageInit()
+            
+            if (app.globalData.appSetting.foundingSwitch) {
+              var myEventDetail = { // detail对象，提供给事件监听函数  
+                //监听函数可以通过e.detail查看传递的数据;
+                page: '../founding/founding'
+              }
+              that.triggerEvent('switchPage', myEventDetail);
+            }
           }
         }
 
@@ -817,7 +784,12 @@ Component({
           }
         })
         qityArr.push(count);
-        // allQiry += parseFloat(greensList[i].GTYPE_QITY);
+      }
+    },
+    backMainPage:function(){
+      if (shoppingCart.table == undefined && app.globalData.appSetting.foundingSwitch) {
+        app.reLaunch('../index/index?page=../founding/founding')
+        return
       }
     }
 

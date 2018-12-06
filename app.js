@@ -88,10 +88,10 @@ App({
       "borderStyle": "#000",
       "backgroundColor": "#EF9BA0",
       "list": [{
-        "pagePath": "../founding/founding",
+        "pagePath": "../menu/menu",
         "iconPath": "../../images/icon/caidan.png",
         "selectedIconPath": "../../images/icon/caidan.png",
-        "text": "开台"
+        "text": "菜单"
       },
       {
         "pagePath": "../indent/indent",
@@ -121,7 +121,8 @@ App({
       ]
     },
     appSetting:{
-      tddcsy:true//堂点带出收银
+      tddcsy:true,//堂点带出收银
+      foundingSwitch:true
     }
   },
   /**
@@ -485,6 +486,8 @@ pushSession:function(){
       fail: function (error) {
         if(data.fail != undefined){
           data.fail(error)
+        }else{
+          that.hintBox('网络错误，请检查网络设置')
         }
       }
     })
@@ -567,9 +570,9 @@ pushSession:function(){
       },
       fail: function (error) {
         if (message != undefined &&message.fail != undefined) {
-          message.fail(res)
+          message.fail(error)
         }else{
-          that.toast('系统错误')
+          that.hintBox('系统错误')
         }
       }
     })

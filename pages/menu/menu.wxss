@@ -45,7 +45,7 @@
 /* 选好了  */
 .selected{
   position: fixed;
-  right: 38rpx;bottom: 96rpx;
+  right: 38rpx;bottom: 106rpx;
   width: 144rpx;
   line-height: 58rpx;
   border-radius: 58rpx;
@@ -59,7 +59,7 @@
 .cat,.entry-orders{
   position: fixed;
   left: 48rpx;
-  bottom: 100rpx;
+  bottom: 106rpx;
   width: 74rpx;
   height: 74rpx;
   z-index: 50

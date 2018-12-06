@@ -1,10 +1,17 @@
 // pages/indent/indentDateil.js
 var app = getApp()
-var totalMoney = 0;
+
 var ORDER_PK;//订单的id
 var orderType;//订单的类型
 var smallButton = true;//显示按钮吗还,需要从后台查询
 var jiacai = false;//是加菜状态
+
+var currentSlideOrderId = 0;//当前滑动触摸的orderid
+var movedistance = 0;//移动的距离
+var startX = 0;//开始滑动的时候的x轴位置
+var sliderWidth = 120;//滑块的宽度，单位rpx
+var silderStatus = false;//当前滑块是打开的吗
+
 var shoppingCart={
   totalMoney:0,
   totalNumber:0
@@ -16,10 +23,13 @@ Page({
     startY:0,
     startRight:0,
     orderDetailMap:{},
-    smallButton
+    smallButton,
+    sliderWidth
+   
   },
   onLoad: function (options) {
     var that = this;
+    that.initParam()
     ORDER_PK = options.ORDER_PK
     orderType = options.type
     if (ORDER_PK == undefined || ORDER_PK == ''){
@@ -49,58 +59,60 @@ Page({
   onShow: function () {
     
   },
+  initParam:function(){
+    var that = this;
+    movedistance = 0;//移动的距离
+    startX = 0;//开始滑动的时候的x轴位置
+    sliderWidth = 120;//滑块的宽度，单位rpx
+    silderStatus = false;//当前滑块是打开的吗
+    currentSlideOrderId = 0;
+    that.setData({
+      movedistance, silderStatus, currentSlideOrderId
+    })
+  },
   drawStart: function (e) {
     let that = this;
     let touch = e.touches[0];
-    let index = e.currentTarget.dataset.index;
-    var data = that.data.orderDetailMap.data;
-    that.data.startX = touch.clientX;
-    that.data.startRight = data[index].right
+    currentSlideOrderId = e.currentTarget.dataset.orderid;
+    startX = touch.clientX;
+    that.setData({currentSlideOrderId})
   },
   drawEnd: function (e) {
-    let that = this;
-    let index = e.currentTarget.dataset.index;
-    var data = that.data.orderDetailMap.data;
-    if (data[index].right < 30){
-      data[index].right = 0
-    }else{
-      data[index].right = 30
+    let touch = e.changedTouches[0];
+    let length = touch.clientX - startX;
+    if (silderStatus && length > 10) {//如果滑之前滑块是开的，并且现在往右滑了超过10rpx的话，就关闭滑块
+      silderStatus = false;
+      movedistance = 0
+      this.setData({
+        movedistance
+      })
+    } else if (!silderStatus) {//如果滑之前滑块是关的
+      if (-length > sliderWidth / 2) {//如果现在滑的距离大于滑块的一半的话，就自动打开滑块
+        silderStatus = true
+        movedistance = -sliderWidth
+      } else {//反之，自动关闭滑块
+        silderStatus = false;
+        movedistance = 0
+      }
+      this.setData({
+        movedistance
+      })
     }
-    that.setData({
-      orderDetailMap: that.data.orderDetailMap
-    });
   },
   drawMove: function (e) {
-    let that = this;
     let touch = e.touches[0];
-    let startX = that.data.startX;
-    let index = e.currentTarget.dataset.index;
-    var data = that.data.orderDetailMap.data;
-    let endX = touch.clientX;
-    if (endX - startX == 0)
-      return;
-    //从右往左  
-    if ((endX - startX) < 0) {
-      if (data[index].show != true){
-        data[index].show = true;
-        that.data.startRight = startX - endX;
-        that.data.startRight > 30 ? data[index].right = 30 : data[index].right = that.data.startRight;
-      }else{
-        data[index].right = 30
-      }   
-    } else {//从左往右 
-      if (data[index].show != true) {
-        data[index].right = 0
-      } else {
-        that.data.startRight = 30 - (endX - startX);
-        that.data.startRight < 0 ? data[index].right = 0 : data[index].right = that.data.startRight;
-        that.data.startRight <= 0 ? data[index].show = false : data[index].show = true;
-      }  
+    let length = touch.clientX - startX;
+    if (silderStatus && length > 0 && length < sliderWidth) {
+      movedistance = length - sliderWidth
+      this.setData({
+        movedistance
+      })
+    } else if (!silderStatus && length < 0 && length > -sliderWidth) {
+      movedistance = length
+      this.setData({
+        movedistance
+      })
     }
-    that.setData({
-      orderDetailMap: that.data.orderDetailMap
-    });
-
   },
 //请求订单详情数据
 loadOrderDetail:function(){
@@ -122,6 +134,7 @@ loadOrderDetail:function(){
           res.data.data[_index].right = 0;
           res.data.data[_index].show = false;
         }
+     
         that.setData({
           orderDetailMap: res.data.data[0]
         });
@@ -178,27 +191,38 @@ mapToJson: function (map) {
   tuicai: function (e) {
     let that = this;
     var ORDER_DETAILS_PK = e.currentTarget.dataset.id;
-    wx.request({
-      url: app.globalData.basePath + 'json/Order_delete_tuiCai.json',
-      method: "post",
-      data: {
-        ORDER_DETAILS_PK:ORDER_DETAILS_PK,
-        openid: wx.getStorageSync('openid')
-      },
-      header: {
-        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-      },
+    app.modal({
+      content: '确定退菜？',
       success: function (res) {
-        if (res.data.code == '0000') {
-          that.loadOrderDetail();
+        if (res.confirm) {
+          app.sendRequest({
+            url:'Order_delete_tuiCai',
+            data: {
+              ORDER_DETAILS_PK: ORDER_DETAILS_PK,
+              openid: wx.getStorageSync('openid')
+            },
+            success: function (res) {
+              if (res.data.code == '0000') {
+                that.initParam()
+                that.loadOrderDetail();
+              }else{
+                app.hintBox(res.data.data,'none')
+              }
+            }
+          })
+         
+        } else if (res.cancel) {
+          //闭合滑块
+          silderStatus = false;
+          movedistance = 0
+
+          that.setData({
+            movedistance
+          })
         }
-      },
-      fail: function (error) {
-        wx.showToast({
-          title: '登录失败',
-        })
       }
     })
+    
   },
   /**
    * 确定订单
@@ -237,10 +261,10 @@ mapToJson: function (map) {
                   })
                  that.loadOrderDetail();
                  if (app.globalData.appSetting.tddcsy){
-                   app.pageTurns('../checkOut/checkOut?shouldMoney=' + (totalMoney + shoppingMoney) + '&ORDER_PK=' + ORDER_PK)
+                   app.pageTurns('../checkOut/checkOut?shouldMoney=' + (that.data.orderDetailMap.ORDER_YFMONEY + shoppingMoney) + '&ORDER_PK=' + ORDER_PK)
                  }
                }else{
-                 app.toast(res.data.data)
+                 app.hintBox(res.data.data)
                }
               },
             })
@@ -248,7 +272,7 @@ mapToJson: function (map) {
         }
       })
     }else{
-      app.pageTurns('../checkOut/checkOut?shouldMoney=' + totalMoney + '&ORDER_PK=' + ORDER_PK)
+      app.pageTurns('../checkOut/checkOut?shouldMoney=' + that.data.orderDetailMap.ORDER_YFMONEY + '&ORDER_PK=' + ORDER_PK)
     }
   },
   /**
@@ -316,7 +340,7 @@ mapToJson: function (map) {
         if(res.data.code == '0000'){
           app.toast('操作成功')
         }else{
-          app.toast(res.data.data)
+          app.hintBox(res.data.data)
         }
       }
     })

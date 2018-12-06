@@ -10,7 +10,8 @@ var shoppingCart = {};//购物车信息
 
 Page({
   data: {
-    loadingHidden: true
+    loadingHidden: true,
+    allowChooseTable: !app.globalData.appSetting.foundingSwitch
   },
   onLoad: function (options) {
     var that = this;
@@ -101,7 +102,7 @@ Page({
 
           //验证是否开启堂点带出收银
           if (app.globalData.appSetting.tddcsy == true) {
-            app.redirectTo(`../checkOut/checkOut?shouldMoney=` + allMoney)
+            app.redirectTo(`../checkOut/checkOut?shouldMoney=` + shoppingCart.totalMoney + '&ORDER_PK=' + res.data.data)
           } else {
             app.reLaunch(`../index/index?page=../menu/menu`);
           }
@@ -119,7 +120,8 @@ Page({
             showCancel: false,
             success: function () {
               //更改当前桌位信息
-              let tempCart = app.getShoppingCart().table == {}
+              let tempCart = app.getShoppingCart()
+              tempCart.table == {}
               app.recoverShoppingCart(tempCart)
 
               app.pageTurns('../index/index?page=../menu/menu&reserveShow=true')
@@ -133,14 +135,10 @@ Page({
             title: res.data.data,
           })
         }
-        that.setData({
-          loadingHidden: true
-        })
+        app.hideLoading()
       },
       fail: function (error) {
-        that.setData({
-          loadingHidden: true
-        })
+        app.hideLoading()
         wx.showToast({
           title: '创建失败',
         })

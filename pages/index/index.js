@@ -88,18 +88,21 @@ Page({
    */
   pageInit:function(){
     var that = this;
-    var menu = wx.getStorageSync('menu')
-    if (menu == undefined || menu == ''){
-      menu = app.globalData.tabBar.list[0].pagePath;
-    }
-    currentPage = menu;
-    if (currentPage == '../menu/menu' || currentPage == '../founding/founding'){
-      if (currentPage == '../menu/menu') {
-        app.globalData.tabBar.list[0].pagePath = "../menu/menu"
-        app.globalData.tabBar.list[0].text = "首页"
-      } else if(currentPage == '../founding/founding') {
+   
+    // currentPage = menu;
+    if (app.globalData.appSetting.foundingSwitch){
+      if (app.getShoppingCart().table == undefined){
         app.globalData.tabBar.list[0].pagePath = "../founding/founding"
         app.globalData.tabBar.list[0].text = "开台"
+        if (currentPage == '../menu/menu'){
+          currentPage = '../founding/founding'
+        }
+      }else{
+        app.globalData.tabBar.list[0].pagePath = "../menu/menu"
+        app.globalData.tabBar.list[0].text = "菜单"
+        if (currentPage == '../founding/founding') {
+          currentPage = '../menu/menu'
+        }
       }
       that.setData({
         currentPage,
@@ -120,14 +123,14 @@ Page({
     }
 
     //判断是不是点了第一个按钮
-    if (clickPage == currentPage && currentPage == '../menu/menu'){
-      that.switchMenu('../founding/founding')
-    } else if (clickPage == currentPage && currentPage == '../founding/founding'){
-      that.switchMenu('../menu/menu')
-    }else{
-      currentPage = clickPage
-    }
-
+    // if (clickPage == '../menu/menu'){
+    //   that.switchMenu('../founding/founding')
+    // } else if (clickPage == '../founding/founding'){
+    //   that.switchMenu('../menu/menu')
+    // }else{
+    //   currentPage = clickPage
+    // }
+    currentPage = clickPage
     that.setData({
       tabBar: app.globalData.tabBar,
       currentPage

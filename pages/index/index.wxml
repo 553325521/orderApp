@@ -12,7 +12,7 @@
 <view class="tabBar" style="background-color:{{tabBar.backgroundColor}}">
   <block wx:for="{{tabBar.list}}" wx:for-item="item" wx:key="tabBar">
     <view class="tabBar-item" bindtap="switchTab" data-current-page="{{item.pagePath}}">
-        <view style="height:50rpx;"><image class="icon" src='{{item.iconPath}}'></image></view>
+        <view style="height:56rpx;"><image class="icon" src='{{item.iconPath}}'></image></view>
         <view style="color:{{item.pagePath == currentPage ? tabBar.selectedColor :tabBar.color}}" class="{{item.pagePath == currentPage ? 'tabBartext' :''}}">{{item.text}}</view>
     </view>
   </block>

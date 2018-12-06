@@ -8,7 +8,7 @@
   </view>
   <view class='info flex-1 dp-flex'>
     <view class='reserve'>
-      <view class='site font-28 c6 tc' bindtap='clickTables'>{{shoppingCart.table.TABLES_SHORT_NAME == undefined ? shoppingCart.table.TABLES_NAME : shoppingCart.table.TABLES_SHORT_NAME}}</view>
+      <view class='site font-28 c6 tc' bindtap="{{allowChooseTable?'clickTables':''}}">{{shoppingCart.table.TABLES_SHORT_NAME == undefined ? shoppingCart.table.TABLES_NAME : shoppingCart.table.TABLES_SHORT_NAME}}</view>
       <view class='entry-orders cf tc font-18' bindtap='saveCartOrder'>挂单</view>
     </view>
     <view class='quorum c6 tc font-28' bindtap='clickPersonNum'>

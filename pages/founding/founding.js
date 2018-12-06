@@ -11,13 +11,14 @@ var currentLookStatus = 0;//当前查看的状态(0:全部 1：空台 2：已开
 
 Component({
   options: {
-    addGlobalClass: true,
+    addGlobalClass: true
   },
   data:{
     currentClickArea,
     isUseTableNum,
     allTableNum,
-    currentLookStatus
+    currentLookStatus,
+    allowChooseTable: app.globalData.appSetting.foundingSwitch
   },
   
   /**
@@ -34,6 +35,19 @@ Component({
     //组件被移除
     detached: function () { console.log("detached") },
   },
+  /**
+   * page的生命周期
+   */
+  pageLifetimes: {
+    // 组件所在页面的生命周期函数
+    show: function () {
+      // this.pageInit();
+    },
+    hide: function () { },
+    resize: function () { },
+  },
+
+
   methods:{
     /**
      * 页面初始化方法,加载所有区域和桌位
@@ -42,6 +56,13 @@ Component({
       app.showLoading()
       //先获取时间
       currentDate = util.nowTime()
+      //判断有没有挂单的
+      var guadanshuju = app.getStorageOrder()
+      if (guadanshuju.length > 0){
+        this.setData({
+          saveOrdersFalg:true
+        })
+      }
       this.setData({
         currentDate
       })
@@ -61,13 +82,13 @@ Component({
               areaMess
             })
           }else{
-            app.toast(res.data.data)
+            app.hintBox(res.data.data)
           }
           app.hideLoading()
         },
         fail:function(error){
           app.hideLoading()
-          app.toast(error)
+          app.hintBox(error)
         }
 
       })
@@ -149,6 +170,12 @@ Component({
         app.pageTurns(`../indent/indentDateil?type=${table.ORDER_PAY_STATE}&ORDER_PK=${table.ORDER_PK}`)
       }
 
+    },
+    /**
+     * 查看挂单
+     */
+    checkEntryOrders: function () {
+      app.pageTurns(`../entryOrders/entryOrders`)
     }
   }
 })

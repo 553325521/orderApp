@@ -22,7 +22,7 @@
   <text wx:if="{{shoppingCart.totalNumber>0}}" class='font-26 cf tc pa'>{{shoppingCart.totalNumber}}</text>
 </view>
 <!-- 挂单按钮  -->
-<view class='entry-orders' bindtap='checkEntryOrders' wx:if='{{saveOrdersFalg}}'>
+<view class='entry-orders' bindtap='checkEntryOrders' wx:if='{{saveOrdersFalg && allowChooseTable}}'>
   <image class='w100 h100' src='../../images/icon/list-icon.png'></image>
 </view>
 <!-- 挂单列表  -->
@@ -41,6 +41,9 @@
       </view>
     </view>
     <scroll-view scroll-y class='list bg-fff' style='height:{{height}}'>
+     <view class="weui-loadmore weui-loadmore_line"  style='display:{{isExistData?"none":"block"}}'>
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+</view>
       <block wx:for = "{{shoppingCart.goods}}" wx:key="{{index}}">
         <view class='item dp-flex' id="orders-item">
           <view class='name font-28 c3'>{{item.GOODS_NAME}}{{item.GOODS_RECIPE == undefined ? '' : '('+item.GOODS_RECIPE+')'}}</view>
@@ -156,21 +159,4 @@
   </scroll-view>
 </view>
 
-<!--index.wxml-->
-<!-- <view class="container">
-    <view id="loading" hidden="{{loadingHidden}}">
-        <view id="loading-center">
-            <view id="loading-center-absolute">
-                <view class="object" id="object_one"></view>
-                <view class="object" id="object_two"></view>
-                <view class="object" id="object_three"></view>
-                <view class="object" id="object_four"></view>
-                <view class="object" id="object_five"></view>
-                <view class="object" id="object_six"></view>
-                <view class="object" id="object_seven"></view>
-                <view class="object" id="object_eight"></view>
-                <view class="object" id="object_big"></view>
-            </view>
-        </view>
-    </view>
-</view> -->
+

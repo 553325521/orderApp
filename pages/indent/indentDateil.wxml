@@ -31,12 +31,14 @@
 </view>
 <scroll-view scroll-y class='list' style='height:{{height}}'>
   <block wx:for = "{{orderDetailMap.orders}}" wx:key="{{index}}"> 
-    <view class='item dp-flex font-28 c6 pr  viewBottomBorder {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}'   data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
+  <view class=' dp-flex font-28 c6'>
+    <view class='item pr dp-flex viewBottomBorder bg-fff' data-index='{{index}}' bindtouchstart="{{orderType == '0'?'drawStart':''}}" bindtouchmove="{{orderType == '0'?'drawMove':''}}" bindtouchend="{{orderType == '0'?'drawEnd':''}}" data-orderid='{{item.ORDER_DETAILS_PK}}' style="transform: translate({{currentSlideOrderId == item.ORDER_DETAILS_PK ? movedistance:'0'}}rpx,0)">
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
-      <view class='moeny c2821 tr {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
-      <view wx:if="{{item.show}}" class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
-      <view class='delete-line' wx:if='{{item.ORDER_DETAILS_GOODS_STATE == "3"}}'></view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
+
+    </view>
+    <view wx:if="{{item.ORDER_DETAILS_PK == currentSlideOrderId}}" style="z-index:{{currentSlideOrderId == item.ORDER_DETAILS_PK && movedistance == -sliderWidth ? '0':'-1'}}"  class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
     </view>
   </block>
   <!--购物车的信息-->
@@ -46,7 +48,6 @@
       <view class='name'>{{item.GOODS_NAME}}</view>
       <view class='part tr'>{{item.GOODS_NUMBER}}份</view>
       <view class='moeny c2821 tr'>￥{{math.toFix((item.GOODS_TRUE_PRICE == undefined ? item.GOODS_PRICE : item.GOODS_TRUE_PRICE)/100.0)}}</view>
-      <view wx:if="{{item.show}}" class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
     </view>
   </block>
 
@@ -55,7 +56,7 @@
     <view class='item dp-flex font-28 c6 pr' >
       <view class='name' style='padding-left:52rpx'>应付金额合计</view>
       <view class='part tr'>{{orderDetailMap.totalFS}}份菜品</view>
-      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.totalMoney/100.0)}}</view>
+      <view class='moeny c2821 tr'>￥{{math.toFix(orderDetailMap.ORDER_YFMONEY/100.0)}}</view>
     </view>
     <view class='item dp-flex font-28 c6 pr' wx:if="{{math.toFix(orderDetailMap.ORDER_YHMONEY) > 0}}">
       <view class='name'>优惠金额</view>
@@ -84,7 +85,7 @@
   <view class='total dp-flex c6 font-28 viewTopBorder' style='height:70rpx;padding-top:20rpx;'>
     <text>合计</text>
     <view class='deal'>{{orderDetailMap.totalFS + shoppingCart.totalNumber}}份菜品</view>
-    <view class='total-prices c2821'>￥{{math.toFix(orderDetailMap.totalMoney/100.0 + shoppingCart.totalMoney/100.0)}}</view>
+    <view class='total-prices c2821'>￥{{math.toFix(orderDetailMap.ORDER_YFMONEY/100.0 + shoppingCart.totalMoney/100.0)}}</view>
   </view>
   <view class='oper dp-flex font-38 cf tc'>
     <view class='add-dish bg-EF9B' bindtap='addDish'>加菜</view>

@@ -144,7 +144,12 @@ Page({
   selectPay:function(e){
     var that = this;
     payWay = e.currentTarget.dataset.index
-    console.info("payWay"+payWay)
+    if(payWay == 2 || payWay == 3){
+      that.data.wzShow = true
+      that.setData({
+        wzShow: that.data.wzShow
+      })
+    }
     that.setData({
       currentTab: payWay
     })
@@ -153,29 +158,16 @@ Page({
    * 确定支付
    */
   settleAccounts:function(){
-
-    // wx.requestPayment({
-    //   appId:'wx3326999f88e7077a',
-    //   timeStamp: '1543484072',
-    //   nonceStr: '2727b32b4e0a407e9cf01f9e25120304',
-    //   package: 'prepay_id=wx291734320062914b0f49dade2319482583',
-    //   signType: 'RSA',
-    //   paySign: 'm5TNqqUT/EuU6zBfwPimmYTyMbniVS6fVXf 6 dedENA0YcONNvM/uqPEAu0tpW64Zk3hoC6La5kmL6sQWruDLp GxW1QqaxRxgDC6KZhveYKjI0ORUpXk/hxlQMcgFBkEVBcVCZEwSOyyXqPculaR4QOfFmGVV/wau6Y6vHN8at3zTrb3IuxfV7z66d6eiOAh49Rk 8tx467x3r0zalfgaOtm/ba04coifSx0uXXe7tC4fLr2peKivmUuGXMzZvvi55gxNz8N3TeVb4xeyi 9NI/63ERz3uu67qU2Q4yNm/c6/qHI/vJsjPMrd8puECROKcetwS9H6jRF0h8hewzQ==',
-    //   success(res) { console.info(res)},
-    //   fail(res) { console.info(res)}
-    // })
-
-
     var that = this;
     var currentTab = that.data.currentTab;
     console.log(currentTab)
     if (currentTab == undefined){
       app.hintBox('请选择支付方式','none')
-    } else if (currentTab == 1 || currentTab == 2){
-      console.log(1)
+    } else if (currentTab == 2 || currentTab == 3){//如果选的是微信或者支付宝支付
       that.data.wzShow = true
     }else{
-      app.hintBox('付款成功','success')
+      //请求网络，进行支付
+      that.sendPay(payWay)
     }
     that.setData({
       wzShow: that.data.wzShow
@@ -201,12 +193,11 @@ Page({
     var type = e.currentTarget.dataset.type;
     console.log(type)
     if(type == '0'){
-      app.hintBox('付款成功','success')
-      that.setData({
-        wzShow: false
-      })
+      that.sendPay(payWay + '0')
     }else if(type == '2'){
-      app.pageTurns('../payMent/payMent');
+        that.sendPay(payWay + '2',function success(res){
+        app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK);
+      })
     }else{
       wx.scanCode({
         onlyFromCamera:true,
@@ -216,43 +207,46 @@ Page({
           console.log(res)
           var code = res.result
           if (code != null){
-            //进行支付
-            app.sendRequest({
-              url: 'ShopScanPay',
-              method: "post",
-              data: {
-                qrCode: code,
-                //openid: wx.getStorageSync('openid'),
-                payWay: payWay,
-                ORDER_PK: ORDER_PK
-              },
-              success: function (res) {
-                console.info(res)
-                if (res.data.code == '0000') {
-                  if (res.data.data.result == 'A') {
+            //进行支付前先生成支付订单
+            sendPay(payWay + '1', function success(res) {
+              //进行支付
+              app.sendRequest({
+                url: 'ShopScanPay',
+                method: "post",
+                data: {
+                  qrCode: code,
+                  //openid: wx.getStorageSync('openid'),
+                  payWay: payWay,
+                  ORDER_PK: ORDER_PK
+                },
+                success: function (res) {
+                  console.info(res)
+                  if (res.data.code == '0000') {
+                    if (res.data.data.result == 'A') {
+                      wx.showModal({
+                        title: '提示',
+                        showCancel: false,
+                        content: '等待用户确认支付',
+                        success: function (res) { }
+                      })
+                    } else if (res.data.data.result == 'S') {
+                      app.toast('支付成功')
+                      app.reLaunch('../index/index?page=../indent/indent')
+                    }
+
+                  } else {
                     wx.showModal({
                       title: '提示',
                       showCancel: false,
-                      content: '等待用户确认支付',
+                      content: '支付失败,原因:' + res.data,
                       success: function (res) { }
                     })
-                  } else if (res.data.data.result == 'S') {
-                    app.toast('支付成功')
                   }
-
-                } else {
-
-                  wx.showModal({
-                    title: '提示',
-                    showCancel: false,
-                    content: '支付失败,原因:' + res.data,
-                    success: function (res) { }
-                  })
+                },
+                fail: function (error) {
+                  app.hintBox('支付失败')
                 }
-              },
-              fail: function (error) {
-                app.toast('支付失败')
-              }
+              })
             })
           }
         },
@@ -270,5 +264,35 @@ Page({
    */
   couponList:function(){
     app.pageTurns('../couponList/couponList');
+  },
+  /**
+   * 发送请求支付
+   */
+  sendPay:function(payWay,fun){
+    var that = this
+    //请求网络，进行付款成功
+    app.sendRequest({
+      url: 'Order_update_OrderShopSettleAccounts',
+      data: {
+        SHOP_FK: app.globalData.shopid,
+        OPEN_ID: wx.getStorageSync('openid'),
+        ORDER_PK: ORDER_PK,
+        payWay: payWay
+      },
+      success: function (res) {
+        if (fun != undefined){
+          fun(res)
+        }else{
+          if (res.data.code = "0000") {
+            app.hintBox('收款成功', 'success')
+            that.vanish()
+            app.reLaunch('../index/index?page=../indent/indent')
+          } else {
+            app.hintBox(res.data.data, 'none')
+          }
+        }
+      }
+    })
+    
   }
 })

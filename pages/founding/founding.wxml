@@ -6,8 +6,8 @@
   <view style='overflow:hidden;white-space:nowrap;padding-top:{{areaMess.length > 1 ? "96":"0"}}rpx;' wx:if="{{areaMess.length > 1}}">
     <scroll-view scroll-x="true" class="fd-scroll">
       <block wx:for="{{areaMess}}" wx:key="item">
-        <button bindtap='clickArea' class="fd-bt fd-bt01 {{currentClickArea == 0 ? 'select-bt':''}}" wx:if="{{index == 0}}" data-areaid='0'>全 部</button> 
-        <button bindtap='clickArea' class="fd-bt fd-bt02 {{currentClickArea == item.TABLES_AREA_PK ? 'select-bt':''}}" data-areaid='{{item.TABLES_AREA_PK}}'>{{item.TABLES_AREA_NAME}}</button>
+        <view bindtap='clickArea' class="fd-bt fd-bt01 {{currentClickArea == 0 ? 'select-bt':''}}" wx:if="{{index == 0}}" data-areaid='0'>全 部</view> 
+        <view bindtap='clickArea' class="fd-bt fd-bt02 {{currentClickArea == item.TABLES_AREA_PK ? 'select-bt':''}}" data-areaid='{{item.TABLES_AREA_PK}}'>{{item.TABLES_AREA_NAME}}</view>
       </block>
     </scroll-view>
   </view>
@@ -45,16 +45,20 @@
 
 <!--第三部分-->
 <view class='fd-end'>
+<!-- 挂单按钮  -->
+<view class='entry-orders' bindtap='checkEntryOrders' wx:if='{{saveOrdersFalg && allowChooseTable}}'>
+  <image class='w100 h100' src='../../images/icon/list-icon.png'></image>
+</view>
   <view class='fd-end-1'>
-      <button class="fd-end-bt" bindtap='clicklookStatus' data-status='0'>全部</button>
+      <view class="fd-end-bt" bindtap='clicklookStatus' data-status='0'>全部</view>
       <view class="weui-badge bg-d137 fd-end-lr">{{allTableNum}}</view>
   </view>
    <view class='fd-end-1'>
-      <button class="fd-end-bt" bindtap='clicklookStatus' data-status='1'>空台</button>
-      <view class="weui-badge fd-tb-1 fd-end-lr">{{allTableNum-isUseTableNum}}</view>
+      <view class="fd-end-bt" style='background:#bbb;' bindtap='clicklookStatus' data-status='1'>空台</view>
+      <view class="weui-badge bg-d137 fd-end-lr">{{allTableNum-isUseTableNum}}</view>
   </view>
    <view class='fd-end-1'>
-      <button class="fd-end-bt" bindtap='clicklookStatus' data-status='2'>已开台</button>
+      <view class="fd-end-bt" bindtap='clicklookStatus' data-status='2'>已开台</view>
       <view class="weui-badge bg-d137 fd-end-lr">{{isUseTableNum}}</view>
   </view>
    
