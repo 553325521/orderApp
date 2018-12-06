@@ -31,11 +31,12 @@
 </view>
 <scroll-view scroll-y class='list' style='height:{{height}}'>
   <block wx:for = "{{orderDetailMap.orders}}" wx:key="{{index}}"> 
-    <view class='item dp-flex font-28 c6 pr  viewBottomBorder'  data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
+    <view class='item dp-flex font-28 c6 pr  viewBottomBorder {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}'   data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
-      <view class='moeny c2821 tr'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
+      <view class='moeny c2821 tr {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
       <view wx:if="{{item.show}}" class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
+      <view class='delete-line' wx:if='{{item.ORDER_DETAILS_GOODS_STATE == "3"}}'></view>
     </view>
   </block>
   <!--购物车的信息-->
