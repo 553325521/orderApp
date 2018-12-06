@@ -139,7 +139,8 @@ Page({
     var isYH = e.detail.value.length > 0 ? false : true;
     that.setData({
       isDiscounts: isDiscounts,
-      isYH: isYH
+      isYH: isYH,
+      yhMoney:""
     })
   },
   //处理点击按钮
