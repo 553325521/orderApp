@@ -87,3 +87,15 @@
   top: -1rpx;
   left: 30rpx
 }
+/* //删除线样式 */
+.delete-line{
+  width:80%;
+  border-top:solid 1rpx #fdf3f4;
+  height:2rpx;
+  position:absolute;
+  top:50%;
+  left:10%
+}
+.delete-color{
+  color: #ffdadd
+}

@@ -28,6 +28,7 @@ App({
   },
   //声明连接socket方法
   connectWebsocket: function () {
+    var that = this;
     var task = wx.connectSocket({
       url: 'ws://m.ddera.com/dcxt/json/webSocket.json',
       data: {
@@ -39,8 +40,15 @@ App({
       method: "POST"
     })
     wx.onSocketOpen(function (res) {
+      var msg = {
+        msgType:0,
+        msgContent: {
+          openid: wx.getStorageSync('openid'),
+          shopid: that.globalData.shopid
+        }
+      };
       wx.sendSocketMessage({
-        data: "微信小程序 web socket"
+        data:JSON.stringify(msg)
       })
       console.log('WebSocket连接已打开！')
     })
@@ -133,7 +141,7 @@ App({
     wx.login({
       success: function (res) {
         that.getUserAuth(res.code);
-        that.pushSession();
+       // that.pushSession();
       },
       fail: function (res) {
         if (wx.hideLoading) {
@@ -200,6 +208,8 @@ pushSession:function(){
         }
         wx.setStorageSync("openid", res.data.data.OPENID);
         wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
+        //连接websocket
+        that.connectWebsocket(); 
         //授权成功
       },
       fail: function (error) {
