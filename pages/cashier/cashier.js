@@ -7,11 +7,12 @@ Page({
     addGlobalClass: true,
   },
   data: {
-    isDiscounts: true,
     result: '',
     process: '',
     newStr: '',
-    isYH: false,
+    noYH: true,
+    isFocus:false,
+    isComputeFocus:true,
     bdsArray:[],
     operateStr:"",
     yhMoney:""
@@ -46,6 +47,18 @@ Page({
   prioraty: function(o1, o2) {
     return this.getPrioraty(o1) <= this.getPrioraty(o2);
 
+  },
+  changeComputeFocus:function(){
+    this.setData({
+      isComputeFocus:true,
+      isFocus:false
+    })
+  },
+  changeYHINPUT:function(){
+    this.setData({
+      isFocus:true,
+      isComputeFocus: false
+    })
   },
   //中缀表达式转后缀表达式
   dal2Rpn: function(exp) {
@@ -134,41 +147,65 @@ Page({
   //是否优惠状态改变
   checkboxChange: function(e) {
     var that = this;
-    console.log(e.detail.value.length);
-    var isDiscounts = e.detail.value.length > 0 ? true : false;
-    var isYH = e.detail.value.length > 0 ? false : true;
+    var currentIndex = e.currentTarget.dataset.index;
+    var noYH = currentIndex == 0 ? false : true;
+    var isFocus = !noYH;
+    console.info("???"+isFocus);
     that.setData({
-      isDiscounts: isDiscounts,
-      isYH: isYH,
-      yhMoney:""
+      noYH: noYH,
+      yhMoney:"",
+      isFocus:isFocus
     })
   },
   //处理点击按钮
   processString: function(e) {
     var that = this;
     var str = e.currentTarget.dataset.number;
-    if (str == '×' || str == '+'){
-      var process = that.data.process;
-      that.data.bdsArray.push(parseFloat(process));
-      if (str == '×'){
-        that.data.bdsArray.push("*");
-      }else{
-        that.data.bdsArray.push(str);
+    var isFoucs = that.data.isFocus;
+    var yhMoney = that.data.yhMoney+"";
+    if (isFoucs){
+      if (str != '×' && str != '+'){
+        var why = yhMoney.indexOf(".");
+        if (str == "." && why == -1){
+          yhMoney = yhMoney + str;
+          this.setData({
+            yhMoney:yhMoney
+          })
+        }else{
+          yhMoney = yhMoney + str;
+          this.setData({
+            yhMoney: parseFloat(yhMoney)
+          })
+        }
+       
       }
-      that.setData({
-        process: "",
-        bdsArray: that.data.bdsArray
-      })
     }else{
-      var process = that.data.process;
+      if (str == '×' || str == '+') {
+        var process = that.data.process;
+        if(process != ""){
+          that.data.bdsArray.push(parseFloat(process));
+        }
+        if (str == '×') {
+          that.data.bdsArray.push("*");
+        } else {
+          that.data.bdsArray.push(str);
+        }
+        that.setData({
+          process: "",
+          bdsArray: that.data.bdsArray
+        })
+      } else {
+        var process = that.data.process;
+        that.setData({
+          process: process + str
+        })
+      }
+      var operateStr = that.data.operateStr;
       that.setData({
-        process: process + str
-      })
+        operateStr: operateStr + str
+      })   
     }
-    var operateStr = that.data.operateStr;
-    that.setData({
-      operateStr: operateStr + str
-    })   
+   
   },
   //清空
   empty: function() {
@@ -177,11 +214,6 @@ Page({
       process: '',
       result: '',
       operateStr:''
-    })
-  },
-  changeYHMoney:function(e){
-    this.setData({
-      yhMoney:e.detail.value
     })
   },
   //计算
@@ -193,14 +225,23 @@ Page({
     if (that.data.yhMoney != ""){
       yhMoney = parseFloat(that.data.yhMoney);
     }
-    bdsArray.push(parseFloat(process));
-    var hz = this.dal2Rpn(bdsArray);
-    var result = this.calc(hz);
-    result = result - yhMoney;
+    if(process!=""){
+      bdsArray.push(parseFloat(process));
+    }
+    var result = 0;
+    console.info(bdsArray);
+    if(bdsArray.length != 0){
+      var hz = this.dal2Rpn(bdsArray);
+      result = this.calc(hz);
+      result = result - yhMoney;
+      bdsArray = [];
+      bdsArray.push(result);
+    }
     that.setData({
       process:'',
       result: result,
-      bdsArray:[]
+      bdsArray: bdsArray,
+     // operateStr:""
     })
   },
   /**

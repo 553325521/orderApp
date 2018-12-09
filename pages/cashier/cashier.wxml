@@ -5,19 +5,21 @@
       <text class='c6 font-28'>消费金额</text>
       <view class='total-money flex-1 font-42 flex-jc-sb tr'>{{result}}</view>
     </view>
-    <view class='process tr font-28 c6'>{{operateStr}}</view>
+    <view class='process tr font-28 c6'>
+      <input class='flex-1 font-28 c6'  value="{{operateStr}}" focus='{{isComputeFocus}}' bindtap = 'changeComputeFocus'></input>
+    </view>
   </view>
   <view class='discounts dp-flex'>
     <view class='check pr'>
       <view class='check-img'>
-        <image wx:if = "{{isDiscounts==true}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
+        <image wx:if = "{{noYH == false}}" class='w100 h100' src='../../images/icon/sele-1.png'></image>
         <image wx:else class='w100 h100' src='../../images/icon/sele-2.png'></image>
       </view>
-      <checkbox-group  bindchange="checkboxChange" data-index="0">
-          <checkbox value="0" checked="true"/>
+      <checkbox-group  bindchange="checkboxChange" data-index="{{noYH == true ? 0 : 1}}">
+          <checkbox value="0" checked="false"/>
       </checkbox-group>
     </view>
-    <input class='flex-1 font-28 c6' disabled='{{isYH}}' type='digit' value="{{yhMoney}}"  bindchange="changeYHMoney" placeholder='请输入优惠金额'></input>
+    <input class='flex-1 font-28 c6' disabled='{{noYH}}' type='digit' value="{{yhMoney}}" focus='{{isFocus}}' bindtap = 'changeYHINPUT'  placeholder='请输入优惠金额'></input>
   </view>
   <view class='keyboard dp-flex flex-jc-sb'>
     <view class='numeric-key dp-flex font-28 c6'>

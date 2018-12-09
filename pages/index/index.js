@@ -29,9 +29,7 @@ Page({
         this.menu.setOptions(options);
       }
     }
-
     this.pageInit()
-
   },
 
   /**
