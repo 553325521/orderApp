@@ -213,7 +213,8 @@ Page({
     that.setData({
       process: '',
       result: '',
-      operateStr:''
+      operateStr:'',
+      bdsArray:[]
     })
   },
   //计算
