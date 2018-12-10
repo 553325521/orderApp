@@ -14,22 +14,21 @@ var goodsGuige = {
   kouwei: []
 }//当前弹框的属性 规格做法和口味  
 var height = '';//还不知道是什么高度
-// var saveOrdersFalg = false;//挂单按钮是否显示
+var saveOrdersFalg = false;//挂单按钮是否显示
 var currentGood;//当前商品
 var isSelected = false;//选择规格了吗
 var reserveShow = false;//显示选择餐位
-var quorumShow = false;//显示选择人数
+// var quorumShow = false;//显示选择人数
 var selectPersonNum = true;//选择人数开关是否开启
 var currentTable = {};//当前桌位
 var currentEatPersonNum = 0;//当前餐桌就餐的人数
 var menuStatus = 0;//当前菜单页面状态（0：没状态 1：点菜 2：加菜）
 var shoppingCart = {};//购物车信息
 
-Component({
-  options: {
-    addGlobalClass: true,
-  },
+Page({
+
   data: {
+    addGlobalClass:true,
     navList:null,
     currentTab:0,
     currentTabInit: 0,
@@ -43,12 +42,12 @@ Component({
     entryShow:false,//购物车显示
     popShow:false,
     reserveShow,
-    quorumShow,
+    quorumShow:false,
     currentGood,
     currentIndex: null,
     currentItem: null,
     currentTable,
-    saveOrdersFalg:false,//挂单按钮是否显示
+    saveOrdersFalg,//挂单按钮是否显示
     goodsGuige,
     // isSelected: isSelected,
     tableList,
@@ -59,37 +58,22 @@ Component({
 
 
   /**
-     * 组件周期函数
-     */
-  lifetimes: {
-    // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
-    //组件被加载
-    attached: function () {
-      app.updateTitle(pageTitle)
-      this.pageInit();
-    },
-    moved: function () { console.log("组件被moved") },
-    //组件被移除
-    detached: function () { console.log("detached") },
-  },
-  /**
    * page的生命周期
    */
-  pageLifetimes: {
+
     // 组件所在页面的生命周期函数
-    show: function () {
-      console.info("shou")
-      // this.pageInit();
-      // this.loadGoodsInfo();
+    onLoad: function () {
+     
+      app.updateTitle(pageTitle)
+      this.pageInit();
+      this.loadGoodsInfo();
       this.flushStroageData()
-      this.loadCountOrderWei();
       this.flushShoppingCart()
       this.backMainPage()
       },
     hide: function () { },
     resize: function () { },
-  },
-  methods:{
+
     //自定义页面初始化函数
     pageInit:function(){
       var that = this;
@@ -99,18 +83,18 @@ Component({
       that.setData({
         W: mobInfo.mob_width + 'px',
         H: mobInfo.mob_height + 'px',
-        scrollHeight: mobInfo.mob_height - 180 * mobInfo.mob_onerpx
+        scrollHeight: mobInfo.mob_height - 90 * mobInfo.mob_onerpx
       })
       // 查询菜单和数量
-      that.loadGoodsInfo();
+      // that.loadGoodsInfo();
       // 查询餐桌
       that.loadTables();
       //TODO 查询开关设置，比如选择人数是否开启
       //。。。。。。。
 
-      that.flushStroageData()
+      // that.flushStroageData()
      
-      that.flushShoppingCart()
+      // that.flushShoppingCart()
     },
     /**
      * 刷新缓存数据
@@ -123,15 +107,17 @@ Component({
         menuStatus = 2
       }else{
         shoppingCart = app.getShoppingCart()
-        if (shoppingCart != undefined && shoppingCart.table != undefined && shoppingCart.table != '') {
+        if (shoppingCart != undefined && shoppingCart != undefined && shoppingCart.table != undefined && shoppingCart.table != '') {
           menuStatus = 1;
           currentTable = shoppingCart.table,
             currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
         }else{
           menuStatus = 0
         }
-       
+        
       }
+
+     
 
       that.setData({
         menuStatus,
@@ -144,6 +130,9 @@ Component({
     flushShoppingCart:function(){
       var that = this;
       shoppingCart = app.getShoppingCart()
+      if (shoppingCart == undefined){
+        shoppingCart = {}
+      }
       if (shoppingCart.totalNumber == undefined){
         shoppingCart.totalNumber = 0
       }
@@ -154,7 +143,7 @@ Component({
         shoppingCart.totalMoney = 0;
       }
       currentTable = shoppingCart.table == undefined ? {} : shoppingCart.table,
-      currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
+        currentEatPersonNum = shoppingCart.personNum == undefined ? 0 : shoppingCart.personNum
       
       that.setData({
         shoppingCart,
@@ -178,7 +167,7 @@ Component({
               tableList: tableList,
             })
             // 查询挂单数量
-            that.loadCountOrderWei();
+            // that.loadCountOrderWei();
           }
         },
         fail: function (error) {
@@ -204,13 +193,12 @@ Component({
             qityArr = [];
             greensList = res.data.data.greensList;
             navList = res.data.data.navList;
-
             for (let i = 0; i < greensList.length; i++) {
               var count = 0;
               if (shoppingCart != undefined && shoppingCart.goods != undefined){
                 shoppingCart.goods.forEach(function (good, index) {
                   if (navList[i].GTYPE_PK == good.GTYPE_FK) {
-                    count += good.GOODS_NUMBER
+                    count+=good.GOODS_NUMBER
                   }
                 })
               }
@@ -302,7 +290,7 @@ Component({
     },
     getOrdersList:function() {
       var that = this;
-      that.flushShoppingCart
+      that.flushShoppingCart()
 
       console.info("购物车")
       console.info(shoppingCart)
@@ -333,9 +321,10 @@ Component({
       for (let i = 0; i < greensList.length; i++) {
         qityArr.push(0);
       }
+      // app.clearShoppingCart()
       app.removeShoppingCart()
       that.flushShoppingCart()
-    
+      that.backMainPage()
       that.setData({
         greensList: greensList,
         qityArr: qityArr,
@@ -381,13 +370,12 @@ Component({
      */
     closePop:function(){
       var that = this;
-      quorumShow = false;
       reserveShow = false;
       that.setData({
         popShow:false,
         reserveShow: reserveShow,
         entryShow: false,
-        quorumShow: quorumShow
+        quorumShow: false
       })
     },
     /**
@@ -406,9 +394,8 @@ Component({
             reserveShow
           })
         } else if (currentEatPersonNum == 0){
-          quorumShow = true;
           this.setData({
-            quorumShow
+            quorumShow:true
           })
         }else{
           app.pageTurns('../orderDetail/orderDetail')
@@ -421,6 +408,7 @@ Component({
     reserveConfirm:function(e){
     
       var that = this;
+      var quorumShow = false;
       if (selectPersonNum !=undefined && selectPersonNum != '' && currentEatPersonNum == 0){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
         quorumShow = true;
       }
@@ -453,9 +441,8 @@ Component({
       currentEatPersonNum = e.target.dataset.index
       shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
 
-      quorumShow = false;
       that.setData({
-        quorumShow
+        quorumShow:false
       })
       app.pageTurns('../orderDetail/orderDetail')
     },
@@ -686,35 +673,18 @@ Component({
       isSelected = false;//清除规格选择状态
     },
 
-    /**
-     * 加载挂单数量
-     * 
-     * lps  2018年11月29日02:24:21
-     */
-    loadCountOrderWei: function() {
-      var that = this;
-      var shopStorageOrder = app.getStorageOrder()
-      console.info("这个")
-      console.info(shopStorageOrder)
-      if (shopStorageOrder.length > 0){
-        var saveOrdersFalg = true;
-      }else{
-        var saveOrdersFalg = false;
-      }
-      that.setData({
-        saveOrdersFalg
-      });
-    },
     setOptions:function(options){
+      var quorumShow = false;
       if (options != undefined) {
-        if (options.reserveShow != undefined) {
+        if (options.reserveShow != undefined && options.reserveShow) {
           reserveShow = true;
-          quorumShow = false;
-        } else if (options.quorumShow != undefined) {
+          // quorumShow = false;
+        } else if (options.quorumShow != undefined && options.quorumShow) {
           quorumShow = true;
         } 
        
       }
+
       this.setData({
         reserveShow,
         quorumShow
@@ -744,11 +714,12 @@ Component({
     //         that.pageInit()
             
     //         if (app.globalData.appSetting.foundingSwitch) {
-    //           var myEventDetail = { // detail对象，提供给事件监听函数  
-    //             //监听函数可以通过e.detail查看传递的数据;
-    //             page: '../founding/founding'
-    //           }
-    //           that.triggerEvent('switchPage', myEventDetail);
+    //           // var myEventDetail = { // detail对象，提供给事件监听函数  
+    //           //   //监听函数可以通过e.detail查看传递的数据;
+    //           //   page: '../founding/founding'
+    //           // }
+    //           // that.triggerEvent('switchPage', myEventDetail);
+    //           app.reLaunch('../index/index?page=../founding/founding')
     //         }
     //       }
     //     }
@@ -778,25 +749,29 @@ Component({
      * 刷新数据
      */
     flushPageData:function(){
+
       qityArr = []
       for (let i = 0; i < greensList.length; i++) {
         var count = 0;
         if (shoppingCart != undefined && shoppingCart.goods != undefined)
-        shoppingCart.goods.forEach(function (good, index) {
+          shoppingCart.goods.forEach(function (good, index) {
           if (navList[i].GTYPE_PK == good.GTYPE_FK) {
             count += good.GOODS_NUMBER
           }
         })
         qityArr.push(count);
       }
+      this.setData({
+        qityArr
+      })
     },
     backMainPage:function(){
-      if (shoppingCart.table == undefined && app.globalData.appSetting.foundingSwitch) {
-        app.reLaunch('../index/index?page=../founding/founding')
-        return
-      }
+      // if (menuStatus != 2){
+        if (shoppingCart == undefined || shoppingCart.table == undefined || shoppingCart.table == '' && app.globalData.appSetting.foundingSwitch) {
+          app.reLaunch('../index/index?page=../founding/founding')
+          return
+        }
+      // }
     }
-
-
-  }
+  
 })

@@ -11,7 +11,7 @@ var shoppingCart = {};//购物车信息
 Page({
   data: {
     loadingHidden: true,
-    allowChooseTable: !app.globalData.appSetting.foundingSwitch
+    allowChooseTable: !app.globalData.appSetting.foundingSwitch,
   },
   onLoad: function (options) {
     var that = this;
@@ -22,7 +22,8 @@ Page({
         content: '请选择餐位',
         showCancel: false,
         success: function () {
-          app.reLaunch('../index/index?page=../menu/menu')
+          // app.reLaunch('../index/index?page=../menu/menu')
+          app.jumpMenu()
           return;
         }
       })
@@ -47,6 +48,9 @@ Page({
   flushShoppingCart: function () {
     var that = this;
     shoppingCart = app.getShoppingCart()
+    if (that.data.allowChooseTable){
+      shoppingCart
+    }
     if (shoppingCart.totalNumber == undefined) {
       shoppingCart.totalNumber = 0
     }
@@ -104,7 +108,8 @@ Page({
           if (app.globalData.appSetting.tddcsy == true) {
             app.redirectTo(`../checkOut/checkOut?shouldMoney=` + shoppingCart.totalMoney + '&ORDER_PK=' + res.data.data)
           } else {
-            app.reLaunch(`../index/index?page=../menu/menu`);
+            // app.reLaunch(`../index/index?page=menu`);
+            app.jumpMenu()
           }
 
 
@@ -124,7 +129,8 @@ Page({
               tempCart.table == {}
               app.recoverShoppingCart(tempCart)
 
-              app.pageTurns('../index/index?page=../menu/menu&reserveShow=true')
+              // app.pageTurns('../index/index?page=menu&reserveShow=true')
+              app.jumpMenu('reserveShow')
 
             }
           })
@@ -158,26 +164,29 @@ Page({
    * 点击餐桌
    */
   clickTables: function(){
-    app.reLaunch('../index/index?page=../menu/menu&reserveShow=true')
+    // app.reLaunch('../index/index?page=menu&reserveShow=true')
+    app.jumpMenu('reserveShow')
   },
   /**
    * 点击人数
    */
   clickPersonNum: function(){
-    app.reLaunch('../index/index?page=../menu/menu&quorumShow=true')
+    // app.reLaunch('../index/index?page=menu&quorumShow=true')
+    app.jumpMenu('quorumShow')
+    // app.redirectTo('../menu/menupage?quorumShow=true')
   },
   /**
    * 点击清空
    */
   clickClear:function(){
     app.removeShoppingCart()
-    app.reLaunch('../index/index?page=../menu/menu')
+    app.reLaunch('../index/index?page=indexPage')
   },
   /**
    * 挂单
    */
   saveCartOrder:function(){
     app.setStorageOrder(shoppingCart)
-    app.reLaunch('../index/index?page=../menu/menu')
+    app.reLaunch('../index/index?page=indexPage')
   }
 })

@@ -9,7 +9,7 @@
 </view>
 <view wx:if="{{orderType == '1'}}" class='top-oper dp-flex'>
     <view class='cf tc font-30' wx:if="{{smallButton}}" bindtap='clickSmallButton' data-opera='1'>补单</view>
-    <view class='cf tc font-30' wx:if="{{smallButton}}" bindtap='clickSmallButton' data-opera="{{orderDetailMap.TABLES_ISUSE == '1' ? '4':'3'}}">{{orderDetailMap.TABLES_ISUSE == '1' ? '空台':'开台'}}</view>
+    <view class='cf tc font-30' wx:if="{{smallButton && foundingSwitch}}" bindtap='clickSmallButton' data-opera="{{orderDetailMap.TABLES_ISUSE == '1' ? '4':'3'}}">{{orderDetailMap.TABLES_ISUSE == '1' ? '空台':'开台'}}</view>
     <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
 </view>
 

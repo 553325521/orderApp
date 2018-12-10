@@ -5,7 +5,7 @@
 <!-- 菜单导航  -->
 <view class='menu-nav bg-f9 br-ec' style='height:{{height}}'>
   <block wx:for="{{navList}}" wx:for-index='index' wx:key="keys">
-    <view class="nav-item font-24 pr\ c5957 bb-ec tc {{currentTab == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-type='{{item.GTYPE_PK}}' bindtap='switchNav'>
+    <view class="nav-item font-24 pr c5957 bb-ec tc {{currentTab == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-type='{{item.GTYPE_PK}}' bindtap='switchNav'>
     {{item.GTYPE_NAME}}
     <text class='pa font-28 tc cf' wx:if="{{qityArr[index]>0}}">{{qityArr[index]}}</text></view>
   </block>
@@ -93,8 +93,8 @@
     </view>
   </view>
 </view>
-<!--取消加菜-->
-<!-- <view class="selected font-28 tc cf on" wx:if="{{menuStatus != '0'}}" style='right:200rpx;width:170rpx;' bindtap="cancalAddCai" data-meunstatus='{{menuStatus}}'>
+<!-- 取消加菜
+<view class="selected font-28 tc cf on" wx:if="{{menuStatus != '0'}}" style='right:200rpx;width:170rpx;' bindtap="cancalAddCai" data-meunstatus='{{menuStatus}}'>
   取消{{menuStatus == '1' ? '点菜' : menuStatus == '2' ? '加菜' : ''}}
 </view> -->
 <!-- 选好了  -->

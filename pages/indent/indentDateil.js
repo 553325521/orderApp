@@ -24,7 +24,8 @@ Page({
     startRight:0,
     orderDetailMap:{},
     smallButton,
-    sliderWidth
+    sliderWidth,
+    foundingSwitch:app.globalData.appSetting.foundingSwitch
    
   },
   onLoad: function (options) {
@@ -180,12 +181,17 @@ mapToJson: function (map) {
    * 加菜
    */
   addDish: function (){
-    app.clearCart()
+    // app.clearCart()
     var that = this;
     wx.setStorageSync('ORDER_PK', ORDER_PK);
     wx.setStorageSync('ORDER_TYPE', orderType);
 
-    app.reLaunch('../index/index?page=../menu/menu')
+    app.createShoppingCart({
+      TABLES_PK: that.data.orderDetailMap.TABLES_PK,
+      TABLE_NAME: that.data.orderDetailMap.TABLES_NAME
+      }, 0)
+
+    app.jumpMenu()
   },
   //退菜
   tuicai: function (e) {
@@ -261,7 +267,7 @@ mapToJson: function (map) {
                   })
                  that.loadOrderDetail();
                  if (app.globalData.appSetting.tddcsy){
-                   app.pageTurns('../checkOut/checkOut?shouldMoney=' + (that.data.orderDetailMap.ORDER_YFMONEY + shoppingMoney) + '&ORDER_PK=' + ORDER_PK)
+                   app.pageTurns('../checkOut/checkOut?shouldMoney=' + (Number(that.data.orderDetailMap.ORDER_YFMONEY) + Number(shoppingMoney)) + '&ORDER_PK=' + ORDER_PK)
                  }
                }else{
                  app.hintBox(res.data.data)

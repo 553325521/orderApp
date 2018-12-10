@@ -56,13 +56,12 @@ Component({
       app.showLoading()
       //先获取时间
       currentDate = util.nowTime()
-      //判断有没有挂单的
-      var guadanshuju = app.getStorageOrder()
-      if (guadanshuju.length > 0){
+      //获取挂单的数据(founding开启的情况下没有挂单数据，全是放在购物车里，即查询购物车里的信息))
+      var guadanshuju = app.getShoppingCart('all')
         this.setData({
-          saveOrdersFalg:true
+          guadanshuju
         })
-      }
+      
       this.setData({
         currentDate
       })
@@ -149,21 +148,9 @@ Component({
         wx.setStorageSync('ORDER_PK', '');
         wx.setStorageSync('ORDER_TYPE', '');
         
-        //点击了空台，插入桌子数据，然后跳转到菜单
-        var myEventDetail = { // detail对象，提供给事件监听函数  
-          //监听函数可以通过e.detail查看传递的数据;
-          page: '../menu/menu'
-        }  　　
-        //创建一个空的购物车
+        //改需求
+        app.pageTurns('../menu/menupage')
         app.createShoppingCart(table, 0)
-        //先把当前桌子数据放进去
-        // var currentTableMessage = {
-        //   currentTable: table,
-        //   currentEatPersonNum:0
-        // }
-        // app.setStorage('currentTableMessage', currentTableMessage)
-
-        this.triggerEvent('switchPage', myEventDetail);
         
       }else if(status == '1'){
         //点击了开台的桌子，进入订单详情

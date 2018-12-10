@@ -18,14 +18,14 @@
   <block wx:for="{{areaMess}}" wx:key="area" wx:for-item="area">
     <block wx:for="{{area.tables}}" wx:key="table" wx:for-item="table" wx:if="{{currentClickArea == '0' || currentClickArea == area.TABLES_AREA_PK}}">
       <!--空台的样式-->
-      <view class="fd-tb fd-tb-1" bindtap='clickTable' data-table="{{table}}" data-usestatus='0' wx:if="{{currentLookStatus != '2' && table.TABLES_ISUSE == '0' || table.TABLES_ISUSE == undefined}}">
+      <view class="fd-tb fd-tb-1 {{guadanshuju[table.TABLES_PK].totalNumber > 0 ? 'yc':''}}" bindtap='clickTable' data-table="{{table}}" data-usestatus='0' wx:if="{{currentLookStatus != '2' && table.TABLES_ISUSE == '0' || table.TABLES_ISUSE == undefined}}">
         <view class='fd-one'>空台</view>
         <view class='fd-two'><view class='two-one'>{{table.TABLES_SHORT_NAME == undefined ? table.TABLES_NAME:table.TABLES_SHORT_NAME}}</view></view>
         <view class='fd-one-line'></view>
         <view class='fd-th'><view style="height:80%;">0/{{table.TABLES_NUM}}</view></view>
       </view>
       <!--开台的样式-->
-      <view style='position:relative;' class='fd-tb fd-tb-2' bindtap='clickTable' data-table="{{table}}" data-usestatus='1' wx:if="{{currentLookStatus != '1' && table.TABLES_ISUSE == '1'}}">
+      <view style='position:relative;' class="fd-tb fd-tb-2 {{guadanshuju[table.TABLES_PK].totalNumber > 0 ? 'yc':''}}" bindtap='clickTable' data-table="{{table}}" data-usestatus='1' wx:if="{{currentLookStatus != '1' && table.TABLES_ISUSE == '1'}}">
       <image wx:if="{{table.ORDER_PAY_STATE == 1}}" src='../../images/icon/yzf.webp' style='position:absolute;top:5rpx;right:5rpx;height:46rpx;width:55rpx;'></image>
         <view class='fd-one'>
           <view class='fd-one-1'>{{table.TABLES_SHORT_NAME == undefined ? table.TABLES_NAME:table.TABLES_SHORT_NAME}}</view>
@@ -46,9 +46,9 @@
 <!--第三部分-->
 <view class='fd-end'>
 <!-- 挂单按钮  -->
-<view class='entry-orders' bindtap='checkEntryOrders' wx:if='{{saveOrdersFalg && allowChooseTable}}'>
+<!-- <view class='entry-orders' bindtap='checkEntryOrders' wx:if='{{saveOrdersFalg && allowChooseTable}}'>
   <image class='w100 h100' src='../../images/icon/list-icon.png'></image>
-</view>
+</view> -->
   <view class='fd-end-1'>
       <view class="fd-end-bt" bindtap='clicklookStatus' data-status='0'>全部</view>
       <view class="weui-badge bg-d137 fd-end-lr">{{allTableNum}}</view>

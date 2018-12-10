@@ -96,10 +96,10 @@ App({
       "borderStyle": "#000",
       "backgroundColor": "#EF9BA0",
       "list": [{
-        "pagePath": "../menu/menu",
+        "pagePath": "../founding/founding",
         "iconPath": "../../images/icon/caidan.png",
         "selectedIconPath": "../../images/icon/caidan.png",
-        "text": "菜单"
+        "text": "开台"
       },
       {
         "pagePath": "../indent/indent",
@@ -130,7 +130,7 @@ App({
     },
     appSetting:{
       tddcsy:true,//堂点带出收银
-      foundingSwitch:true
+      foundingSwitch:true// 是否开启开台
     }
   },
   /**
@@ -565,85 +565,68 @@ pushSession:function(){
   /**
    * 清空购物车
    */
-  clearCart:function(message){
-    var that = this;
-    this.sendRequest({
-      url: 'ShoppingCart_update_removeAllCart',
-      data: {
-        shopid: that.globalData.shopid,
-        openid: wx.getStorageSync('openid')
-      },
-      success: function (res) {
-        if (message != undefined && message.success != undefined){
-          message.success(res)
-        }
-      },
-      fail: function (error) {
-        if (message != undefined &&message.fail != undefined) {
-          message.fail(error)
-        }else{
-          that.hintBox('系统错误')
-        }
-      }
-    })
-  },
+  // clearCart:function(message){
+  //   var that = this;
+  //   this.sendRequest({
+  //     url: 'ShoppingCart_update_removeAllCart',
+  //     data: {
+  //       shopid: that.globalData.shopid,
+  //       openid: wx.getStorageSync('openid')
+  //     },
+  //     success: function (res) {
+  //       if (message != undefined && message.success != undefined){
+  //         message.success(res)
+  //       }
+  //     },
+  //     fail: function (error) {
+  //       if (message != undefined &&message.fail != undefined) {
+  //         message.fail(error)
+  //       }else{
+  //         that.hintBox('系统错误')
+  //       }
+  //     }
+  //   })
+  // },
   /**
    * 添加商品到购物车（本地版）
    */
   addShoppingCart: function (good) {
-    //从购物车获取数据
+    var that = this
+     //从购物车获取数据
     var shoppingCart = wx.getStorageSync('shopping_cart')
-    var that = this;
-    if (shoppingCart[that.globalData.shopid]) {
-      var isSameGoods = false;
-      var currentShopShoppingCart = shoppingCart[that.globalData.shopid].goods
-      currentShopShoppingCart.forEach(function (cart, index) {
-        if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
-          cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
-          //判断为同一商品
-          if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
-            shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_TRUE_PRICE)
-          } else {
-            shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_PRICE)
-          }
-          shoppingCart[that.globalData.shopid].totalNumber += 1
-          cart.GOODS_NUMBER++;
-          isSameGoods = true
-          wx.setStorageSync('shopping_cart', shoppingCart)
-        }
-      })
+    var shopShoppingCart = shoppingCart[that.globalData.shopid];
+    if (that.globalData.appSetting.foundingSwitch) {
+      // shopShoppingCart[shopShoppingCart.currentTableId] = {}
+      var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
 
-      if (!isSameGoods) {
-        //不是相同的商品
-        if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
-          shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_TRUE_PRICE)
-        } else {
-          shoppingCart[that.globalData.shopid].totalMoney = Number(shoppingCart[that.globalData.shopid].totalMoney) + Number(good.GOODS_PRICE)
-        }
-        shoppingCart[that.globalData.shopid].totalNumber += 1
-        currentShopShoppingCart.push({
-          GOODS_PK: good.GOODS_PK,//商品主键
-          GOODS_NAME: good.GOODS_NAME,//商品名字
-          GOODS_NUMBER: 1,//商品的数量
-          GOODS_PRICE: good.GOODS_PRICE,//商品单价
-          // GOODS_TRUE_PRICE: good.GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
-          GOODS_FORMAT: good.GOODS_FORMAT,//规格
-          GOODS_MAKING: good.GOODS_MAKING,//做法
-          GOODS_TASTE: good.GOODS_TASTE,//口味
-          GOODS_DW: good.GOODS_DW,
-          GOODS_TYPE: good.GOODS_TYPE,
-          GTYPE_NAME: good.GTYPE_NAME
+      if (tableShoppingCart) {
+        var isSameGoods = false;
+        var currentTableShoppingCart = tableShoppingCart.goods
+        currentTableShoppingCart.forEach(function (cart, index) {
+          if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+            cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
+            //判断为同一商品
+            if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
+              tableShoppingCart.totalMoney = Number(tableShoppingCart.totalMoney) + Number(good.GOODS_TRUE_PRICE)
+            } else {
+              tableShoppingCart.totalMoney = Number(tableShoppingCart.totalMoney) + Number(good.GOODS_PRICE)
+            }
+            tableShoppingCart.totalNumber += 1
+            cart.GOODS_NUMBER++;
+            isSameGoods = true
+            wx.setStorageSync('shopping_cart', shoppingCart)
+          }
         })
-        wx.setStorageSync('shopping_cart', shoppingCart)
-      }
-    } else {
-      console.info("没有购物车")
-      var currentShopShoppingCart = {}
-      currentShopShoppingCart[that.globalData.shopid] = {
-        totalMoney: good.GOODS_TRUE_PRICE == undefined || good.GOODS_TRUE_PRICE == '' ? good.GOODS_PRICE : good.GOODS_TRUE_PRICE,
-        totalNumber: 1,
-        goods: [
-          {
+
+        if (!isSameGoods) {
+          //不是相同的商品
+          if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
+            tableShoppingCart.totalMoney = Number(tableShoppingCart.totalMoney) + Number(good.GOODS_TRUE_PRICE)
+          } else {
+            tableShoppingCart.totalMoney = Number(tableShoppingCart.totalMoney) + Number(good.GOODS_PRICE)
+          }
+          tableShoppingCart.totalNumber += 1
+          tableShoppingCart.goods.push({
             GOODS_PK: good.GOODS_PK,//商品主键
             GOODS_NAME: good.GOODS_NAME,//商品名字
             GOODS_NUMBER: 1,//商品的数量
@@ -654,100 +637,272 @@ pushSession:function(){
             GOODS_TASTE: good.GOODS_TASTE,//口味
             GOODS_DW: good.GOODS_DW,
             GOODS_TYPE: good.GOODS_TYPE,
-            GTYPE_NAME: good.GTYPE_NAME
-          }
-        ]
+            GTYPE_NAME: good.GTYPE_NAME,
+            GTYPE_FK: good.GTYPE_FK
+          })
+          wx.setStorageSync('shopping_cart', shoppingCart)
+        }
+      } else {
+        // console.info("没有购物车")
+        // var shoppingCart = {}
+        // shoppingCart[that.globalData.shopid] = {}
+        // //每个商铺的桌位对应一个购物车
+
+        // shoppingCart[that.globalData.shopid][t] = tableShoppingCart
+        // var tableShoppingCart = {
+        //   totalMoney: good.GOODS_TRUE_PRICE == undefined || good.GOODS_TRUE_PRICE == '' ? good.GOODS_PRICE : good.GOODS_TRUE_PRICE,
+        //   totalNumber: 1,
+        //   goods: [
+        //     {
+        //       GOODS_PK: good.GOODS_PK,//商品主键
+        //       GOODS_NAME: good.GOODS_NAME,//商品名字
+        //       GOODS_NUMBER: 1,//商品的数量
+        //       GOODS_PRICE: good.GOODS_PRICE,//商品单价
+        //       // GOODS_TRUE_PRICE: good.GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+        //       GOODS_FORMAT: good.GOODS_FORMAT,//规格
+        //       GOODS_MAKING: good.GOODS_MAKING,//做法
+        //       GOODS_TASTE: good.GOODS_TASTE,//口味
+        //       GOODS_DW: good.GOODS_DW,
+        //       GOODS_TYPE: good.GOODS_TYPE,
+        //       GTYPE_NAME: good.GTYPE_NAME,
+        //       GTYPE_FK: good.GTYPE_FK
+        //     }
+        //   ]
+        // }
+
+        // if (table != undefined) {
+        //   tableShoppingCart.table = table
+        // }
+
+        // wx.setStorageSync('shopping_cart', shoppingCart)
+
+        //购物车数据结构
+        // shopping_cart:{
+        //   shopid:{
+        //     totalMoney:'800',
+        //     totalNumber:'10',
+        //     goods:[
+        //       {
+        //         GOODS_PK: GOODS_PK,//商品主键
+        //         GOODS_NAME: GOODS_NAME,//商品名字
+        //         GOODS_NUMBER: GOODS_NUMBER,//商品的数量
+        //         GOODS_PRICE: GOODS_PRICE,//商品单价
+        //         GOODS_TRUE_PRICE: GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+        //         GOODS_FORMAT: GOODS_FORMAT,//规格
+        //         GOODS_MAKING: GOODS_MAKING,//做法
+        //         GOODS_TASTE: GOODS_TASTE,//口味
+        //         GOODS_DW: GOODS_DW
+        //       },
+        //       {
+
+        //       },
+        //       {
+
+        //       }
+        //     ]
+
+        //   }
+        // }
       }
-      wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+    }else{
+      if (shopShoppingCart != undefined && shopShoppingCart.totalNumber != undefined) {
+        var isSameGoods = false;
+        var currentShopShoppingCart = shopShoppingCart.goods
+        currentShopShoppingCart.forEach(function (cart, index) {
+          if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+            cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
+            //判断为同一商品
+            if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
+              shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) + Number(good.GOODS_TRUE_PRICE)
+            } else {
+              shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) + Number(good.GOODS_PRICE)
+            }
+            shopShoppingCart.totalNumber += 1
+            cart.GOODS_NUMBER++;
+            isSameGoods = true
+            wx.setStorageSync('shopping_cart', shoppingCart)
+          }
+        })
 
-      //购物车数据结构
-      // shopping_cart:{
-      //   shopid:{
-      //     totalMoney:'800',
-      //     totalNumber:'10',
-      //     goods:[
-      //       {
-      //         GOODS_PK: GOODS_PK,//商品主键
-      //         GOODS_NAME: GOODS_NAME,//商品名字
-      //         GOODS_NUMBER: GOODS_NUMBER,//商品的数量
-      //         GOODS_PRICE: GOODS_PRICE,//商品单价
-      //         GOODS_TRUE_PRICE: GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
-      //         GOODS_FORMAT: GOODS_FORMAT,//规格
-      //         GOODS_MAKING: GOODS_MAKING,//做法
-      //         GOODS_TASTE: GOODS_TASTE,//口味
-      //         GOODS_DW: GOODS_DW
-      //       },
-      //       {
-
-      //       },
-      //       {
-
-      //       }
-      //     ]
-
-      //   }
-      // }
+        if (!isSameGoods) {
+          //不是相同的商品
+          if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
+            shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) + Number(good.GOODS_TRUE_PRICE)
+          } else {
+            shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) + Number(good.GOODS_PRICE)
+          }
+          shopShoppingCart.totalNumber += 1
+          currentShopShoppingCart.push({
+            GOODS_PK: good.GOODS_PK,//商品主键
+            GOODS_NAME: good.GOODS_NAME,//商品名字
+            GOODS_NUMBER: 1,//商品的数量
+            GOODS_PRICE: good.GOODS_PRICE,//商品单价
+            // GOODS_TRUE_PRICE: good.GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+            GOODS_FORMAT: good.GOODS_FORMAT,//规格
+            GOODS_MAKING: good.GOODS_MAKING,//做法
+            GOODS_TASTE: good.GOODS_TASTE,//口味
+            GOODS_DW: good.GOODS_DW,
+            GOODS_TYPE: good.GOODS_TYPE,
+            GTYPE_NAME: good.GTYPE_NAME,
+            GTYPE_FK: good.GTYPE_FK
+          })
+          wx.setStorageSync('shopping_cart', shoppingCart)
+        }
+      } else {
+        console.info("没有购物车")
+        var currentShopShoppingCart = {}
+        currentShopShoppingCart[that.globalData.shopid] = {
+          totalMoney: good.GOODS_TRUE_PRICE == undefined || good.GOODS_TRUE_PRICE == '' ? good.GOODS_PRICE : good.GOODS_TRUE_PRICE,
+          totalNumber: 1,
+          goods: [
+            {
+              GOODS_PK: good.GOODS_PK,//商品主键
+              GOODS_NAME: good.GOODS_NAME,//商品名字
+              GOODS_NUMBER: 1,//商品的数量
+              GOODS_PRICE: good.GOODS_PRICE,//商品单价
+              // GOODS_TRUE_PRICE: good.GOODS_TRUE_PRICE,//商品特价，为空则不为特价商品
+              GOODS_FORMAT: good.GOODS_FORMAT,//规格
+              GOODS_MAKING: good.GOODS_MAKING,//做法
+              GOODS_TASTE: good.GOODS_TASTE,//口味
+              GOODS_DW: good.GOODS_DW,
+              GOODS_TYPE: good.GOODS_TYPE,
+              GTYPE_NAME: good.GTYPE_NAME,
+              GTYPE_FK: good.GTYPE_FK
+            }
+          ]
+        }
+        wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+      }
     }
+    
   },
   /**
   * 从购物车减少商品数量（本地版）
   */
   subShoppingCart: function (good) {
+    var that = this;
     //从购物车获取数据
     var shoppingCart = wx.getStorageSync('shopping_cart')
-    var that = this;
-    //先判断允许减少商品的数量吗
-    if (shoppingCart == undefined || shoppingCart[that.globalData.shopid] == undefined || shoppingCart[that.globalData.shopid].totalNumber < 1) {
-      return;
-    }
-
+    if (shoppingCart == undefined)return
     var shopShoppingCart = shoppingCart[that.globalData.shopid];
-    var goods = shopShoppingCart.goods;
+    if (shopShoppingCart == undefined) return
 
 
-    goods.forEach(function (cart, index) {
-
-      //判断是同一件商品吗
-      if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
-        cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
-
-        if (cart.GOODS_TRUE_PRICE != undefined && cart.GOODS_TRUE_PRICE != '') {
-          shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) - Number(cart.GOODS_TRUE_PRICE)
-        } else {
-          shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) - Number(cart.GOODS_PRICE)
-        }
-        shopShoppingCart.totalNumber = Number(shopShoppingCart.totalNumber) - 1
-
-        if (cart.GOODS_NUMBER > 1) {
-          cart.GOODS_NUMBER--;
-        } else {
-          goods.splice(index, 1)
-        }
-
-        wx.setStorageSync('shopping_cart', shoppingCart)
+    if (that.globalData.appSetting.foundingSwitch) {
+      var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
+      if (tableShoppingCart == undefined) return
+      //先判断允许减少商品的数量吗
+      if (tableShoppingCart.totalNumber < 1) {
+        return;
       }
-    })
-    return shopShoppingCart
+
+      var goods = tableShoppingCart.goods;
+
+      goods.forEach(function (cart, index) {
+
+        //判断是同一件商品吗
+        if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+          cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
+
+          if (cart.GOODS_TRUE_PRICE != undefined && cart.GOODS_TRUE_PRICE != '') {
+            tableShoppingCart.totalMoney = Number(tableShoppingCart.totalMoney) - Number(cart.GOODS_TRUE_PRICE)
+          } else {
+            tableShoppingCart.totalMoney = Number(tableShoppingCart.totalMoney) - Number(cart.GOODS_PRICE)
+          }
+          tableShoppingCart.totalNumber = Number(tableShoppingCart.totalNumber) - 1
+
+          if (cart.GOODS_NUMBER > 1) {
+            cart.GOODS_NUMBER--;
+          } else {
+            goods.splice(index, 1)
+          }
+
+          wx.setStorageSync('shopping_cart', shoppingCart)
+        }
+      })
+      return tableShoppingCart
+    }else{
+      //先判断允许减少商品的数量吗
+      if (shoppingCart == undefined || shoppingCart[that.globalData.shopid] == undefined || shoppingCart[that.globalData.shopid].totalNumber < 1) {
+        return;
+      }
+
+      var shopShoppingCart = shoppingCart[that.globalData.shopid];
+      var goods = shopShoppingCart.goods;
+
+
+      goods.forEach(function (cart, index) {
+
+        //判断是同一件商品吗
+        if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+          cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
+
+          if (cart.GOODS_TRUE_PRICE != undefined && cart.GOODS_TRUE_PRICE != '') {
+            shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) - Number(cart.GOODS_TRUE_PRICE)
+          } else {
+            shopShoppingCart.totalMoney = Number(shopShoppingCart.totalMoney) - Number(cart.GOODS_PRICE)
+          }
+          shopShoppingCart.totalNumber = Number(shopShoppingCart.totalNumber) - 1
+
+          if (cart.GOODS_NUMBER > 1) {
+            cart.GOODS_NUMBER--;
+          } else {
+            goods.splice(index, 1)
+          }
+
+          wx.setStorageSync('shopping_cart', shoppingCart)
+        }
+      })
+      return shopShoppingCart
+    }
   },
   /**
    * 根据桌位和人数创建一个空的购物车
    */
   createShoppingCart: function (table, personNum) {
-    var currentShopShoppingCart = {}
-    currentShopShoppingCart[this.globalData.shopid] = {
-      table: table,
-      personNum: personNum,
-      totalMoney: 0,
-      totalNumber: 0,
-      goods: []
+    var that = this
+    if (that.globalData.appSetting.foundingSwitch) {
+      var currentShopShoppingCart = wx.getStorageSync('shopping_cart')
+      if (currentShopShoppingCart == undefined || currentShopShoppingCart == '') {
+        currentShopShoppingCart = {}
+      }
+      var shopShoppingCart = currentShopShoppingCart[that.globalData.shopid];
+      if (shopShoppingCart == undefined || shopShoppingCart == ''){
+        shopShoppingCart = {}
+        currentShopShoppingCart[that.globalData.shopid] = shopShoppingCart
+      }
+      
+      shopShoppingCart.currentTableId = table.TABLES_PK
+      if (shopShoppingCart[table.TABLES_PK] == undefined || shopShoppingCart[table.TABLES_PK] == ''){
+        var tableShoppingCart = {
+          table: table,
+          personNum: personNum,
+          totalMoney: 0,
+          totalNumber: 0,
+          goods: []
+        }
+        shopShoppingCart[table.TABLES_PK] = tableShoppingCart
+      }
+      wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+      return tableShoppingCart
+    }else{
+      var currentShopShoppingCart = {}
+      currentShopShoppingCart[this.globalData.shopid] = {
+        table: table,
+        personNum: personNum,
+        totalMoney: 0,
+        totalNumber: 0,
+        goods: []
+      }
+      wx.setStorageSync('shopping_cart', currentShopShoppingCart)
+      return currentShopShoppingCart[this.globalData.shopid]
     }
-    wx.setStorageSync('shopping_cart', currentShopShoppingCart)
-    return currentShopShoppingCart[this.globalData.shopid]
+
   },
   /**
    * 挂单恢复购物车，直接传过来
    */
-  recoverShoppingCart:function(shoppingCart){
+  recoverShoppingCart: function (shoppingCart){
     var currentShopShoppingCart = {}
     currentShopShoppingCart[this.globalData.shopid] = shoppingCart;
     wx.setStorageSync('shopping_cart', currentShopShoppingCart)
@@ -760,43 +915,91 @@ pushSession:function(){
     //从购物车获取数据
     var shoppingCart = wx.getStorageSync('shopping_cart')
     var shopShoppingCart = shoppingCart[this.globalData.shopid]
-    shopShoppingCart.totalMoney = 0;
-    shopShoppingCart.totalNumber = 0;
-    shopShoppingCart.goods = [];
+    
+    if (that.globalData.appSetting.foundingSwitch) {
+      var tableShoppingCart = shopShoppingCart[shoppingCart.currentTableId];
+      tableShoppingCart.totalMoney = 0;
+      tableShoppingCart.totalNumber = 0;
+      tableShoppingCart.goods = [];
+    }else{
+      shopShoppingCart.totalMoney = 0;
+      shopShoppingCart.totalNumber = 0;
+      shopShoppingCart.goods = [];
+    }
+    
     wx.setStorageSync('shopping_cart', shoppingCart)
   },
   /**
    * 移除购物车(移除购物车)
    */
   removeShoppingCart: function () {
-    wx.removeStorageSync('shopping_cart')
-    return {};
+    var that = this
+    if (that.globalData.appSetting.foundingSwitch) {
+      var shoppingCart = wx.getStorageSync('shopping_cart')
+      var shopShoppingCart = shoppingCart[that.globalData.shopid]
+      var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
+      delete shopShoppingCart[shopShoppingCart.currentTableId]
+      shopShoppingCart.currentTableId = ''
+      wx.setStorageSync('shopping_cart', shoppingCart)
+    }else{
+      wx.removeStorageSync('shopping_cart')
+    }
+    
+    return {}
   },
   /**
    * 获取购物车
    */
-  getShoppingCart:function(){
+  getShoppingCart:function(table){
+    var that = this
     var shoppingCart = wx.getStorageSync('shopping_cart')
+
     if (shoppingCart == undefined || shoppingCart == ""){
       return {}
     }
-    if (shoppingCart[this.globalData.shopid] == undefined){
+    var shopShoppingCart = shoppingCart[that.globalData.shopid]
+    if (shopShoppingCart == undefined){
       return {}
     }
-    return shoppingCart[this.globalData.shopid]
+
+    if (that.globalData.appSetting.foundingSwitch && table == undefined) {
+      if (shopShoppingCart[shopShoppingCart.currentTableId] != undefined){
+        return shopShoppingCart[shopShoppingCart.currentTableId]
+      }else{
+        return {}
+      }
+    }
+
+      return shopShoppingCart
+    
   },
   /**
    * 购物车添加当前桌位或者人数信息
    */
   addTableInCart:function(table,personNum){
     var shoppingCart = wx.getStorageSync('shopping_cart')
+    if (shoppingCart == undefined){
+      shoppingCart = {}
+    }
     var shopShoppingCart = shoppingCart[this.globalData.shopid]
-    if (table != undefined && table != ''){
-      shopShoppingCart.table = table
+    
+    if(this.globalData.appSetting.foundingSwitch){
+      var currentTableId = table.TABLES_PK
+      if (table != undefined && table != '') {
+        shopShoppingCart[currentTableId].table = table
+      }
+      if (personNum != undefined && personNum != '') {
+        shopShoppingCart[currentTableId].personNum = personNum
+      }
+    }else{
+      if (table != undefined && table != '') {
+        shopShoppingCart.table = table
+      }
+      if (personNum != undefined && personNum != '') {
+        shopShoppingCart.personNum = personNum
+      }
     }
-    if (personNum != undefined && personNum != ''){
-      shopShoppingCart.personNum = personNum
-    }
+    
 
     wx.setStorageSync('shopping_cart', shoppingCart)
     return shopShoppingCart;
@@ -804,25 +1007,25 @@ pushSession:function(){
   /**
    * 获取挂单数据
    */
-  getStorageOrder:function(){
+  getStorageOrder: function () {
     var storageOrder = wx.getStorageSync('storage_order')
-    if (storageOrder){
+    if (storageOrder) {
       var shopStorageOrder = storageOrder[this.globalData.shopid]
       return shopStorageOrder
     }
-    
+
     return []
   },
   /**
    * 挂单
    */
-  setStorageOrder:function(shoppingCart){
+  setStorageOrder: function (shoppingCart) {
     var storageOrder = wx.getStorageSync('storage_order')
-    if (storageOrder == undefined || storageOrder == ""){
+    if (storageOrder == undefined || storageOrder == "") {
       storageOrder = {};
       storageOrder[this.globalData.shopid] = []
-    } 
-    
+    }
+
     shoppingCart.saveOrderDate = util.nowTime();//添加一个挂单日期
     storageOrder[this.globalData.shopid].unshift(shoppingCart)
     wx.setStorageSync('storage_order', storageOrder)
@@ -835,9 +1038,9 @@ pushSession:function(){
     var storageOrder = wx.getStorageSync('storage_order')
     if (storageOrder) {
       var shopStorageOrder = storageOrder[this.globalData.shopid]
-      var deleteShoppingCart = shopStorageOrder.splice(index,1)
+      var deleteShoppingCart = shopStorageOrder.splice(index, 1)
     }
-    if (shopStorageOrder.length < 1){
+    if (shopStorageOrder.length < 1) {
       wx.removeStorageSync('storage_order')
       return deleteShoppingCart[0]
     }
@@ -845,4 +1048,39 @@ pushSession:function(){
 
     return deleteShoppingCart[0]
   },
+  /**
+   * 跳转到菜单
+   */
+  jumpMenu:function(param){
+    var that = this;
+    var pages = getCurrentPages()    //获取加载的页面
+    var prePage = pages[pages.length - 2];
+    if (that.globalData.appSetting.foundingSwitch){
+      if (prePage.route == 'pages/menu/menupage'){  
+        wx.navigateBack({
+          delta:1
+        })
+        if (param != undefined) {
+          var map = {}
+          map[param] = true;
+          prePage.setData(map)
+        }
+      }else{
+        that.redirectTo('/pages/menu/menupage?' + param)
+      }
+    }else{
+      if (prePage.route == 'pages/index/index' && prePage.__data__.currentPage=='../menu/menu'){
+        if (param != undefined) {
+          var map = {}
+          map[param] = true;
+          prePage.setMenuData(map);
+        }  
+        wx.navigateBack({
+          delta: 1
+        })
+      }else{
+        that.reLaunch('/pages/index/index?page=../menu/menu&' + param)
+      }
+    }
+  }
 })

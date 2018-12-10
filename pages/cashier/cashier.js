@@ -259,7 +259,7 @@ Page({
    * 二维码收款
    */
   qrCodeCollection: function(e) {
-    app.pageTurns('../payMent/payMent');
+    app.pageTurns('../payMent/payMent?money=');
   },
   /**
    * 扫一扫收款

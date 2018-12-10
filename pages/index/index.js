@@ -1,6 +1,8 @@
 // pages/index/index.js
 var app = getApp();
 var currentPage = app.globalData.tabBar.list[0].pagePath;//当前是哪个页面
+var foundingSwitch = app.globalData.appSetting.foundingSwitch;
+var indexPage = foundingSwitch ? '../founding/founding' : '../menu/menu';
 
 //引入单页面页面的js
 // var indent = require('../indent/indent.js');//引入modul
@@ -20,6 +22,9 @@ Page({
   onLoad: function (options) {
     if (options != undefined && options.page != undefined) {
       currentPage = options.page;
+      if (options.page == 'indexPage'){
+        currentPage = indexPage;
+      }
       //set数据在上边，不然页面没出来，下边后去不到
       this.setData({
         currentPage
@@ -88,25 +93,25 @@ Page({
     var that = this;
    
     // currentPage = menu;
-    if (app.globalData.appSetting.foundingSwitch){
-      if (app.getShoppingCart().table == undefined){
-        app.globalData.tabBar.list[0].pagePath = "../founding/founding"
-        app.globalData.tabBar.list[0].text = "开台"
-        if (currentPage == '../menu/menu'){
-          currentPage = '../founding/founding'
-        }
-      }else{
-        app.globalData.tabBar.list[0].pagePath = "../menu/menu"
-        app.globalData.tabBar.list[0].text = "菜单"
-        if (currentPage == '../founding/founding') {
-          currentPage = '../menu/menu'
-        }
-      }
-      that.setData({
-        currentPage,
-        tabBar: app.globalData.tabBar//获取tabBar
-      })
-    }
+    // if (app.globalData.appSetting.foundingSwitch){
+    //   if (app.getShoppingCart().table == undefined){
+    //     app.globalData.tabBar.list[0].pagePath = "../founding/founding"
+    //     app.globalData.tabBar.list[0].text = "开台"
+    //     if (currentPage == '../menu/menu'){
+    //       currentPage = '../founding/founding'
+    //     }
+    //   }else{
+    //     app.globalData.tabBar.list[0].pagePath = "../menu/menu"
+    //     app.globalData.tabBar.list[0].text = "菜单"
+    //     if (currentPage == '../founding/founding') {
+    //       currentPage = '../menu/menu'
+    //     }
+    //   }
+    //   that.setData({
+    //     currentPage,
+    //     tabBar: app.globalData.tabBar//获取tabBar
+    //   })
+    // }
     
   },
   /**
@@ -151,24 +156,9 @@ Page({
     currentPage = page.detail.page
     this.setData({ currentPage})
   },
-  /**
-   * 切换菜单:根据当前页面判断是否需要切换页面,返回是否切换了
-   */
-  switchMenu:function(page){
-    if (page == "../menu/menu" && app.globalData.tabBar.list[0].pagePath == "../founding/founding") {
-      app.globalData.tabBar.list[0].pagePath = "../menu/menu"
-      app.globalData.tabBar.list[0].text = "首页"
-      currentPage = "../menu/menu"
-      wx.setStorageSync("menu", currentPage)
-    } else if (page == "../founding/founding" && app.globalData.tabBar.list[0].pagePath == "../menu/menu") {
-      app.globalData.tabBar.list[0].pagePath = "../founding/founding"
-      app.globalData.tabBar.list[0].text = "开台"
-      currentPage = "../founding/founding"
-      wx.setStorageSync("menu", currentPage)
-    }else{
-      return false
-    }
-    this.setData({tabBar: app.globalData.tabBar})
-    return true
-  } 
+  setMenuData:function(options){
+    this.menu = this.selectComponent("#menu");
+    this.menu.setOptions(options);
+  }
+    
 })

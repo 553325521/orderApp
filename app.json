@@ -4,9 +4,9 @@
     "pages/index/index",
     "pages/checkOut/checkOut",
     "pages/founding/founding",
-    "pages/couponList/couponList",
-    
+    "pages/couponList/couponList", 
     "pages/menu/menu",
+    "pages/menu/menupage",
     "pages/takeOut/takeOut",
     "pages/takeOut/takeOutDateil",
     "pages/template/chosenPosition",
