@@ -15,7 +15,8 @@ Page({
     isComputeFocus:true,
     bdsArray:[],
     operateStr:"",
-    yhMoney:""
+    yhMoney:"",
+    isFirst:true
   },
   // 组件所在页面的生命周期函数
   onLoad: function() {
@@ -72,7 +73,6 @@ Page({
         inputStack.push(cur);
       }
     }
-    console.log('step one');
     while (inputStack.length > 0) {
       var cur = inputStack.shift();
       if (this.isOperator(cur)) {
@@ -100,7 +100,6 @@ Page({
         outputQueue.push(new Number(cur));
       }
     }
-    console.log('step two');
     if (outputStack.length > 0) {
       if (outputStack[outputStack.length - 1] == ')' || outputStack[outputStack.length - 1] == '(') {
         throw "error: unmatched ()";
@@ -109,7 +108,6 @@ Page({
         outputQueue.push(outputStack.pop());
       }
     }
-    console.log('step three');
     return outputQueue;
   },
   //后缀表达式计算结果
@@ -150,7 +148,6 @@ Page({
     var currentIndex = e.currentTarget.dataset.index;
     var noYH = currentIndex == 0 ? false : true;
     var isFocus = !noYH;
-    console.info("???"+isFocus);
     that.setData({
       noYH: noYH,
       yhMoney:"",
@@ -163,7 +160,7 @@ Page({
     var str = e.currentTarget.dataset.number;
     var isFoucs = that.data.isFocus;
     var yhMoney = that.data.yhMoney+"";
-    if (isFoucs){
+    if (isFoucs && that.data.noYH == false){
       if (str != '×' && str != '+'){
         var why = yhMoney.indexOf(".");
         if (str == "." && why == -1){
@@ -179,7 +176,7 @@ Page({
         }
        
       }
-    }else{
+    } else if (that.data.isComputeFocus == true){
       if (str == '×' || str == '+') {
         var process = that.data.process;
         if(process != ""){
@@ -214,7 +211,14 @@ Page({
       process: '',
       result: '',
       operateStr:'',
-      bdsArray:[]
+      bdsArray:[],
+      yhMoney:"",
+      noYH:true
+    })
+  },
+  yhMoneyChange:function(e){
+    this.setData({
+      yhMoney:e.detail.value
     })
   },
   //计算
@@ -234,14 +238,19 @@ Page({
     if(bdsArray.length != 0){
       var hz = this.dal2Rpn(bdsArray);
       result = this.calc(hz);
-      result = result - yhMoney;
+      if (that.data.isFirst == true){
+        result = result - yhMoney;
+        this.setData({
+          isFirst:false
+        })
+      }
       bdsArray = [];
       bdsArray.push(result);
     }
     that.setData({
       process:'',
       result: result,
-      bdsArray: bdsArray,
+      bdsArray: bdsArray
      // operateStr:""
     })
   },

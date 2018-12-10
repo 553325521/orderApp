@@ -19,7 +19,7 @@
           <checkbox value="0" checked="false"/>
       </checkbox-group>
     </view>
-    <input class='flex-1 font-28 c6' disabled='{{noYH}}' type='digit' value="{{yhMoney}}" focus='{{isFocus}}' bindtap = 'changeYHINPUT'  placeholder='请输入优惠金额'></input>
+    <input class='flex-1 font-28 c6' disabled='{{noYH}}' type='digit' value="{{yhMoney}}" focus='{{isFocus}}' bindchange = 'yhMoneyChange' bindtap = 'changeYHINPUT'  placeholder='请输入优惠金额'></input>
   </view>
   <view class='keyboard dp-flex flex-jc-sb'>
     <view class='numeric-key dp-flex font-28 c6'>
