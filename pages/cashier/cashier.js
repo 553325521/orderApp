@@ -213,7 +213,8 @@ Page({
       operateStr:'',
       bdsArray:[],
       yhMoney:"",
-      noYH:true
+      noYH:true,
+      isFirst: true
     })
   },
   yhMoneyChange:function(e){
