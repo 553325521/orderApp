@@ -328,6 +328,7 @@ methods:{
     that.setData({
       currentTab: currentTab,
     });
+    console.info("当前tab值"+that.data.currentTab);
     that.loadOrderData();
   },
   // 

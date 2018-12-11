@@ -32,11 +32,11 @@
 <scroll-view scroll-y class='list' style='height:{{height}}'>
   <block wx:for = "{{orderDetailMap.orders}}" wx:key="{{index}}"> 
   <view class=' dp-flex font-28 c6'>
-    <view class='item pr dp-flex viewBottomBorder bg-fff' data-index='{{index}}' bindtouchstart="{{orderType == '0'?'drawStart':''}}" bindtouchmove="{{orderType == '0'?'drawMove':''}}" bindtouchend="{{orderType == '0'?'drawEnd':''}}" data-orderid='{{item.ORDER_DETAILS_PK}}' style="transform: translate({{currentSlideOrderId == item.ORDER_DETAILS_PK ? movedistance:'0'}}rpx,0)">
+    <view class='item pr dp-flex viewBottomBorder bg-fff {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}' data-index='{{index}}' bindtouchstart="{{orderType == '0'?'drawStart':''}}" bindtouchmove="{{orderType == '0'?'drawMove':''}}" bindtouchend="{{orderType == '0'?'drawEnd':''}}" data-orderid='{{item.ORDER_DETAILS_PK}}' style="transform: translate({{currentSlideOrderId == item.ORDER_DETAILS_PK ? movedistance:'0'}}rpx,0)">
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
-      <view class='moeny c2821 tr'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
-
+      <view class='moeny c2821 tr {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
+       <view class='delete-line' wx:if='{{item.ORDER_DETAILS_GOODS_STATE == "3"}}'></view>  
     </view>
     <view wx:if="{{item.ORDER_DETAILS_PK == currentSlideOrderId}}" style="z-index:{{currentSlideOrderId == item.ORDER_DETAILS_PK && movedistance == -sliderWidth ? '0':'-1'}}"  class='retreat-food pa tc' bindtap='tuicai' data-id='{{item.ORDER_DETAILS_PK}}'>退菜</view>
     </view>

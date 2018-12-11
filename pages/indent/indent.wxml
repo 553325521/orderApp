@@ -6,7 +6,7 @@
   <view class='swiper-tab bg-fff dp-flex'>
       <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
         <view class="flex-1 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
-          <text>{{item.title}}</text>
+          <text>{{item.title}}{{currentTab}}</text>
           <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
           <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view>
           <view wx:if="{{item.type!=2 && item.type == 1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
