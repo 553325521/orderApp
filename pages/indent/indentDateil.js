@@ -25,13 +25,16 @@ Page({
     orderDetailMap:{},
     smallButton,
     sliderWidth,
-    foundingSwitch:app.globalData.appSetting.foundingSwitch
-   
+    foundingSwitch:app.globalData.appSetting.foundingSwitch,
+    currentOrderPk:""
   },
   onLoad: function (options) {
     var that = this;
     that.initParam()
     ORDER_PK = options.ORDER_PK
+    that.setData({
+      currentOrderPk:ORDER_PK
+    })
     orderType = options.type
     if (ORDER_PK == undefined || ORDER_PK == ''){
       ORDER_PK = wx.getStorageSync('ORDER_PK');
@@ -322,6 +325,24 @@ mapToJson: function (map) {
    * 退单操作
    */
   cancalOrder: function (orderId){
+    var that = this;
+    app.sendRequest({
+      url:'Order_update_cancelOrder',
+      data:{
+        SHOP_FK: app.globalData.shopid,
+        OPEN_ID: wx.getStorageSync('openid'),
+        ORDER_PK:that.data.currentOrderPk
+      },
+      success: function (res) {
+        console.info(res.data);
+          var flag = res.data.code == '0000' ? 'success':'none';
+          app.hintBox(res.data.data,flag);
+          app.reLaunch('/pages/index/index?page=../indent/indent')
+      },
+      fail: function (error) {
+        console.info(error);
+      }
+    })
     console.info("退单成功")
   },
   /**
