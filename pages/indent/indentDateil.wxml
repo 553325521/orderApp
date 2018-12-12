@@ -42,12 +42,16 @@
     </view>
   </block>
   <!--购物车的信息-->
-  <block wx:for = "{{shoppingCart.goods}}" wx:key="{{index}}"> 
-    <view class='dp-flex font-24 bg-f9 c3 pr' style='padding:6rpx 30rpx;'>购物车</view>
-    <view class='item dp-flex font-28 c6 pr viewBottomBorder'>
+  <block wx:for = "{{shoppingCart.goods}}" wx:key>
+   
+    <view wx:if='{{index == 0}}' class='dp-flex font-24 bg-f9 c3 pr' style='padding:6rpx 30rpx;'>购物车</view>
+    <view class=' dp-flex font-28 c6'> 
+    <view class='item dp-flex pr viewBottomBorder bg-fff' bindtouchstart="{{orderType == '0'?'drawStart':''}}" bindtouchmove="{{orderType == '0'?'drawMove':''}}" bindtouchend="{{orderType == '0'?'drawEnd':''}}" data-orderid='{{index}}' style="transform: translate({{currentSlideOrderId == index ? movedistance:'0'}}rpx,0)">
       <view class='name'>{{item.GOODS_NAME}}</view>
       <view class='part tr'>{{item.GOODS_NUMBER}}份</view>
       <view class='moeny c2821 tr'>￥{{math.toFix((item.GOODS_TRUE_PRICE == undefined ? item.GOODS_PRICE : item.GOODS_TRUE_PRICE)/100.0)}}</view>
+    </view>
+    <view wx:if="{{currentSlideOrderId == index}}" style="z-index:{{currentSlideOrderId == index && movedistance == -sliderWidth ? '0':'-1'}}"  class='retreat-food pa tc' bindtap='deleteGoods' data-index='{{index}}'>删除</view>
     </view>
   </block>
 

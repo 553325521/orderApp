@@ -1,3 +1,4 @@
+
 var filters = {
   toFix: function (value) {
     return parseFloat(value).toFixed(2)//此处2为保留两位小数
@@ -59,12 +60,58 @@ var filters = {
       return "其他"
     }
 
+  },
+  /**
+   * 解析商品图片
+   */
+  parseImage:function(map){
+    return JSON.parse(map);
+  },
+  /**
+   * 类别上的数量
+   */
+  catNum:function(gtype_pk,goods){
+    var num = 0;
+    goods.forEach(function(good){
+      if (gtype_pk == good.GTYPE_FK) {
+        num+=good.GOODS_NUMBER;
+      }
+    })
+    return num;
+  },
+  /**
+   * 解析商品的口味、规格、做法
+   */
+  parseGoods:function(goods){
+    return JSON.parse(goods)
+  },
+  /**
+   * 解析成json
+   */
+  parseJSON:function(param){
+    return JSON.parse(param)
+  },
+  /**
+   * 判断字符串为不为空
+   */
+  isNotUndefined:function(str){
+    if (str == undefined || str == null || str == ''){
+      return false
+    }
+    return true
   }
+
 }
 module.exports = {
   toFix: filters.toFix,
   calcDate: filters.calcDate,
   getYMD: filters.getYMD,
   subString: filters.subString,
-  payWay: filters.payWay
+  payWay: filters.payWay,
+  parseImage: filters.parseImage,
+  showCatNum: filters.showCatNum,
+  catNum: filters.catNum,
+  parseGoods: filters.parseGoods,
+  parseJSON: filters.parseJSON,
+  isNotUndefined: filters.isNotUndefined
 }

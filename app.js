@@ -1,5 +1,6 @@
 //app.js
 var util = require('utils/util.js');  
+var basePath =  'http://m.ddera.com/dcxt/'
 
 App({
   data: {   
@@ -20,8 +21,8 @@ App({
       // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
       options.query.appid = 'wx3326999f88e7077a';
     }
-    //this.globalData.shopid = 'c3a1f69158e04e0b8d072e5bc1f47b31';
     this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
+    // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
     this.globalData.appid = options.query.appid;
     that.wxLogin();
     wx.setStorageSync("Address", "not");
@@ -87,9 +88,9 @@ App({
   globalData: {
     userInfo: null,
     appid:null,
-    loginUrl: 'http://m.ddera.com/dcxt/json/toSmallProgram.json',
     shopid:null,
-    basePath:'http://m.ddera.com/dcxt/',
+    basePath: basePath,
+    loginUrl: basePath + 'json/toSmallProgram.json',
     tabBar: {
       "color": "#5C5A58",
       "selectedColor": "#DA251D",
@@ -211,6 +212,9 @@ pushSession:function(){
         //连接websocket
         that.connectWebsocket(); 
         //授权成功
+
+        //获取全局设置
+        that.getAppSetting();
       },
       fail: function (error) {
         console.log(error)
@@ -561,6 +565,13 @@ pushSession:function(){
       url: url
     })
   },
+  /**
+   * 获取小程序设置
+   */
+  getAppSetting:function(){
+    var that = this;
+    
+  },
 
   /**
    * 清空购物车
@@ -598,7 +609,6 @@ pushSession:function(){
     if (that.globalData.appSetting.foundingSwitch) {
       // shopShoppingCart[shopShoppingCart.currentTableId] = {}
       var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
-
       if (tableShoppingCart) {
         var isSameGoods = false;
         var currentTableShoppingCart = tableShoppingCart.goods
@@ -827,9 +837,7 @@ pushSession:function(){
         return;
       }
 
-      var shopShoppingCart = shoppingCart[that.globalData.shopid];
       var goods = shopShoppingCart.goods;
-
 
       goods.forEach(function (cart, index) {
 
@@ -854,6 +862,36 @@ pushSession:function(){
         }
       })
       return shopShoppingCart
+    }
+  },
+  /**
+   * 删除购物车里边的商品
+   */
+  removeShoppingCartGoods:function(index){
+    var that = this;
+    //从购物车获取数据
+    var shoppingCart = wx.getStorageSync('shopping_cart')
+    if (shoppingCart == undefined) return
+    var shopShoppingCart = shoppingCart[that.globalData.shopid];
+    if (shopShoppingCart == undefined) return
+
+
+    if (that.globalData.appSetting.foundingSwitch) {
+      var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
+      if (tableShoppingCart == undefined) return
+      //先判断允许减少商品的数量吗
+
+      var goods = tableShoppingCart.goods.splice(index,1)
+      tableShoppingCart.totalNumber -= goods[0].GOODS_NUMBER
+      tableShoppingCart.totalMoney -= goods[0].GOODS_NUMBER * goods[0].GOODS_PRICE
+      wx.setStorageSync('shopping_cart', shoppingCart)
+      return
+    } else {
+      var goods = shopShoppingCart.goods.splice(index, 1)
+      shopShoppingCart.totalNumber -= goods[0].GOODS_NUMBER
+      shopShoppingCart.totalMoney -= goods[0].GOODS_NUMBER * goods[0].GOODS_PRICE
+      wx.setStorageSync('shopping_cart', shoppingCart)
+      return
     }
   },
   /**
