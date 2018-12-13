@@ -122,6 +122,7 @@
 <view wx:if="{{couponShow}}" class='coupon footfixed' style='width:{{W}};heigth:{{H}}'>
   <view class='coupon-list dp-flex flex-wrap cf'>
     <view class='coupon-item' bindtap='seleCoupon'>
+      <view class='coupon-selectedIcon'>已选择<icon type="success" color='green' size="10"></icon></view>
       <view class='coupon-title font-35'>优惠标题</view>
       <view class='discount tr font-35'>9.5折</view>
       <view class='tr font-26'>全部商品</view>

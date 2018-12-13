@@ -3,10 +3,10 @@ var app = getApp();
 var payWay = -1;
 var trueMoney;//实收金额
 var shouldMoney;//应收金额
-var discountsMoneyShow = false;//优惠金额显示不显示
-var discountCouponShow = false;//优惠券显示不显示
-var jfdxShow = false;//积分抵现显示不显示
-var czzfShow = false;//储值支付显示不显示
+var discountsMoneyShow = true;//优惠金额显示不显示
+var discountCouponShow = true;//优惠券显示不显示
+var jfdxShow = true;//积分抵现显示不显示
+var czzfShow = true;//储值支付显示不显示
 var ORDER_PK;//订单ID
 
 Page({
@@ -144,7 +144,8 @@ Page({
   selectPay:function(e){
     var that = this;
     payWay = e.currentTarget.dataset.index
-    if(payWay == 2 || payWay == 3){
+    if(//payWay == 2 ||
+     payWay == 3){
       that.data.wzShow = true
       that.setData({
         wzShow: that.data.wzShow
@@ -164,7 +165,8 @@ Page({
     if (currentTab == undefined){
       app.hintBox('请选择支付方式','none')
     } else if (currentTab == 2 || currentTab == 3){//如果选的是微信或者支付宝支付
-      that.data.wzShow = true
+      //that.data.wzShow = true
+      app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK);
     }else{
       //请求网络，进行支付
       that.sendPay(payWay)

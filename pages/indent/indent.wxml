@@ -6,7 +6,7 @@
   <view class='swiper-tab bg-fff dp-flex'>
       <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
         <view class="flex-1 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
-          <text>{{item.title}}{{currentTab}}</text>
+          <text>{{item.title}}</text>
           <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
           <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view>
           <view wx:if="{{item.type!=2 && item.type == 1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
@@ -45,7 +45,7 @@
         <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>
         <view class='seat' style="width:{{itemName.seatWidth}}">{{item.ORDER_POSITION}}</view>
         <view class='part' style="width:{{itemName.partWidth}}">{{item.TOTAL_FS}}份</view>
-        <view class='money' style="width:{{itemName.moneyWidth}}">{{math.toFix(item.TOTAL_MONEY)}}元</view>
+        <view class='money' style="width:{{itemName.moneyWidth}}">{{math.toFix(item.ORDER_YFMONEY/100)}}元</view>
         <view class='pay-way' wx:if="{{currentTab == 1 || currentTab == 2}}">{{math.payWay(item.ORDER_PAY_WAY)}}</view>
         <!-- <view class='pay-way' wx:if="{{currentTab == 1}}">{{item.payWay}}</view> 
         <view class='pay-way' wx:if="{{currentTab == 0}}">{{item.payWay}}</view>         -->
