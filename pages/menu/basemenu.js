@@ -7,15 +7,9 @@ var navList;//分类列表，里边有分类名称和PK
 var ordersList = [];//购物车列表吧？
 var allMoney = 0.0;//订单总金额
 var tableList = [];//桌位列表
-var goodsGuige = {
-  guige: [],
-  zuofa: [],
-  kouwei: []
-}//当前弹框的属性 规格做法和口味  
 var height = '';//还不知道是什么高度
 var saveOrdersFalg = false;//挂单按钮是否显示
 var currentGood;//当前商品
-var isSelected = false;//选择规格了吗
 var reserveShow = false;//显示选择餐位
 // var quorumShow = false;//显示选择人数
 var selectPersonNum = true;//选择人数开关是否开启
@@ -24,87 +18,78 @@ var currentEatPersonNum = 0;//当前餐桌就餐的人数
 var menuStatus = 0;//当前菜单页面状态（0：没状态 1：点菜 2：加菜）
 var shoppingCart = {};//购物车信息
 
-Page({
-
-  data: {
-    addGlobalClass:true,
-    navList:null,
-    currentTab:0,
-    currentTabInit: 0,
-    greensList,
-   
-    scrollTop:0,
-    allMoney: allMoney.toFixed(2),
-    ordersList,
-    height,
-    entryShow:false,//购物车显示
-    popShow:false,
-    reserveShow,
-    quorumShow:false,
-    currentGood,
-    currentIndex: null,
-    currentItem: null,
-    currentTable,
-    saveOrdersFalg,//挂单按钮是否显示
-    goodsGuige,
-    // isSelected: isSelected,
-    tableList,
-    menuStatus,
-    shoppingCart,
-    allowChooseTable: !app.globalData.appSetting.foundingSwitch,
-    basePath: app.globalData.basePath
-  },
-
-
   /**
    * page的生命周期
    */
 
     // 组件所在页面的生命周期函数
-    onLoad: function () {
-     
+    function onLoad(that) {
+      initData(that)
       app.updateTitle(pageTitle)
-      this.pageInit();
-      this.loadGoodsInfo();
-      this.flushStroageData()
-      this.flushShoppingCart()
-      this.backMainPage()
-      },
-      onShow:function(){
-        this.flushStroageData()
-        this.flushShoppingCart()
-        this.backMainPage()
-      },
-    hide: function () { },
-    resize: function () { },
+      pageInit(that);
+      loadGoodsInfo(that);
+      flushStroageData(that)
+      flushShoppingCart(that)
+      backMainPage(that)
+      }
+
+      function onShow(that){
+        console.info("ff")
+        flushStroageData(that)
+        loadCountOrderWei(that);
+        flushShoppingCart(that)
+        backMainPage(that)
+      }
+
+      //初始化参数
+      function initData(that){
+        that.setData({
+          navList: null,
+          currentTab: 0,
+          currentTabInit: 0,
+          greensList,
+          scrollTop: 0,
+          allMoney: allMoney.toFixed(2),
+          ordersList,
+          height,
+          entryShow: false,//购物车显示
+          popShow: false,
+          reserveShow,
+          quorumShow: false,
+          currentGood,
+          currentIndex: null,
+          currentItem: null,
+          currentTable,
+          saveOrdersFalg,//挂单按钮是否显示
+          tableList,
+          menuStatus,
+          shoppingCart,
+          allowChooseTable: !app.globalData.appSetting.foundingSwitch,
+          basePath: app.globalData.basePath
+        })
+      }
 
     //自定义页面初始化函数
-    pageInit:function(){
-      var that = this;
-      app.showLoading();
-      var mobInfo = app.getSystemInfo();
+    function pageInit(that){
       
-      that.setData({
-        W: mobInfo.mob_width + 'px',
-        H: mobInfo.mob_height + 'px',
-        scrollHeight: mobInfo.mob_height - 90 * mobInfo.mob_onerpx
-      })
+      app.showLoading();
+    
+      // debugger
       // 查询菜单和数量
-      // that.loadGoodsInfo();
+      loadGoodsInfo(that);
       // 查询餐桌
-      that.loadTables();
+      loadTables(that);
       //TODO 查询开关设置，比如选择人数是否开启
       //。。。。。。。
 
-      // that.flushStroageData()
+      flushStroageData(that)
      
-      // that.flushShoppingCart()
-    },
+      flushShoppingCart(that)
+    }
     /**
      * 刷新缓存数据
      */
-    flushStroageData:function(){
-      var that = this;
+function flushStroageData(that){
       console.info(wx.getStorageSync('ORDER_PK'))
       //判断是加菜状态吗
       if(wx.getStorageSync('ORDER_PK') != undefined && wx.getStorageSync('ORDER_PK') != ''){
@@ -125,12 +110,13 @@ Page({
         menuStatus,
         currentTable
       })
-    },
+     
+    }
     /**
      * 刷新购物车信息
      */
-    flushShoppingCart:function(){
-      var that = this;
+function flushShoppingCart(that){
+      
       shoppingCart = app.getShoppingCart()
       if (shoppingCart == undefined){
         shoppingCart = {}
@@ -151,10 +137,10 @@ Page({
         shoppingCart,
         currentTable
       })
-    },
+    }
 
-    loadTables: function() {
-      let that = this;
+function loadTables(that) {
+      
       app.sendRequest({
         url: 'Tables_select_loadTableList',
         method: 'POST',
@@ -169,16 +155,16 @@ Page({
               tableList: tableList,
             })
             // 查询挂单数量
-            // that.loadCountOrderWei();
+            loadCountOrderWei(that);
           }
         },
         fail: function (error) {
           app.hintBox('查询失败', 'none')
         }
       });
-    },
-    loadGoodsInfo: function () {
-      let that = this;
+} 
+function loadGoodsInfo(that) {
+      
       app.showLoading()
       app.sendRequest({
         url: 'GoodsType_select_loadGoodsTypeByShopId',
@@ -191,7 +177,7 @@ Page({
           if (res.data.code == '0000') {
             app.hideLoading()
             // 查询购物车
-            that.getOrdersList();
+            getOrdersList(that);
 
             greensList = res.data.data.greensList;
             navList = res.data.data.navList;
@@ -221,13 +207,13 @@ Page({
       });
 
 
-    },
+    }
     /**
      * 添加购物车和删除购物车
      */
-    addQity:function(e){
+function addQity(that,e){
       console.info("添加购物车和删除后无车")
-      var that = this;
+      
 
       var clickgood = e.currentTarget.dataset.good;
       var type = e.currentTarget.dataset.type;
@@ -258,13 +244,13 @@ Page({
         greensList
       })
       // 查询购物车
-      that.getOrdersList();
-    },
+      getOrdersList(that);
+    }
     /**
      *  查看购物车
-     */
-    entryOrders:function(){
-      var that = this;
+     */ 
+function entryOrders(that){
+      
 
       shoppingCart = app.getShoppingCart()
 
@@ -281,47 +267,47 @@ Page({
         allMoney: allMoney.toFixed(2)
       })
 
-    },
-    getOrdersList:function() {
-      var that = this;
-      that.flushShoppingCart()
-    },
+}
+    function getOrdersList(that) {
+      
+      flushShoppingCart(that)
+    }
     /**
      *  隐藏挂单
      */
-    vanish:function(){
-      var that = this;
+    function vanish(that){
+      
       that.setData({
         entryShow: false
       })
-    },
+    }
     /**
      * 清空购物车
      */
-    emptyCat:function(){
-      var that = this;
+    function emptyCat(that){
+      
       // app.clearShoppingCart()
       app.removeShoppingCart()
-      that.flushShoppingCart()
-      that.backMainPage()
+      flushShoppingCart(that)
+      that.backMainPage(that)
       that.setData({
         greensList,
         entryShow: false,
       })
-    },
+    }
     /**
      * 移除购物车,和清除购物车最大的区别就是也清除桌位和就餐人员信息
      */
-    removeShoppingCart:function(){
+    function removeShoppingCart(that){
       shoppingCart = app.removeShoppingCart()
-      this.flushShoppingCart()
-      this.backMainPage()
-    },
+      flushShoppingCart(that)
+      backMainPage(that)
+    }
     /**
      * 关闭弹框
      */
-    closePop:function(){
-      var that = this;
+function closePop(that){
+      
       reserveShow = false;
       that.setData({
         popShow:false,
@@ -329,12 +315,12 @@ Page({
         entryShow: false,
         quorumShow: false
       })
-    },
+    }
     /**
      * 选好了
      */
-    chosen: function (){
-      var that = this;
+function chosen(that){
+      
       if(menuStatus == 2){
         //加菜
         app.pageTurns('../indent/indentDateil')
@@ -342,24 +328,24 @@ Page({
       }else{
         if (currentTable == undefined || currentTable == '' || JSON.stringify(currentTable) == '{}'){
           reserveShow = true;//显示选择餐位
-          this.setData({
+          that.setData({
             reserveShow
           })
         } else if (currentEatPersonNum == 0){
-          this.setData({
+          that.setData({
             quorumShow:true
           })
         }else{
           app.pageTurns('../orderDetail/orderDetail')
         }
       }   
-    },
+    }
     /**
      * 选择餐位
      */
-    reserveConfirm:function(e){
+function reserveConfirm(that,e){
     
-      var that = this;
+      
       var quorumShow = false;
       if (selectPersonNum !=undefined && selectPersonNum != '' && currentEatPersonNum == 0){//如果选择就餐人数的开关是打开的，那么就显示就餐人数
         quorumShow = true;
@@ -373,7 +359,7 @@ Page({
     
       shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
       console.info(currentTable)
-      that.flushStroageData()
+      flushStroageData(that)
       reserveShow = false;
       console.info(currentTable.TABLES_NUM)
       that.setData({
@@ -384,12 +370,12 @@ Page({
       if (!quorumShow){
         app.pageTurns('../orderDetail/orderDetail')
       }
-    },
+    }
     /**
      * 选择就餐人数
      */
-    reserveQuorum:function(e){
-      var that = this;
+    function reserveQuorum(that,e){
+      
       currentEatPersonNum = e.target.dataset.index
       shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
 
@@ -397,18 +383,18 @@ Page({
         quorumShow:false
       })
       app.pageTurns('../orderDetail/orderDetail')
-    },
+    }
     /**
      * 查看挂单
      */
-    checkEntryOrders:function(){
+    function checkEntryOrders(that){
       app.pageTurns(`../entryOrders/entryOrders`)
-    },
+    }
     /**
      * 菜品滑动事件
      */
-    doScroll: function (e) {
-      var that = this;
+    function doScroll(that,e) {
+      
       var scrollTop = e.detail.scrollTop,
       h = 0; 
       let currentTab = 0;
@@ -422,23 +408,23 @@ Page({
     that.setData({
       currentTab: currentTab
     })
-    },
+    }
     /**
      * 切换菜单
      */
-    switchNav: function (e) {
-      var that = this;
+function switchNav(that,e) {
+      
       var type = e.currentTarget.dataset.type;
       var index = e.currentTarget.dataset.index;
       that.setData({
         currentTabInit: type
       })
-    },
+    }
     /**
      * 选择规格
      */
-    selectGuige: function (e) {
-      var that = this;
+function selectGuige(that,e) {
+      
       var data = greensList;
       currentGood = e.currentTarget.dataset.good;
       currentGood.LAST_PIRCE = currentGood.GOODS_TRUE_PRICE == undefined || currentGood.GOODS_TRUE_PRICE == "" ? currentGood.GOODS_PRICE : currentGood.GOODS_TRUE_PRICE;
@@ -446,12 +432,12 @@ Page({
         popShow: true,
         currentGood,
       })
-    },
+    }
     /**
      * 选择规格里边的属性
      */
-    selectGg: function(e) {
-      var that = this; 
+function selectGg(that,e) {
+       
       var _type = e.currentTarget.dataset.type;
       var name = e.currentTarget.dataset.name;
       var price = e.currentTarget.dataset.price;
@@ -493,12 +479,12 @@ Page({
             currentGood
           })
       }
-    },
+    }
     /**
      * 规格弹窗加入购物车逻辑
      */
-    addToCart2: function (e) {
-      var that = this;
+function addToCart2(that,e) {
+      
       if (currentGood.guige == undefined && currentGood.zuofa == undefined && currentGood.kouwei == undefined) {
         app.hintBox('请选择规格、做法或口味', 'none')
         return;
@@ -522,11 +508,11 @@ Page({
         greensList,
         shoppingCart
       })
-      that.closePop();
+      closePop(that);
       currentGood = undefined
-    },
+    }
 
-    setOptions:function(options){
+function setOptions(that,options){
       var quorumShow = false;
       if (options != undefined) {
         if (options.reserveShow != undefined && options.reserveShow) {
@@ -538,15 +524,15 @@ Page({
        
       }
 
-      this.setData({
+  that.setData({
         reserveShow,
         quorumShow
       })
-    },
+    }
     /**
      * 增加或者减少购物车商品数量
      */
-    operaGoodsNumber: function (e) {
+function operaGoodsNumber(that,e) {
       var opera = e.currentTarget.dataset.type
       var good = e.currentTarget.dataset.good
       if (opera == '1'){
@@ -555,25 +541,86 @@ Page({
         app.addShoppingCart(good)
       }
       shoppingCart = app.getShoppingCart()
-      this.flushPageData()
-      this.setData({
+      // flushPageData(that)
+  that.setData({
         shoppingCart
       })
       
-    },
-    /**
-     * 刷新数据
-     */
-    flushPageData:function(){
-    },
-    /**
-     * 判断需要返回首页吗
-     */
-    backMainPage:function(){
-      if (shoppingCart == undefined || shoppingCart.table == undefined || shoppingCart.table == '' || shoppingCart.table == '' && app.globalData.appSetting.foundingSwitch) {
-          app.reLaunch('../index/index?page=../founding/founding')
-          return
-        }
-    }
-  
-})
+}
+/**
+ * 查看挂单修改数量
+ */
+function alterCount(that,e) {
+  var index = e.currentTarget.dataset.index;
+  var type = e.currentTarget.dataset.type;
+  var _url = '';
+  var tpnum = 0;
+  if (type == "+") {
+    tpnum = ++greensList[i].infos[j].qity;
+  } else {
+    tpnum = greensList[i].infos[j].qity - 1;
+
+    greensList[i].infos[j].qity--;
+
+  }
+  that.setData({
+    greensList: greensList,
+    qityArr: qityArr,
+
+    // ordersList: ordersList,
+    allMoney: allMoney.toFixed(2),
+  })
+}
+
+function backMainPage(that){
+  if (shoppingCart.table == undefined && app.globalData.appSetting.foundingSwitch) {
+    app.reLaunch('../index/index?page=indexPage')
+    return
+  }
+}
+
+/**
+    * 加载挂单数量
+    * 
+    * lps  2018年11月29日02:24:21
+    */
+function loadCountOrderWei(that) {
+  var shopStorageOrder = app.getStorageOrder()
+  console.info(shopStorageOrder)
+  if (shopStorageOrder.length > 0) {
+    var saveOrdersFalg = true;
+  } else {
+    var saveOrdersFalg = false;
+  }
+  that.setData({
+    saveOrdersFalg
+  });
+}
+
+module.exports = {
+  operaGoodsNumber: operaGoodsNumber,
+  setOptions: setOptions,
+  addToCart2: addToCart2,
+  selectGg: selectGg,
+  selectGuige ,
+  switchNav ,
+  doScroll  ,
+  checkEntryOrders,
+  reserveQuorum,
+  reserveConfirm,
+  chosen,
+  closePop,
+  removeShoppingCart,
+  emptyCat,
+  vanish,
+  getOrdersList,
+  entryOrders,
+addQity,
+ loadGoodsInfo,
+ loadTables,
+  flushShoppingCart: flushShoppingCart,
+  flushStroageData: flushStroageData,
+     pageInit,
+  onLoad, alterCount, onShow, backMainPage
+
+};

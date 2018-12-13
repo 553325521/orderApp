@@ -1,35 +1,12 @@
 /* pages/menu/menu.wxss */
 @import "../template/chosenPosition.wxss";
-
 /*  */
 .page{
   padding: 92rpx 0 0 180rpx;
 }
-/* 购物车、挂单  */
-.cat,.entry-orders{
-  position: fixed;
-  left: 40rpx;
-  bottom: 24rpx;
-  width: 74rpx;
-  height: 74rpx;
-  z-index: 50
-}
-
-/* 选好了  */
-.selected{
-  position: fixed;
-  right: 38rpx;bottom: 24rpx;
-  width: 144rpx;
-  line-height: 58rpx;
-  border-radius: 58rpx;
-  background-color: #DEDEDD;
-  z-index: 60
-}
 .selected.on{
    background-color: #EF9BA0;
 }
-
-
 
 .menu-nav{
   position: fixed;
@@ -73,12 +50,6 @@
   z-index: 30
 }
 
-
-.orders-cat{
-  position: absolute;
-  left: 38rpx;
-  top: -34rpx
-}
 .cat text{
   top: -3rpx;
   right: -20rpx;
@@ -87,18 +58,12 @@
   border-radius: 50%;
   background-color: #DA1A7D;
 }
-.entry-orders{
-  bottom: 190rpx;
-  z-index: 10
-}
+
 /* 挂单列表  */
 .entry-orders-list{
   z-index: 50
 }
-.box-content{
-   bottom: 0rpx; left: 0;
-   z-index: 60;
-}
+
 .box-content .head{
   background-color: #EFEEEE;
   line-height: 50rpx;

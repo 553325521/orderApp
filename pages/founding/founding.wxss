@@ -193,7 +193,8 @@ page{
 }
 
 .yc{
-  background-color: #0f0;
+  /* ffc8b4 ffb7dd*/
+  background-color: #bfbffa;
 }
 
 /* .fd-scroll .fd-bt:active{

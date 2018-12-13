@@ -288,7 +288,8 @@ Page({
           if (res.data.code = "0000") {
             app.hintBox('收款成功', 'success')
             that.vanish()
-            app.reLaunch('../index/index?page=../indent/indent')
+            that.jumpPage()
+            
           } else {
             app.hintBox(res.data.data, 'none')
           }
@@ -296,5 +297,17 @@ Page({
       }
     })
     
+  },
+  /**
+   * 跳转页面
+   */
+  jumpPage:function(){
+    var page = wx.getStorageSync('click_page')
+    if (page == '../indent/indent'){
+      app.reLaunch('../index/index?page=../indent/indent')
+    }else{
+      app.reLaunch('../index/index?page=../founding/founding')
+    }
+   
   }
 })

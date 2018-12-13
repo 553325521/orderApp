@@ -6,7 +6,7 @@ var orderType;//订单的类型
 var smallButton = true;//显示按钮吗还,需要从后台查询
 var jiacai = false;//是加菜状态
 
-var currentSlideOrderId = 0;//当前滑动触摸的orderid
+var currentSlideOrderId = -1;//当前滑动触摸的orderid
 var movedistance = 0;//移动的距离
 var startX = 0;//开始滑动的时候的x轴位置
 var sliderWidth = 120;//滑块的宽度，单位rpx
@@ -36,12 +36,15 @@ Page({
       currentOrderPk:ORDER_PK
     })
     orderType = options.type
-    if (ORDER_PK == undefined || ORDER_PK == ''){
+    if (ORDER_PK == undefined || ORDER_PK == '') {
       ORDER_PK = wx.getStorageSync('ORDER_PK');
       if (ORDER_PK != undefined && ORDER_PK != ''){
         jiacai = true;
         shoppingCart = app.getShoppingCart()
       }
+      orderType = 0
+    } else if (app.getShoppingCart() != undefined && app.getShoppingCart().totalNumber > 0){
+      shoppingCart = app.getShoppingCart()
       orderType = 0
     }else{
       jiacai = false;//是加菜状态
@@ -69,7 +72,7 @@ Page({
     startX = 0;//开始滑动的时候的x轴位置
     sliderWidth = 120;//滑块的宽度，单位rpx
     silderStatus = false;//当前滑块是打开的吗
-    currentSlideOrderId = 0;
+    currentSlideOrderId = -1;
     that.setData({
       movedistance, silderStatus, currentSlideOrderId
     })
@@ -234,6 +237,33 @@ mapToJson: function (map) {
     
   },
   /**
+   * 删除购物车的菜
+   */
+  deleteGoods:function(e){
+    let that = this;
+    var index = e.currentTarget.dataset.index;
+    app.modal({
+      content: '确定删除？',
+      success: function (res) {
+        if (res.confirm) {
+          app.removeShoppingCartGoods(index)
+          that.initParam()
+          that.loadOrderDetail();
+          that.flushShoppingCart()
+        } else if (res.cancel) {
+          //闭合滑块
+          silderStatus = false;
+          movedistance = 0
+
+          that.setData({
+            movedistance
+          })
+        }
+      }
+    })
+
+  },
+  /**
    * 确定订单
    */
   navTo:function(){
@@ -372,5 +402,15 @@ mapToJson: function (map) {
       }
     })
     
+  },
+  /**
+   * 刷新购物车
+   */
+  flushShoppingCart:function(){
+    var that = this
+    shoppingCart = app.getShoppingCart()
+    that.setData({
+      shoppingCart
+    })
   }
 })
