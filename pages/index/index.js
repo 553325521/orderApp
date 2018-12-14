@@ -20,6 +20,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+   
     if (options != undefined && options.page != undefined) {
       currentPage = options.page;
       if (options.page == 'indexPage'){
@@ -35,6 +36,7 @@ Page({
       }
     }
     this.pageInit()
+    
   },
 
   /**
@@ -132,6 +134,31 @@ Page({
   setMenuData:function(options){
     this.menu = this.selectComponent("#menu");
     this.menu.setOptions(options);
+  },
+  /**
+   * 刷新该page下面的组件的数据
+   */
+  flushComponentData:function(page,params){
+    if(page=='../founding/founding'){
+      this.menu = this.selectComponent("#founding");
+      this.menu.indexFlushData(params);
+    } else if (page == '../menu/menu'){
+      this.menu = this.selectComponent("#menu");
+      this.menu.setOptions(options);
+    }
+  },
+  onDownFlush:function(){
+    console.info('调用了')
+    this.setData({
+      downflush:true
+    })
+  },
+  stopDownFlush:function(){
+    console.info('调用了stopDownFlush')
+      this.setData({
+
+        downflush: false
+      })
   }
     
 })

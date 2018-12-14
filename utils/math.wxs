@@ -3,7 +3,7 @@ var filters = {
   toFix: function (value) {
     return parseFloat(value).toFixed(2)//此处2为保留两位小数
   },
-  calcDate: function (date, currentDate){
+  calcDate: function (date, currentDate, autoMin){
     date = date.split(' ')
     currentDate = currentDate.split(' ')
 
@@ -18,7 +18,7 @@ var filters = {
       if (subHours < 0) {
         subHours += 24
       }
-      var subMin = currentMS[1] - dateMS[1]
+      var subMin = currentMS[1] - dateMS[1] + autoMin
       if (subMin < 0) {
         subHours--;
         subMin += 60;

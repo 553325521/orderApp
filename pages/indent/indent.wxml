@@ -1,7 +1,7 @@
 <!--pages/indent/indent.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 
-<view class='indent-page'>
+<view class='indent-page' bindtouchstart='moveStart' bindtouchmove='move' bindtouchend='moveStop'>
 <view class='page w100'> 
   <view class='swiper-tab bg-fff dp-flex'>
       <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
@@ -34,11 +34,12 @@
   </view>
 </view>
 <view class='indent-list'>
-  <view class='indent-item' wx:for="{{orderArray}}" wx:key="keys"  wx:for-item="itemName">
+  <view class='indent-item' id="{{index == 0?'flag':''}}" wx:for="{{orderArray}}" wx:key="keys"  wx:for-item="itemName">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
       <text>{{itemName.keyName}}</text>
       <text>总计:{{math.toFix(itemName.totalMoney)}}元</text>
     </view>
+    <!-- bindtouchmove='move' -->
     <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
       <view class='item dp-flex font-30 c3 pr  {{item.ORDER_STATE == "1" ? "delete-color":""}}' style='border-bottom:1rpx solid rgba(0, 0, 0, 0.1);' bindtap='navTo' data-id='{{item.ORDER_PK}}' data-status='{{item.ORDER_PAY_STATE}}' >
         <block wx:if="{{item.ORDER_DIVISION == '2'}}"><view class='label pa'>*</view></block>

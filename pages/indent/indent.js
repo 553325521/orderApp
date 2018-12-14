@@ -3,6 +3,9 @@ var app = getApp()
 var pageTitle = "订单";
 var currentTab = 0;
 var orderArray = {};//订单的数组
+var onerpx = 1; //1rpx对应多少像素
+var lastClientY = 0;//上一次点击的位置
+var flush = false;
 
 var common = require('../../utils/common.js');
 Component({
@@ -42,7 +45,10 @@ Component({
     },
     moved: function () { console.log("组件被moved")},
     //组件被移除
-    detached: function () { console.log("detached")},
+    detached: function () {
+      console.log("detached");
+      this.triggerEvent('stopDownFlush');//停止下拉刷新,
+    }
   },
   
 /**
@@ -50,7 +56,7 @@ Component({
  */
   pageLifetimes: {
     // 组件所在页面的生命周期函数
-    show: function () {this.init();console.log("页面show") },
+    show: function () {this.init();},
     hide: function () { },
     resize: function () { },
   },
@@ -64,12 +70,10 @@ methods:{
   init:function(){
     var that = this;
     var date = wx.getStorageSync('datepicker');
+    onerpx = app.getSystemInfo().mob_onerpx
     var myDate = new Date();
     var month = myDate.getMonth() + 1;
     var year = myDate.getFullYear();
-    console.info("日子")
-    console.info(myDate.getDate())
-    console.info("当前时间");
     if (wx.getStorageSync("order_current_startIndex") == "" && wx.getStorageSync("order_current_endIndex") == "")
     {
       that.data.startIndex = [year - 1990, 0, month - 1, 0, myDate.getDate() - 1, 0, 0, 0]
@@ -111,8 +115,6 @@ methods:{
       startIndex: that.data.startIndex,
       endIndex: that.data.endIndex
     });
-    console.info("日期"); console.info(date);
-    console.info(that.data.startIndex); console.info(that.data.endIndex);
     that.loadOrderNumber();
     that.loadOrderData();
   },
@@ -136,7 +138,6 @@ methods:{
       },
       success: function (res) {
         if (res.data.code == '0000') {
-          console.info(res.data);
           var orderCountMap = new Map();
            orderCountMap.set("first", 0);
            orderCountMap.set("second", 0);
@@ -153,7 +154,6 @@ methods:{
            that.setData({
              orderCount: that.data.orderCount
            });
-           console.info(that.data.orderCount);
         }
       },
       fail: function (error) {
@@ -165,6 +165,7 @@ methods:{
   },
   //加载订单数据
     loadOrderData:function () {
+      wx.showNavigationBarLoading()
     let that = this;
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
     var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
@@ -191,14 +192,12 @@ methods:{
       success: function (res) {
         if (res.data.code == '0000') {
           that.dealOrderDate(res.data.data);
-          console.info("res");
-          console.info(res.data.data);
           orderArray = that.dealOrderDate(res.data.data);
-          console.info(orderArray);
           that.setData({
             orderArray: orderArray
           });
         }
+        wx.hideNavigationBarLoading()
       },
       fail: function (error) {
         wx.showToast({
@@ -270,8 +269,6 @@ methods:{
     return JSON.stringify(this.strMapToObj(map));
   },
   getPhoneNumber:function (e) {
-    console.log(e.detail.iv)
-    console.log(e.detail.encryptedData)
     if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
       wx.showModal({
         title: '提示',
@@ -292,7 +289,6 @@ methods:{
               'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
             },
             success: function (res) {
-              console.info(res)
               if (res.data.code == '0000') {
                 wx.showToast({
                   title: '授权成功',
@@ -328,7 +324,6 @@ methods:{
     that.setData({
       currentTab: currentTab,
     });
-    console.info("当前tab值"+that.data.currentTab);
     that.loadOrderData();
   },
   // 
@@ -366,7 +361,6 @@ methods:{
         that.data.date[4] = common.getDays().days4
       } else if (value == 2) {
         var year = that.data.year
-        console.log(year)
         if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) {
           that.data.date[4] = common.getDays().days1
         } else {
@@ -383,9 +377,44 @@ methods:{
   navTo:function (e){
     var orderPK = e.currentTarget.dataset.id;
     var payStatus = e.currentTarget.dataset.status;
-    console.info(orderPK);
-    console.info(payStatus)
     app.pageTurns(`../indent/indentDateil?type=${payStatus}&ORDER_PK=${orderPK}`)
+  },
+  moveStart:function(e){
+    lastClientY = e.touches[0].clientY
+  },
+  move: function (e) {
+    var that = this
+ 
+    const query = wx.createSelectorQuery().in(that)
+    query.select('#flag').boundingClientRect()
+    query.selectViewport().scrollOffset()
+    query.exec(function (res) {
+      console.info(res[0].top) // #flag节点的上边界坐标
+      var a = onerpx * 174  //距离顶部的高度
+      if (a + 1 > res[0].top && a - 1 < res[0].top){
+        var thisClientY = e.touches[0].clientY
+        if (lastClientY!=0){
+          if (thisClientY - lastClientY > 60){
+            flush = true
+            that.triggerEvent('onDownFlush');//调用下拉刷新
+          }
+        }else{
+          lastClientY = e.touches[0].clientY
+        }
+      }
+    })
+
+  },
+  moveStop:function(){
+    var that = this
+    lastClientY = 0;
+    this.triggerEvent('stopDownFlush');//刷新结束
+    if(flush){
+      that.loadOrderData()
+    }
+    console.info("可以刷新了")
+
+    flush = false;
   }
 }
 })

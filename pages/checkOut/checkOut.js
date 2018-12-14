@@ -303,10 +303,12 @@ Page({
    */
   jumpPage:function(){
     var page = wx.getStorageSync('click_page')
-    if (page == '../indent/indent'){
+    if (page == '../founding/founding' && app.globalDataappSetting.foundingSwitch){
+      app.reLaunch('../index/index?page=../founding/founding')
+    } else if (page == undefined || page == ''){
       app.reLaunch('../index/index?page=../indent/indent')
     }else{
-      app.reLaunch('../index/index?page=../founding/founding')
+      app.reLaunch('../index/index?page='+page)
     }
    
   }

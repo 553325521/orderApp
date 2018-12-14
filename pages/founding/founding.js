@@ -8,6 +8,8 @@ var currentDate;//当前时间
 var isUseTableNum = 0;//桌子正在被使用的数量
 var allTableNum = 0;//所有桌子的数量
 var currentLookStatus = 0;//当前查看的状态(0:全部 1：空台 2：已开台)
+var autoMin = 0;//自动更新的时间
+var dingshiqi;//定时器
 
 Component({
   options: {
@@ -29,11 +31,14 @@ Component({
     //组件被加载
     attached: function () {
       app.updateTitle(pageTitle)
+      
+      wx.showNavigationBarLoading()
       this.pageInit();
+      // wx.hideNavigationBarLoading()
     },
     moved: function () { console.log("组件被moved") },
     //组件被移除
-    detached: function () { console.log("detached") },
+    detached: function () {console.log("detached") },
   },
   /**
    * page的生命周期
@@ -53,7 +58,7 @@ Component({
      * 页面初始化方法,加载所有区域和桌位
      */
     pageInit:function(){
-      app.showLoading()
+      // app.showLoading()
       //先获取时间
       currentDate = util.nowTime()
       //获取挂单的数据(founding开启的情况下没有挂单数据，全是放在购物车里，即查询购物车里的信息))
@@ -76,14 +81,19 @@ Component({
           if(res.data.code == '0000'){
             areaMess = res.data.data
             that.flushTableNum();
+            clearInterval(dingshiqi)
+            dingshiqi = that.autoUpdateTime()
             console.info(areaMess)
+            autoMin = 0;
             that.setData({
-              areaMess
+              areaMess,
+              autoMin
             })
           }else{
             app.hintBox(res.data.data)
           }
-          app.hideLoading()
+          // app.hideLoading()
+          wx.hideNavigationBarLoading()
         },
         fail:function(error){
           app.hideLoading()
@@ -139,8 +149,6 @@ Component({
      * 点击了桌子
      */
     clickTable:function(e){
-      console.info("点击了桌子")
-      console.info(e)
       var status = e.currentTarget.dataset.usestatus
       var table = e.currentTarget.dataset.table
       if(status == '0'){
@@ -163,6 +171,27 @@ Component({
      */
     checkEntryOrders: function () {
       app.pageTurns(`../entryOrders/entryOrders`)
+    },
+    /**
+     * index刷新数据
+     */
+    indexFlushData:function(params){
+      console.info('founding刷新')
+      this.setData(params)
+    },
+    /**
+ * 自动更新时间的定时器
+ */
+    autoUpdateTime:function (){
+      var that = this
+      return setInterval(function callback(){
+        console.info('定时器执行了')
+        autoMin += 1
+        that.setData({
+          autoMin
+        })
+      }, 60000)
     }
+      
   }
 })

@@ -14,7 +14,7 @@
 <!--判断，如果有桌位区域大于1，就显示滚动view  end-->
 
 <!--第二部分-->
-<view class='w100 dp-flex flex-wrap'>
+<view class='w100 dp-flex flex-wrap' >
   <block wx:for="{{areaMess}}" wx:key="area" wx:for-item="area">
     <block wx:for="{{area.tables}}" wx:key="table" wx:for-item="table" wx:if="{{currentClickArea == '0' || currentClickArea == area.TABLES_AREA_PK}}">
       <!--空台的样式-->
@@ -31,7 +31,7 @@
           <view class='fd-one-1'>{{table.TABLES_SHORT_NAME == undefined ? table.TABLES_NAME:table.TABLES_SHORT_NAME}}</view>
           <view class='fd-one-2'>{{table.ORDER_RS}}/{{table.TABLES_NUM}}</view>
         </view>
-        <view class='fd-two'><view class='fd-two-1'>{{math.calcDate(table.CREATE_TIME,currentDate)}}</view></view>
+        <view class='fd-two'><view class='fd-two-1'>{{math.calcDate(table.CREATE_TIME,currentDate,autoMin)}}</view></view>
         <view class='fd-one-line'></view>
         <view class='fd-th'>￥{{math.toFix(table.ORDER_YFMONEY/100.0)}}</view>
       </view>

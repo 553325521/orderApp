@@ -128,8 +128,6 @@ Page({
               let tempCart = app.getShoppingCart()
               tempCart.table == {}
               app.recoverShoppingCart(tempCart)
-
-              // app.pageTurns('../index/index?page=menu&reserveShow=true')
               app.jumpMenu('reserveShow')
 
             }
@@ -164,29 +162,34 @@ Page({
    * 点击餐桌
    */
   clickTables: function(){
-    // app.reLaunch('../index/index?page=menu&reserveShow=true')
     app.jumpMenu('reserveShow')
   },
   /**
    * 点击人数
    */
   clickPersonNum: function(){
-    // app.reLaunch('../index/index?page=menu&quorumShow=true')
     app.jumpMenu('quorumShow')
-    // app.redirectTo('../menu/menupage?quorumShow=true')
   },
   /**
    * 点击清空
    */
   clickClear:function(){
     app.removeShoppingCart()
-    app.reLaunch('../index/index?page=indexPage')
+    app.flushOtherPage({'shoppingCart': app.getShoppingCart() })
+    app.flushOtherPage({ 'guadanshuju': app.getShoppingCart('all') })
+    wx.navigateBack({
+      delta: 1
+    })
   },
   /**
    * 挂单
    */
   saveCartOrder:function(){
     app.setStorageOrder(shoppingCart)
-    app.reLaunch('../index/index?page=indexPage')
+    app.flushOtherPage({'shoppingCart':app.getShoppingCart()})
+    wx.navigateBack({
+      delta: 1
+    })
+    // app.reLaunch('../index/index?page=indexPage')
   }
 })

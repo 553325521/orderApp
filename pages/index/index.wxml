@@ -1,8 +1,12 @@
 <!--单页面化-->
-<view style="margin-bottom:80rpx;">
+<view style="margin-bottom:100rpx;">
+<view class="weui-loadmore donghua" style="{{currentPage == '../indent/indent'?'margin-top:200rpx;':''}}display:{{downflush?'block':'none'}}">
+            <view class="weui-loading"></view>
+            <view class="weui-loadmore__tips">释放立即刷新</view>
+</view>
   <!--加载哪个页面？-->
-  <block wx:if="{{currentPage=='../founding/founding'}}"><founding bind:switchPage="switchPage"></founding></block>
-  <block wx:elif="{{currentPage=='../indent/indent'}}"><indent></indent></block>
+  <block wx:if="{{currentPage=='../founding/founding'}}"><founding bind:switchPage="switchPage" id="founding"></founding></block>
+  <block wx:elif="{{currentPage=='../indent/indent'}}"><indent bind:onDownFlush="onDownFlush" bind:stopDownFlush="stopDownFlush" ></indent></block>
   <block wx:elif="{{currentPage=='../statement/statement'}}"><statement></statement></block>
   <block wx:elif="{{currentPage=='../takeOut/takeOut'}}"><takeOut></takeOut></block>
   <!-- <block wx:elif="{{currentPage=='../cashier/cashier'}}"><cashier></cashier></block> -->

@@ -2,12 +2,12 @@
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 
 <view style="margin-bottom:{{orderType == '0' ? '200':'0'}}rpx">
-<view wx:if="{{orderType == '0' && smallButton}}" class='top-oper dp-flex'>
+<view wx:if="{{orderDetailMap.ORDER_STATE != '1' && orderType == '0' && smallButton}}" class='top-oper dp-flex'>
     <view class='cf tc font-30' bindtap='clickSmallButton' data-opera='1'>补单</view>
-    <view class='cf tc font-30' bindtap='cancalOrder' data-opera='2'>退单</view>
+    <view class='cf tc font-30' bindtap='clickSmallButton' data-opera='2'>退单</view>
     <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
 </view>
-<view wx:if="{{orderType == '1'}}" class='top-oper dp-flex'>
+<view wx:if="{{orderDetailMap.ORDER_STATE != '1' && orderType == '1'}}" class='top-oper dp-flex'>
     <view class='cf tc font-30' wx:if="{{smallButton}}" bindtap='clickSmallButton' data-opera='1'>补单</view>
     <view class='cf tc font-30' wx:if="{{smallButton && foundingSwitch}}" bindtap='clickSmallButton' data-opera="{{orderDetailMap.TABLES_ISUSE == '1' ? '4':'3'}}">{{orderDetailMap.TABLES_ISUSE == '1' ? '空台':'开台'}}</view>
     <!-- <view class='cf tc font-30' bindtap='navTo'>挂单</view> -->
@@ -32,7 +32,7 @@
 <scroll-view scroll-y class='list' style='height:{{height}}'>
   <block wx:for = "{{orderDetailMap.orders}}" wx:key="{{index}}"> 
   <view class=' dp-flex font-28 c6'>
-    <view class='item pr dp-flex viewBottomBorder bg-fff {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}' data-index='{{index}}' bindtouchstart="{{orderType == '0'?'drawStart':''}}" bindtouchmove="{{orderType == '0'?'drawMove':''}}" bindtouchend="{{orderType == '0'?'drawEnd':''}}" data-orderid='{{item.ORDER_DETAILS_PK}}' style="transform: translate({{currentSlideOrderId == item.ORDER_DETAILS_PK ? movedistance:'0'}}rpx,0)">
+    <view class='item pr dp-flex viewBottomBorder bg-fff {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}' data-index='{{index}}' bindtouchstart="{{orderDetailMap.ORDER_STATE != '1' && orderType == '0'?'drawStart':''}}" bindtouchmove="{{orderDetailMap.ORDER_STATE != '1' && orderType == '0'?'drawMove':''}}" bindtouchend="{{orderDetailMap.ORDER_STATE != '1' && orderType == '0'?'drawEnd':''}}" data-orderid='{{item.ORDER_DETAILS_PK}}' style="transform: translate({{currentSlideOrderId == item.ORDER_DETAILS_PK ? movedistance:'0'}}rpx,0)">
       <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
       <view class='part tr'>{{item.ORDER_DETAILS_FS}}份</view>
       <view class='moeny c2821 tr {{item.ORDER_DETAILS_GOODS_STATE == "3" ? "delete-color":""}}'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100.0)}}</view>
@@ -85,7 +85,7 @@
   </block>   
 </scroll-view>
 </view>
-<view wx:if="{{orderType == '0'}}" class='order-bottom bottom-fixed'>
+<view wx:if="{{orderDetailMap.ORDER_STATE != '1' && orderType == '0'}}" class='order-bottom bottom-fixed'>
   <view class='total dp-flex c6 font-28 viewTopBorder' style='height:70rpx;padding-top:20rpx;'>
     <text>合计</text>
     <view class='deal'>{{orderDetailMap.totalFS + shoppingCart.totalNumber}}份菜品</view>

@@ -29,6 +29,7 @@ Page({
     currentOrderPk:""
   },
   onLoad: function (options) {
+    wx.showNavigationBarLoading()
     var that = this;
     that.initParam()
     ORDER_PK = options.ORDER_PK
@@ -146,6 +147,7 @@ loadOrderDetail:function(){
           orderDetailMap: res.data.data[0]
         });
       }
+      wx.hideNavigationBarLoading()
     },
     fail: function (error) {
       wx.showToast({

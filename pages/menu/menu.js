@@ -46,7 +46,7 @@ Component({
      * 添加购物车和删除购物车
      */
     addQity: function (e) {
-      basemenu.addQity(this)
+      basemenu.addQity(this,e)
     },
     /**
      *  查看购物车
@@ -135,6 +135,14 @@ Component({
     operaGoodsNumber: function (e) {
       basemenu.operaGoodsNumber(this,e)
     },
+    /**
+     * index刷新数据
+     */
+    indexFlushData: function (params) {
+      console.info('menu刷新')
+      this.setData(params)
+    },
   
+
   }
 })

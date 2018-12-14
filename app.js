@@ -21,8 +21,8 @@ App({
       // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
       options.query.appid = 'wx3326999f88e7077a';
     }
-    this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
-    // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
+    // this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
+    this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
     this.globalData.appid = options.query.appid;
     that.wxLogin();
     wx.setStorageSync("Address", "not");
@@ -58,14 +58,10 @@ App({
     })
     wx.onSocketMessage(function (res) {
       var page = getCurrentPages()[0];
-      console.info("page值");
-      console.info(page);
       var currentRoute = "";
       if(page !=undefined){
           currentRoute = page.route;
       }
-      console.info("当前路由:"+currentRoute);
-      console.log('收到服务器内容：' + res.data);
       //处理订单数据更新
       if(res.data == "101"){
         console.info("有新的订单");
@@ -175,10 +171,8 @@ pushSession:function(){
     success: function (res) {
       //连接websocket
       that.connectWebsocket(); 
-      console.info(res.data.data);
     },
     fail: function (error) {
-      console.log(error);
       wx.showToast({
         title: 'pushSession失败',
       })
@@ -217,7 +211,6 @@ pushSession:function(){
         that.getAppSetting();
       },
       fail: function (error) {
-        console.log(error)
         wx.showToast({
           title: '登录失败',
         })
@@ -419,7 +412,6 @@ pushSession:function(){
             app.getPhoneSysInfo();
           }
           else {
-            console.log(tempFiles)
             //单张图片 1M以内  （1M=1024KB  1Kb=1024B）
             var sizeRule = 1024 * 1024;
             var imgSize = tempFiles[0].size;
@@ -461,7 +453,6 @@ pushSession:function(){
    * 动画
    */
   animtaed:function(px){
-    console.log(px)
     var that = this;
     var animation = wx.createAnimation({
       duration: 800,
@@ -571,6 +562,22 @@ pushSession:function(){
   getAppSetting:function(){
     var that = this;
     
+  },
+  /**
+   * 刷新其他页面参数
+   */
+  flushOtherPage:function(params){
+    var pages = getCurrentPages()
+    for (var key in params){
+      for(var i=2;i<=pages.length;i++){
+        var currentPage = pages[pages.length - i] 
+        if (currentPage.route == 'pages/index/index'){
+          currentPage.flushComponentData(currentPage.__data__.currentPage, params)
+        }else{
+          currentPage.setData(params)
+        }
+      }
+    }
   },
 
   /**
@@ -759,7 +766,6 @@ pushSession:function(){
           wx.setStorageSync('shopping_cart', shoppingCart)
         }
       } else {
-        console.info("没有购物车")
         var currentShopShoppingCart = {}
         currentShopShoppingCart[that.globalData.shopid] = {
           totalMoney: good.GOODS_TRUE_PRICE == undefined || good.GOODS_TRUE_PRICE == '' ? good.GOODS_PRICE : good.GOODS_TRUE_PRICE,
