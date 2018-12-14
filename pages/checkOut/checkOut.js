@@ -24,7 +24,7 @@ Page({
         img: "../../images/icon/QR-scan.png",
         text: '二维码',
         w: 62,
-        h: 52,
+        h: 62,
         type: 1
       },
       {
