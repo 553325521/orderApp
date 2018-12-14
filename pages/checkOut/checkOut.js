@@ -21,15 +21,15 @@ Page({
         type:0
       },
       {
-        img: "../../images/icon/wx.png",
-        text: '微信',
+        img: "../../images/icon/QR-scan.png",
+        text: '二维码',
         w: 62,
         h: 52,
         type: 1
       },
       {
-        img: "../../images/icon/zfb.png",
-        text: '支付宝',
+        img: "../../images/icon/scan-QR.png",
+        text: '扫一扫',
         w: 50,
         h: 50,
         type: 2
