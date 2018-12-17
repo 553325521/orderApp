@@ -128,4 +128,10 @@ Page({
      */
     flushPageData:function(){
     },  
+    /**
+     * 用户查找菜品
+     */
+    searchGoods:function(e){
+      basemenu.searchGoods(this, e)
+    }
 })

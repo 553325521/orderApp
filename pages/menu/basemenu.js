@@ -72,7 +72,8 @@ function initData(that) {
     menuStatus,
     shoppingCart,
     allowChooseTable: !app.globalData.appSetting.foundingSwitch,
-    basePath: app.globalData.basePath
+    basePath: app.globalData.basePath,
+    seachGoods:false
 
   })
   onerpx = app.getSystemInfo().mob_onerpx
@@ -684,6 +685,14 @@ function flushguadaiData(){
   }
 }
 
+function searchGoods(that, e){
+  var seachGoods = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
+  seachGoods = seachGoods == "" ? false : seachGoods
+  that.setData({
+    seachGoods: seachGoods
+  })
+}
+
 
 module.exports = {
   operaGoodsNumber: operaGoodsNumber,
@@ -713,5 +722,5 @@ module.exports = {
   alterCount,
   onShow,
   backMainPage,
-
+  searchGoods
 };

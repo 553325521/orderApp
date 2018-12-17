@@ -5,15 +5,19 @@
 <!-- 菜单导航  -->
 <view class='menu-nav bg-f9 br-ec' style='height:{{height}}'>
   <block wx:for="{{navList}}" wx:for-index='index' wx:key="keys">
-    <view class="nav-item font-24 pr c5957 bb-ec tc {{currentCat == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
+    <view wx:if='{{seachGoods == false}}' class="nav-item font-24 pr c5957 bb-ec tc {{currentCat == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
     {{item.GTYPE_NAME}}
-    <text class='pa font-28 tc cf' wx:if="{{math.catNum(item.GTYPE_PK, shoppingCart.goods) > 0}}">{{math.catNum(item.GTYPE_PK, shoppingCart.goods)}}</text></view>
+    <text class='pa font-28 tc cf' wx:if="{{math.catNum(shoppingCart.goods, item.GTYPE_PK) > 0}}">{{math.catNum(shoppingCart.goods, item.GTYPE_PK)}}</text></view>
+   
   </block>
+   <view wx:if='{{seachGoods != false}}' class="nav-item font-24 pr c5957 bb-ec tc {{currentCat == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
+   全部
+    <text class='pa font-28 tc cf' wx:if="{{math.catNum(shoppingCart.goods) > 0}}">{{math.catNum(shoppingCart.goods)}}</text></view>
 </view>
 <!-- 搜索框  -->
 <view class='search-box' id='search-box'>
   <image class='ss-icon pa tf-y50' src='../../images/icon/ss.png'></image>
-  <input class='box-s bg-fff font-26' type='text' placeholder='请输入商品名称'></input>
+  <input class='box-s bg-fff font-26' type='text' bindinput='searchGoods' placeholder='请输入商品名称'></input>
 </view>
 <!-- 购物车  -->
 <view class='cat' bindtap="{{shoppingCart.totalNumber>0?'entryOrders':''}}">
@@ -132,10 +136,10 @@
             <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
 </view> -->
       <view wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys' id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}'  class='classify-item ball'>
-          <view class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
-          <view class='greens-list'>
-            <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">
-              <view class="greens-item dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}">
+          <view wx:if='{{seachGoods == false}}' class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
+          <view class='greens-list' style="{{seachGoods != false ? 'padding:0rpx;':''}}">
+            <block wx:for="{{item.infos}}" wx:if='{{seachGoods == false || math.goodsContain(every.GOODS_NAME,seachGoods)}}' wx:for-item="every" wx:for-index='index'  wx:key="keys"> 
+              <view class="greens-item dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}"  style="{{seachGoods != false ? 'padding:6rpx;':''}}">
                 <view class='img'>
                    <image class='w100 h100' wx:key wx:for="{{math.parseImage(every.PICTURE_URL)}}" wx:if='{{index == 0 && every.PICTURE_URL != "{}"}}' wx:for-index='pic' src="{{basePath}}{{pic}}"></image>   
                   <image class='w100 h100' wx:if='{{every.PICTURE_URL == "{}"}}' src='../../images/cai.jpg'></image>  

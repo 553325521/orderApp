@@ -142,7 +142,12 @@ Component({
       console.info('menu刷新')
       this.setData(params)
     },
-  
+    /**
+     * 用户查找菜品
+     */
+    searchGoods: function (e) {
+      basemenu.searchGoods(this, e)
+    }
 
   }
 })

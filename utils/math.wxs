@@ -70,12 +70,15 @@ var filters = {
   /**
    * 类别上的数量
    */
-  catNum:function(gtype_pk,goods){
+  catNum: function (goods, gtype_pk){
     var num = 0;
     goods.forEach(function(good){
-      if (gtype_pk == good.GTYPE_FK) {
-        num+=good.GOODS_NUMBER;
-      }
+
+      if (gtype_pk == good.GTYPE_FK || gtype_pk == undefined){
+          num += good.GOODS_NUMBER;
+        }
+     
+      
     })
     return num;
   },
@@ -99,8 +102,16 @@ var filters = {
       return false
     }
     return true
+  },
+  /**
+   * 判断字符串包不包含
+   */
+  goodsContain:function(str, str2){
+    if (str.indexOf(str2) != -1){
+      return true;
+    }
+    return false;
   }
-
 }
 module.exports = {
   toFix: filters.toFix,
@@ -113,5 +124,6 @@ module.exports = {
   catNum: filters.catNum,
   parseGoods: filters.parseGoods,
   parseJSON: filters.parseJSON,
-  isNotUndefined: filters.isNotUndefined
+  isNotUndefined: filters.isNotUndefined,
+  goodsContain: filters.goodsContain
 }
