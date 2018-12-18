@@ -310,6 +310,5 @@ Page({
     }else{
       app.reLaunch('../index/index?page='+page)
     }
-   
   }
 })

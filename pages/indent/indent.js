@@ -3,7 +3,7 @@ var app = getApp()
 var pageTitle = "订单";
 var currentTab = 0;
 var orderArray = {};//订单的数组
-var onerpx = 1; //1rpx对应多少像素
+var onerpx = 0.5; //1rpx对应多少像素
 var lastClientY = 0;//上一次点击的位置
 var flush = false;
 
@@ -31,7 +31,15 @@ Component({
     endIndex: [],
     year: 2015,
     orderArray: orderArray,
-    orderCount: {}
+    orderCount: {},
+    downflush:false,
+    touchHeigh:48,
+    scaleData:null,
+    refreshFinishIsShow:false,
+    touch:0,
+    noDataIsShow:false,
+    windowHeight: '',
+    windowWidth: ''
   },
 /**
  * 声明周期函数
@@ -40,14 +48,15 @@ Component({
     // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
     //组件被加载
     attached: function () {
-      app.updateTitle(pageTitle)
+      app.updateTitle(pageTitle);
       this.init();
+      var mobJson = app.getSystemInfo();
     },
     moved: function () { console.log("组件被moved")},
     //组件被移除
     detached: function () {
       console.log("detached");
-      this.triggerEvent('stopDownFlush');//停止下拉刷新,
+      // this.triggerEvent('stopDownFlush');//停止下拉刷新,
     }
   },
   
@@ -164,9 +173,9 @@ methods:{
     })
   },
   //加载订单数据
-    loadOrderData:function () {
+    loadOrderData:function (way) {
       wx.showNavigationBarLoading()
-    let that = this;
+    var that = this;
     var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
     var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
     if (that.data.date[5][that.data.startIndex[5]] == 24) {
@@ -191,13 +200,31 @@ methods:{
       },
       success: function (res) {
         if (res.data.code == '0000') {
+          console.info(res.data.data.length);
           that.dealOrderDate(res.data.data);
           orderArray = that.dealOrderDate(res.data.data);
+          if(res.data.data.length == 0 || orderArray.length == 0){
+              that.setData({
+                noDataIsShow:true
+              })
+          }else{
+            that.setData({
+              noDataIsShow: false
+            })
+          }
           that.setData({
             orderArray: orderArray
           });
+          that.setData({
+            flushMessage: "刷新成功"
+          })
+        }else{
+          that.setData({
+            flushMessage: "刷新失败"
+          })
         }
         wx.hideNavigationBarLoading()
+        that.heightChange(48, 500);
       },
       fail: function (error) {
         wx.showToast({
@@ -380,41 +407,60 @@ methods:{
     app.pageTurns(`../indent/indentDateil?type=${payStatus}&ORDER_PK=${orderPK}`)
   },
   moveStart:function(e){
-    lastClientY = e.touches[0].clientY
+    lastClientY = e.touches[0].clientY;
+    console.info("lastClientY" + lastClientY);
   },
   move: function (e) {
     var that = this
- 
+
     const query = wx.createSelectorQuery().in(that)
     query.select('#flag').boundingClientRect()
     query.selectViewport().scrollOffset()
     query.exec(function (res) {
       console.info(res[0].top) // #flag节点的上边界坐标
-      var a = onerpx * 174  //距离顶部的高度
-      if (a + 1 > res[0].top && a - 1 < res[0].top){
+      var a = onerpx * 88  //距离顶部的高度
+      console.info("a"+a)
+      if (a + 1 > res[0].top && a - 1 < res[0].top) {
         var thisClientY = e.touches[0].clientY
-        if (lastClientY!=0){
-          if (thisClientY - lastClientY > 60){
+        if (lastClientY != 0) {
+          if (thisClientY - lastClientY > 60) {
             flush = true
-            that.triggerEvent('onDownFlush');//调用下拉刷新
+            that.heightChange(89,500)//调用下拉刷新
+            that.setData({
+              flushMessage: "下拉刷新"
+            })
           }
-        }else{
+        } else {
           lastClientY = e.touches[0].clientY
         }
       }
     })
 
+ 
   },
-  moveStop:function(){
+  moveStop:function(e){
+   
     var that = this
     lastClientY = 0;
-    this.triggerEvent('stopDownFlush');//刷新结束
-    if(flush){
+    //this.triggerEvent('stopDownFlush');//刷新结束
+    if (flush) {
       that.loadOrderData()
+      console.info("可以刷新了")
     }
-    console.info("可以刷新了")
 
     flush = false;
+    that.setData({
+      flushMessage:"正在刷新"
+    })
+
+  },
+  //高度变化动画
+  heightChange:function(heightNumber,speed){
+    var animation = wx.createAnimation({})
+    animation.height(heightNumber).step({ duration:speed })
+    this.setData({
+      scaleData: animation.export(),
+    })
   }
 }
 })

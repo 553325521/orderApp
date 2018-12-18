@@ -1,7 +1,6 @@
 <!--pages/indent/indent.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 
-<view class='indent-page' bindtouchstart='moveStart' bindtouchmove='move' bindtouchend='moveStop'>
 <view class='page w100'> 
   <view class='swiper-tab bg-fff dp-flex'>
       <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
@@ -15,7 +14,7 @@
   </view>
   
   <!-- 时间段  -->
-  <view class='time-slot dp-flex dp-flex bg-fff w100'>
+  <!-- <view class='time-slot dp-flex dp-flex bg-fff w100'>
     <image class='icon' src='../../images/icon/rq-icon.png'></image>
     <view class='sele-time dp-flex flex-1 bc'>
       <picker class='end bg-fff flex-1' mode="multiSelector" bindchange="bindStartDateChange" bindcolumnchange="bindDateColumnChange" value="{{startIndex}}" range="{{date}}">
@@ -31,9 +30,23 @@
         </view>
       </picker>
     </view>
+  </view> -->
+</view>
+<view style='width:100%;height:50px;background:#fff;position:absolute;top:50px;z-index:-1;'>
+   <view class="weui-loadmore" style="margin-top:0;padding-top:0.5em">
+            <view class="weui-loading" style='display:{{refreshFinishIsShow?"none":"inline-block"}}'></view>
+            <view class="weui-loadmore__tips" style='display:{{refreshFinishIsShow?"none":"inline-block"}}'>{{flushMessage}}</view>
+            <view class="weui-loading-success" style='display:{{refreshFinishIsShow?"inline-block":"none"}}'>
+              <icon type="success_circle" size="15" style="margin-top:5rpx" color="#adadae"/>
+            </view>
   </view>
 </view>
-<view class='indent-list'>
+<view style='width:100%;height:{{touchHeigh}}px;'  animation="{{scaleData}}"></view>
+<view class='indent-page' style='height:100vh'  bindtouchstart='moveStart' bindtouchmove='move' bindtouchend='moveStop'>
+<view class='indent-list' style='border-top:1px #EAD5D7 solid;'>
+   <view class="weui-loadmore weui-loadmore_line" id="{{noDataIsShow?'flag':''}}" style='display:{{noDataIsShow?"block":"none"}}'>
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+  </view>
   <view class='indent-item' id="{{index == 0?'flag':''}}" wx:for="{{orderArray}}" wx:key="keys"  wx:for-item="itemName">
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
       <text>{{itemName.keyName}}</text>
