@@ -21,19 +21,19 @@ var currentCat = "";//当前商品类别
 var clickcurrentCat = "";//当前点击的商品类别
 var lastTop = 0;
 var onerpx = 1;//1rpx对应多少px
-
+var goodsInfo = {};
 
 // 组件所在页面的生命周期函数
 function onLoad(that) {
   wx.showNavigationBarLoading()
-  initData(that)
+  // initData(that)
   app.updateTitle(pageTitle)
   // pageInit(that);
-  loadGoodsInfo(that);
+  getGoodsInfo(that);
   loadTables(that);
-  flushStroageData(that)
-  flushShoppingCart(that)
-  backMainPage(that)
+  // flushStroageData(that)
+  // flushShoppingCart(that)
+  // backMainPage(that)
 }
 
 /**
@@ -51,7 +51,7 @@ function onShow(that) {
 //初始化参数
 function initData(that) {
   that.setData({
-    navList: null,
+    navList,
     currentCat,
     currentTabInit: 0,
     greensList,
@@ -86,7 +86,7 @@ function pageInit(that) {
 
   // debugger
   // 查询菜单和数量
-  loadGoodsInfo(that);
+  getGoodsInfo(that);
   // 查询餐桌
   loadTables(that);
   //TODO 查询开关设置，比如选择人数是否开启
@@ -176,11 +176,42 @@ function loadTables(that) {
 }
 
 /**
- * 加载商品信息
+ * 获取商品，先从本地取，看有没有缓存
  */
-function loadGoodsInfo(that) {
 
-  app.showLoading()
+function getGoodsInfo(that){
+  goodsInfo = app.goodsInfo
+  if (goodsInfo != undefined){
+    greensList = goodsInfo.greensList;
+    navList = goodsInfo.navList;
+    that.setData({
+      navList,
+      greensList,
+      currentCat: navList[0].GTYPE_PK
+    })
+console.info("缓存取的数据")
+    
+    //如果没有类别，就不set类别了
+    // if (navList.length > 0) {
+    //   that.setData({
+        
+    //   })
+    // }
+    
+    wx.hideNavigationBarLoading()
+    loadGoodsInfo(that)
+  }else{
+    console.info("正常加载的数据")
+    app.showLoading()
+    loadGoodsInfo(that)
+  }
+}
+
+/**
+ * 从数据库获取商品信息
+ */
+function loadGoodsInfo(that) { 
+  console.info("获取数据")
   app.sendRequest({
     url: 'GoodsType_select_loadGoodsTypeByShopId',
     method: 'POST',
@@ -196,25 +227,23 @@ function loadGoodsInfo(that) {
 
         greensList = res.data.data.greensList;
         navList = res.data.data.navList;
-
-        if (greensList.length > 1) {
+        
+        if (goodsInfo == undefined){
           that.setData({
-            isExistData: true
-          })
-        }
-
-        //如果没有类别，就不set类别了
-        if (navList.length != 0) {
-          that.setData({
+            navList,
+            greensList,
             currentCat: navList[0].GTYPE_PK,
           })
+          wx.hideNavigationBarLoading()
         }
-        that.setData({
-          navList,
-          greensList
-        })
+        
+        goodsInfo = {
+          'greensList': greensList,
+          'navList': navList
+        }
+        app.goodsInfo = goodsInfo
       }
-      wx.hideNavigationBarLoading()
+      // wx.hideNavigationBarLoading()
     },
     fail: function(error) {
       app.hintBox('操作失败', 'none')
@@ -685,6 +714,9 @@ function flushguadaiData(){
   }
 }
 
+/**
+ * 搜索商品
+ */
 function searchGoods(that, e){
   var seachGoods = e.detail.value.replace(/(^\s*)|(\s*$)/g, "");
   seachGoods = seachGoods == "" ? false : seachGoods

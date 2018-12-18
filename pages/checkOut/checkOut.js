@@ -18,14 +18,7 @@ Page({
         text:'现金',
         w:76,
         h:78,
-        type:0
-      },
-      {
-        img: "../../images/icon/QR-scan.png",
-        text: '二维码',
-        w: 62,
-        h: 62,
-        type: 1
+        type:1
       },
       {
         img: "../../images/icon/scan-QR.png",
@@ -35,25 +28,33 @@ Page({
         type: 2
       },
       {
+        img: "../../images/icon/QR-scan.png",
+        text: '二维码',
+        w: 62,
+        h: 62,
+        type: 3
+      },
+     
+      {
         img: "../../images/icon/pos.png",
         text: 'POS',
         w:60,
         h:46,
-        type: 3
+        type: 4
       },
       {
         img: "../../images/icon/cz.png",
         text: '储值',
         w: 56,
         h: 46,
-        type: 4
+        type: 5
       },
       {
         img: "../../images/icon/qtzf.png",
         text: '其他',
         w:52,
         h:52,
-        type: 5
+        type: 6
       },
     ],
     wzShow:false,
@@ -143,14 +144,7 @@ Page({
    */
   selectPay:function(e){
     var that = this;
-    payWay = e.currentTarget.dataset.index
-    if(//payWay == 2 ||
-     payWay == 3){
-      that.data.wzShow = true
-      that.setData({
-        wzShow: that.data.wzShow
-      })
-    }
+    payWay = e.currentTarget.dataset.payway
     that.setData({
       currentTab: payWay
     })
@@ -164,9 +158,11 @@ Page({
     console.log(currentTab)
     if (currentTab == undefined){
       app.hintBox('请选择支付方式','none')
-    } else if (currentTab == 2 || currentTab == 3){//如果选的是微信或者支付宝支付
+    } else if (currentTab == 3){//如果选的是微信或者支付宝支付
       //that.data.wzShow = true
       app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK);
+    } else if (currentTab == 2){
+      that.scanCode()
     }else{
       //请求网络，进行支付
       that.sendPay(payWay)
@@ -279,13 +275,14 @@ Page({
         SHOP_FK: app.globalData.shopid,
         OPEN_ID: wx.getStorageSync('openid'),
         ORDER_PK: ORDER_PK,
-        payWay: payWay
+        payWay: payWay,
+        trueMoney: trueMoney
       },
       success: function (res) {
         if (fun != undefined){
           fun(res)
         }else{
-          if (res.data.code = "0000") {
+          if (res.data.code == "0000") {
             app.hintBox('收款成功', 'success')
             that.vanish()
             that.jumpPage()
@@ -303,12 +300,72 @@ Page({
    */
   jumpPage:function(){
     var page = wx.getStorageSync('click_page')
-    if (page == '../founding/founding' && app.globalDataappSetting.foundingSwitch){
+    if (page == '../founding/founding' && app.globalData.appSetting.foundingSwitch){
       app.reLaunch('../index/index?page=../founding/founding')
     } else if (page == undefined || page == ''){
       app.reLaunch('../index/index?page=../indent/indent')
     }else{
       app.reLaunch('../index/index?page='+page)
     }
+  },
+  scanCode:function(){
+    wx.scanCode({
+      onlyFromCamera: true,
+      scanType: ['qrCode'],
+      success: function (res) {
+        //扫码成功
+        console.log(res)
+        var code = res.result
+        if (code != null) {
+          //进行支付前先生成支付订单
+          sendPay(payWay + '1', function success(res) {
+            //进行支付
+            app.sendRequest({
+              url: 'ShopScanPay',
+              method: "post",
+              data: {
+                qrCode: code,
+                //openid: wx.getStorageSync('openid'),
+                payWay: payWay,
+                ORDER_PK: ORDER_PK
+              },
+              success: function (res) {
+                console.info(res)
+                if (res.data.code == '0000') {
+                  if (res.data.data.result == 'A') {
+                    wx.showModal({
+                      title: '提示',
+                      showCancel: false,
+                      content: '等待用户确认支付',
+                      success: function (res) { }
+                    })
+                  } else if (res.data.data.result == 'S') {
+                    app.toast('支付成功')
+                    app.reLaunch('../index/index?page=../indent/indent')
+                  }
+
+                } else {
+                  wx.showModal({
+                    title: '提示',
+                    showCancel: false,
+                    content: '支付失败,原因:' + res.data,
+                    success: function (res) { }
+                  })
+                }
+              },
+              fail: function (error) {
+                app.hintBox('支付失败')
+              }
+            })
+          })
+        }
+      },
+      fail: function (error) {
+        console.log(error)
+        wx.showToast({
+          title: error,
+        })
+      }
+    })
   }
 })

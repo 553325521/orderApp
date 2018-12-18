@@ -87,7 +87,7 @@
     <view class='title c6 font-24'>选择支付方式</view>
     <view class='way-list dp-flex flex-wrap bg-fff'>
       <block wx:for="{{payWayList}}" wx:key="{{index}}">
-        <view class="item dp-flex bc pr {{currentTab==index+1?'on':''}}" data-index='{{index+1}}' bindtap='selectPay'>
+        <view class="item dp-flex bc pr {{currentTab==index+1?'on':''}}" data-payway='{{item.type}}' bindtap='selectPay'>
           <image class='icon' src='{{item.img}}' style='width:{{item.w}}rpx;height:{{item.h}}rpx'></image>
           <text class='c6 font-28'>{{item.text}}</text>
           <image wx:if="{{currentTab==index+1}}" class='sele-on pa' src="../../images/icon/way-sele.png"></image>

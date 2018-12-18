@@ -409,10 +409,15 @@ methods:{
   moveStart:function(e){
     lastClientY = e.touches[0].clientY;
     console.info("lastClientY" + lastClientY);
+    var that = this
+    console.info("下拉刷新")
+    that.setData({
+      flushMessage: "下拉刷新"
+    })
   },
   move: function (e) {
+    console.info("move")
     var that = this
-
     const query = wx.createSelectorQuery().in(that)
     query.select('#flag').boundingClientRect()
     query.selectViewport().scrollOffset()
@@ -420,14 +425,20 @@ methods:{
       console.info(res[0].top) // #flag节点的上边界坐标
       var a = onerpx * 88  //距离顶部的高度
       console.info("a"+a)
-      if (a + 1 > res[0].top && a - 1 < res[0].top) {
+      if (a - 1 < res[0].top) {
         var thisClientY = e.touches[0].clientY
         if (lastClientY != 0) {
+          let hh = thisClientY - lastClientY + a
+          hh = hh >= 89 ? 89:hh
+          that.heightChange(hh, 500)
+          console.info("thisClientY - lastClientY > 60  " + (thisClientY - lastClientY - 60))
           if (thisClientY - lastClientY > 60) {
             flush = true
-            that.heightChange(89,500)//调用下拉刷新
+            // console.info("trueteutue")
+            // that.heightChange(89,500)//调用下拉刷新
+            console.info("释放刷新")
             that.setData({
-              flushMessage: "下拉刷新"
+              flushMessage: "释放刷新"
             })
           }
         } else {
@@ -445,13 +456,20 @@ methods:{
     //this.triggerEvent('stopDownFlush');//刷新结束
     if (flush) {
       that.loadOrderData()
-      console.info("可以刷新了")
+      that.setData({
+        flushMessage: "正在刷新"
+      })
+      console.info("正在刷新")
+    }else{
+      console.info("取消刷新")
+      that.setData({
+        flushMessage: "取消刷新"
+      })
+      that.heightChange(48, 500);
     }
 
     flush = false;
-    that.setData({
-      flushMessage:"正在刷新"
-    })
+    
 
   },
   //高度变化动画

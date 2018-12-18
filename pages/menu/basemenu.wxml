@@ -4,13 +4,14 @@
 <import scr="../template/chosenPosition.wxml"/>
 <!-- 菜单导航  -->
 <view class='menu-nav bg-f9 br-ec' style='height:{{height}}'>
-  <block wx:for="{{navList}}" wx:for-index='index' wx:key="keys">
+  <block wx:for="{{navList}}" wx:for-index='index' wx:key="">
     <view wx:if='{{seachGoods == false}}' class="nav-item font-24 pr c5957 bb-ec tc {{currentCat == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
     {{item.GTYPE_NAME}}
-    <text class='pa font-28 tc cf' wx:if="{{math.catNum(shoppingCart.goods, item.GTYPE_PK) > 0}}">{{math.catNum(shoppingCart.goods, item.GTYPE_PK)}}</text></view>
+    <text class='pa font-28 tc cf' wx:if="{{math.catNum(shoppingCart.goods, item.GTYPE_PK) > 0}}">{{math.catNum(shoppingCart.goods, item.GTYPE_PK)}}</text>
+    </view>
    
   </block>
-   <view wx:if='{{seachGoods != false}}' class="nav-item font-24 pr c5957 bb-ec tc {{currentCat == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
+   <view wx:if='{{seachGoods != false || navList.length == 0}}' class="nav-item font-24 pr c5957 bb-ec tc menu-on" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
    全部
     <text class='pa font-28 tc cf' wx:if="{{math.catNum(shoppingCart.goods) > 0}}">{{math.catNum(shoppingCart.goods)}}</text></view>
 </view>
@@ -132,9 +133,7 @@
 <!-- 展示菜品  -->
 <view class='page'>
   <scroll-view style="height: {{scrollHeight}}px;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'a' + clickcurrentCat}}" bindscroll='doScroll' scroll-with-animation="true" enable-back-to-top>
-   <!-- <view class="weui-loadmore weui-loadmore_line"  style='display:{{isExistData?"none":"block"}}'>
-            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
-</view> -->
+
       <view wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys' id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}'  class='classify-item ball'>
           <view wx:if='{{seachGoods == false}}' class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
           <view class='greens-list' style="{{seachGoods != false ? 'padding:0rpx;':''}}">
@@ -164,5 +163,6 @@
             </block> 
           </view>
         </view>
+        <view style="height:50rpx;"></view>
   </scroll-view>
 </view>
