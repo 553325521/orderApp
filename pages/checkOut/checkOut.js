@@ -160,7 +160,7 @@ Page({
       app.hintBox('请选择支付方式','none')
     } else if (currentTab == 3){//如果选的是微信或者支付宝支付
       //that.data.wzShow = true
-      app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK);
+      app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK + '&orderType=1');
     } else if (currentTab == 2){
       that.scanCode()
     }else{
@@ -186,77 +186,77 @@ Page({
   /**
    * 支付相关
    */
-  payWay:function(e){
-    var that = this;
-    var type = e.currentTarget.dataset.type;
-    console.log(type)
-    if(type == '0'){
-      that.sendPay(payWay + '0')
-    }else if(type == '2'){
-        that.sendPay(payWay + '2',function success(res){
-        app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK);
-      })
-    }else{
-      wx.scanCode({
-        onlyFromCamera:true,
-        scanType: ['qrCode'],
-        success:function(res){
-          //扫码成功
-          console.log(res)
-          var code = res.result
-          if (code != null){
-            //进行支付前先生成支付订单
-            sendPay(payWay + '1', function success(res) {
-              //进行支付
-              app.sendRequest({
-                url: 'ShopScanPay',
-                method: "post",
-                data: {
-                  qrCode: code,
-                  //openid: wx.getStorageSync('openid'),
-                  payWay: payWay,
-                  ORDER_PK: ORDER_PK
-                },
-                success: function (res) {
-                  console.info(res)
-                  if (res.data.code == '0000') {
-                    if (res.data.data.result == 'A') {
-                      wx.showModal({
-                        title: '提示',
-                        showCancel: false,
-                        content: '等待用户确认支付',
-                        success: function (res) { }
-                      })
-                    } else if (res.data.data.result == 'S') {
-                      app.toast('支付成功')
-                      app.reLaunch('../index/index?page=../indent/indent')
-                    }
+  // payWay:function(e){
+  //   var that = this;
+  //   var type = e.currentTarget.dataset.type;
+  //   console.log(type)
+  //   if(type == '0'){
+  //     that.sendPay(payWay + '0')
+  //   }else if(type == '2'){
+  //       that.sendPay(payWay + '2',function success(res){
+  //       app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK);
+  //     })
+  //   }else{
+  //     wx.scanCode({
+  //       onlyFromCamera:true,
+  //       scanType: ['qrCode'],
+  //       success:function(res){
+  //         //扫码成功
+  //         console.log(res)
+  //         var code = res.result
+  //         if (code != null){
+  //           //进行支付前先生成支付订单
+  //           that.sendPay(payWay + '1', function success(res) {
+  //             //进行支付
+  //             app.sendRequest({
+  //               url: 'ShopScanPay',
+  //               method: "post",
+  //               data: {
+  //                 qrCode: code,
+  //                 //openid: wx.getStorageSync('openid'),
+  //                 payWay: payWay,
+  //                 ORDER_PK: ORDER_PK
+  //               },
+  //               success: function (res) {
+  //                 console.info(res)
+  //                 if (res.data.code == '0000') {
+  //                   if (res.data.data.result == 'A') {
+  //                     wx.showModal({
+  //                       title: '提示',
+  //                       showCancel: false,
+  //                       content: '等待用户确认支付',
+  //                       success: function (res) { }
+  //                     })
+  //                   } else if (res.data.data.result == 'S') {
+  //                     app.toast('支付成功')
+  //                     app.reLaunch('../index/index?page=../indent/indent')
+  //                   }
 
-                  } else {
-                    wx.showModal({
-                      title: '提示',
-                      showCancel: false,
-                      content: '支付失败,原因:' + res.data,
-                      success: function (res) { }
-                    })
-                  }
-                },
-                fail: function (error) {
-                  app.hintBox('支付失败')
-                }
-              })
-            })
-          }
-        },
-        fail:function(error){
-          console.log(error)
-          wx.showToast({
-            title: error,
-          })
-        }
-      })
-    }
-  },
+  //                 } else {
+  //                   wx.showModal({
+  //                     title: '提示',
+  //                     showCancel: false,
+  //                     content: '支付失败,原因:' + res.data,
+  //                     success: function (res) { }
+  //                   })
+  //                 }
+  //               },
+  //               fail: function (error) {
+  //                 app.hintBox('支付失败')
+  //               }
+  //             })
+  //           })
+  //         }
+  //       },
+  //       fail:function(error){
+  //         console.log(error)
+  //         wx.showToast({
+  //           title: error,
+  //         })
+  //       }
+  //     })
+  //   }
+  // },
   /**
    * 卡券列表
    */
@@ -309,6 +309,7 @@ Page({
     }
   },
   scanCode:function(){
+    var that = this;
     wx.scanCode({
       onlyFromCamera: true,
       scanType: ['qrCode'],
@@ -318,10 +319,11 @@ Page({
         var code = res.result
         if (code != null) {
           //进行支付前先生成支付订单
-          sendPay(payWay + '1', function success(res) {
+          that.sendPay(payWay + '1', function success(res) {
             //进行支付
             app.sendRequest({
               url: 'ShopScanPay',
+              orderType:'1',
               method: "post",
               data: {
                 qrCode: code,
@@ -341,6 +343,7 @@ Page({
                     })
                   } else if (res.data.data.result == 'S') {
                     app.toast('支付成功')
+                    //语音提醒支付成功
                     app.reLaunch('../index/index?page=../indent/indent')
                   }
 

@@ -2,6 +2,7 @@ var app = getApp()
 var baseUrl = app.globalData.basePath
 var money = 0;
 var orderId = '';
+var orderType = '';
 
 Page({
   data: {
@@ -11,9 +12,10 @@ Page({
     var that = this;
     money = options.money;
     orderId = options.orderId;
+    orderType = options.orderType;
     that.setData({
       money,
-      QRCodeUrl: baseUrl + "json/starPosPay_generatePayQRCode.json?orderId=" + orderId
+      QRCodeUrl: baseUrl + "json/starPosPay_generatePayQRCode.json?orderId=" + orderId + '&orderType=' + orderType + 'money=' + money
     })
   },
   onReady: function () {

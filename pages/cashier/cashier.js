@@ -21,7 +21,6 @@ Page({
   // 组件所在页面的生命周期函数
   onLoad: function() {
     app.updateTitle(pageTitle);
-    console.log("页面show")
   },
   onReady: function() {},
   onShow: function() {},
@@ -235,7 +234,6 @@ Page({
       bdsArray.push(parseFloat(process));
     }
     var result = 0;
-    console.info(bdsArray);
     if(bdsArray.length != 0){
       var hz = this.dal2Rpn(bdsArray);
       result = this.calc(hz);
@@ -259,17 +257,68 @@ Page({
    * 二维码收款
    */
   qrCodeCollection: function(e) {
-    app.pageTurns('../payMent/payMent?money=');
+    var that = this
+    var money = Math.floor(Number(that.data.result) * 100)
+    app.pageTurns('../payMent/payMent?money=' + money + '&orderType=2');
   },
   /**
    * 扫一扫收款
    */
   richScan: function() {
+    var that = this
+    var money = Math.floor(Number(that.data.result) * 100) * 100
     wx.scanCode({
       onlyFromCamera: true,
       scanType: ['qrCode'],
       success: function(res) {
+        //扫码成功
         console.log(res)
+        var code = res.result
+        if (code != null) {
+          //进行支付前先生成支付订单
+          // that.sendPay(payWay + '1', function success(res) {
+            //进行支付
+            app.sendRequest({
+              url: 'ShopScanPay',
+              method: "post",
+              data: {
+                qrCode: code,
+                //openid: wx.getStorageSync('openid'),
+                // ORDER_PK: ORDER_PK,
+                orderType: '2',
+                money: money
+              },
+              success: function (res) {
+                console.info(res)
+                if (res.data.code == '0000') {
+                  if (res.data.data.result == 'A') {
+                    wx.showModal({
+                      title: '提示',
+                      showCancel: false,
+                      content: '等待用户确认支付',
+                      success: function (res) { }
+                    })
+                  } else if (res.data.data.result == 'S') {
+                    app.toast('支付成功')
+                    //语音提醒支付成功
+                    app.reLaunch('../index/index?page=../indent/indent')
+                  }
+
+                } else {
+                  wx.showModal({
+                    title: '提示',
+                    showCancel: false,
+                    content: '支付失败,原因:' + res.data,
+                    success: function (res) { }
+                  })
+                }
+              },
+              fail: function (error) {
+                app.hintBox('支付失败')
+              }
+            })
+          // })
+        }
       },
       fail: function(error) {
         console.log(error)
