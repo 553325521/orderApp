@@ -15,7 +15,7 @@ Page({
     orderType = options.orderType;
     that.setData({
       money,
-      QRCodeUrl: baseUrl + "json/starPosPay_generatePayQRCode.json?orderId=" + orderId + '&orderType=' + orderType + 'money=' + money
+      QRCodeUrl: baseUrl + "json/starPosPay_generatePayQRCode.json?orderId=" + orderId + '&orderType=' + orderType + '&money=' + money +'&shopId='+app.globalData.shopid
     })
   },
   onReady: function () {

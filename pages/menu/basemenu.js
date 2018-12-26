@@ -73,7 +73,8 @@ function initData(that) {
     shoppingCart,
     allowChooseTable: !app.globalData.appSetting.foundingSwitch,
     basePath: app.globalData.basePath,
-    seachGoods:false
+    seachGoods:false,
+    tdytmb:app.globalData.appSetting.tdytmb
 
   })
   onerpx = app.getSystemInfo().mob_onerpx

@@ -82,7 +82,7 @@ var filters = {
     return JSON.parse(map);
   },
   /**
-   * 类别上的数量
+   * 该类别在购物车上的数量
    */
   catNum: function (goods, gtype_pk){
     var num = 0;
@@ -99,6 +99,33 @@ var filters = {
     })
     return num;
   },
+  /**
+   * 该商品在购物车上的数量
+   */
+  goodsNum:function(goods,shoppingCartGoods){
+      var num = 0;
+      if (shoppingCartGoods == undefined || shoppingCartGoods == '{}') {
+          return 0;
+      }
+      shoppingCartGoods.forEach(function (g) {
+
+          if (goods.GOODS_PK == g.GOODS_PK) {
+              num += g.GOODS_NUMBER;
+          }
+
+
+      })
+      return num;
+  },
+  /**
+   * 判断该商品有规格选择吗
+   */
+    isSingleGoods: function (every) {
+        if (every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]'){
+            return true;
+        }
+        return false;
+    },
   /**
    * 解析商品的口味、规格、做法
    */
@@ -142,5 +169,7 @@ module.exports = {
   parseGoods: filters.parseGoods,
   parseJSON: filters.parseJSON,
   isNotUndefined: filters.isNotUndefined,
-  goodsContain: filters.goodsContain
+  goodsContain: filters.goodsContain,
+    goodsNum: filters.goodsNum,
+    isSingleGoods: filters.isSingleGoods
 }

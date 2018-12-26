@@ -127,7 +127,8 @@ App({
     },
     appSetting:{
       tddcsy:true,//堂点带出收银
-      foundingSwitch:true// 是否开启开台
+      foundingSwitch:true,// 是否开启开台
+      tdytmb:true,//堂点有图模板
     }
   },
   /**

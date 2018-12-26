@@ -132,37 +132,31 @@
 </view>
 <!-- 展示菜品  -->
 <view class='page'>
-  <scroll-view style="height: {{scrollHeight}}px;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'a' + clickcurrentCat}}" bindscroll='doScroll' scroll-with-animation="true" enable-back-to-top>
-
-      <view wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys' id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}'  class='classify-item ball'>
-          <view wx:if='{{seachGoods == false}}' class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
-          <view class='greens-list' style="{{seachGoods != false ? 'padding:0rpx;':''}}">
-            <block wx:for="{{item.infos}}" wx:if='{{seachGoods == false || math.goodsContain(every.GOODS_NAME,seachGoods)}}' wx:for-item="every" wx:for-index='index'  wx:key="keys"> 
-              <view class="greens-item dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}"  style="{{seachGoods != false ? 'padding:6rpx;':''}}">
-                <view class='img'>
-                   <image class='w100 h100' wx:key wx:for="{{math.parseImage(every.PICTURE_URL)}}" wx:if='{{index == 0 && every.PICTURE_URL != "{}"}}' wx:for-index='pic' src="{{basePath}}{{pic}}"></image>   
-                  <image class='w100 h100' wx:if='{{every.PICTURE_URL == "{}"}}' src='../../images/cai.jpg'></image>  
+    <scroll-view style="height: {{scrollHeight}}px;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'a' + clickcurrentCat}}" bindscroll='doScroll' scroll-with-animation="true" enable-back-to-top>
+     <block wx:if='{{seachGoods == false}}'>
+        <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
+                <view id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}'>
+            
+                    <view class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
+                    <view class='greens-list'>
+                        <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">         
+                            <include wx:if='{{tdytmb}}' src="menupic.wxml"/>
+                            <include wx:if='{{!tdytmb}}' src="menunopic.wxml"/>
+                        </block> 
+                    </view>
                 </view>
-                <view class='info pr'>
-                  <view class='greens-name1 c3 font-28'>{{every.GOODS_NAME}}</view>
-                  <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
-                  <view class='price1 font-28 c2821'>￥{{math.toFix((every.GOODS_TRUE_PRICE == undefined || every.GOODS_TRUE_PRICE == '' ? every.GOODS_PRICE : every.GOODS_TRUE_PRICE) / 100.0)}}/{{every.GOODS_DW}}</view>
-                  <view class='quantity1 pa dp-flex'>
-                    <block wx:for='{{shoppingCart.goods}}' wx:for-item="good" wx:key wx:if="{{every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]' && good.GOODS_PK == every.GOODS_PK}}">
-                      <image class='add' wx:if="{{good.GOODS_NUMBER>0}}" data-type="-"  data-good='{{every}}' catchtap='addQity' src='../../images/icon/minus-icon.png'></image>
-                      <text class='font-26 num' style='line-height: 40rpx'  wx:if="{{good.GOODS_NUMBER > 0}}" >{{good.GOODS_NUMBER}}</text>
-                      </block>
-                      <image wx:if="{{every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]'}}" class='minus' data-good="{{every}}"  data-type="+" catchtap='addQity' src='../../images/icon/add-icon.png'></image>
-                    
-                    <block wx:if="{{every.GOODS_SPECIFICATION != '[]' || every.GOODS_RECIPE != '[]' || every.GOODS_TASTE != '[]'}}">
-                      <view class="goods-list-guige" bindtap='selectGuige' data-good='{{every}}'>规格</view>
-                    </block>
-                  </view>
-                </view>
-              </view>
-            </block> 
-          </view>
+        </block>
+    </block>
+    <block wx:else>
+        <view style='display:flex;flex-wrap:wrap;padding:10rpx'>
+            <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
+                <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index' wx:key="keys" wx:if='{{math.goodsContain(every.GOODS_NAME,seachGoods)}}' >  
+                    <include wx:if='{{tdytmb}}' src="menupic.wxml"/>
+                    <include wx:if='{{!tdytmb}}' src="menunopic.wxml"/>
+                </block> 
+            </block>
         </view>
-        <view style="height:50rpx;"></view>
-  </scroll-view>
+    </block>
+    <view style="height:50rpx;"></view>
+    </scroll-view>
 </view>

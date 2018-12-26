@@ -286,7 +286,8 @@ Page({
                 //openid: wx.getStorageSync('openid'),
                 // ORDER_PK: ORDER_PK,
                 orderType: '2',
-                money: money
+                money: money,
+                shopId: app.globalData.shopid
               },
               success: function (res) {
                 console.info(res)

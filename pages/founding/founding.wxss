@@ -4,7 +4,7 @@ page{
 }
 .founding-page{
   background-color: #fff;
-  /* padding: 0rpx 0rpx 100rpx 0; */
+  padding: 0rpx 0rpx 100rpx 0;
 }
 
 .fd-scroll{
@@ -169,7 +169,7 @@ page{
   width:25%;
   margin:12rpx;
   position:relative;
-   text-align:center;
+  text-align:center;
 }
 
 .fd-end-bt{

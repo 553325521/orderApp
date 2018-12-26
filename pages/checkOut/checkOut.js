@@ -329,7 +329,8 @@ Page({
                 qrCode: code,
                 //openid: wx.getStorageSync('openid'),
                 payWay: payWay,
-                ORDER_PK: ORDER_PK
+                ORDER_PK: ORDER_PK,
+                shopId: app.globalData.shopid
               },
               success: function (res) {
                 console.info(res)

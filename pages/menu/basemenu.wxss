@@ -100,7 +100,9 @@
 }
 .greens-list{
   padding: 8rpx;
-  flex-wrap: wrap
+  flex-wrap: wrap;
+  background-color: #fff;
+  display: flex;
 }
 .greens-item1{
   width: 272rpx;
@@ -109,10 +111,11 @@
   border: 1px solid #DFDEDE;
   border-radius: 10rpx;
   padding: 12rpx 14rpx;
-
+  background-color: #fff;
 }
-.greens-item1.on{
-  border: 1px solid #EB8A86
+.greens-item1-on{
+  border: 1px solid #EB8A86;
+  background-color: rgba(233, 207, 206, 0.1);
 }
 .greens-item1:nth-child(2n){
   margin-right: 0
@@ -121,7 +124,7 @@
   color: #DA251D;
   margin: 24rpx 0
 }
-.quantity{
+ .quantity{
   right: 14rpx;
   bottom: 12rpx;
   z-index: 9
@@ -131,13 +134,21 @@
   margin-right: 8rpx;
   line-height: 40rpx
 }
-.quantity .btn{
+
+.quantity .add,.quantity .minus{
   width: 40rpx;
   height: 40rpx;
 }
+.quantity .num{
+  color: #DA251D;
+  margin: 0 10rpx;
+} 
+
+
 /*  greens-item  */
 .greens-item{
-  margin-bottom: 24rpx
+  margin-bottom: 24rpx;
+  width: 100%
 }
 .greens-item:last-child{
   margin-bottom: 0
@@ -240,3 +251,11 @@ view.on{
   text-align:center;
   color:#EB8A86;
 }
+
+.xf-font{
+    position:absolute;
+    color:#EF9BA0;
+    right:10rpx;
+}
+
+
