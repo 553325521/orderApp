@@ -15,7 +15,7 @@
       <text class='font-28 c6'>应收金额</text>
       <text class='money c2821 font-26' style='margin-top:2rpx'>￥<text class='font-26'>{{math.toFix(shouldMoney/100.0)}}</text></text>
       <text class='font-28 c6' style='margin-left:16rpx;'>抵扣金额</text>
-      <text class='money c2821 font-26' style='margin-top:2rpx'>￥<text class='font-26'>{{math.toFix(favorMoney)}}</text></text>
+      <text class='money c2821 font-26' style='margin-top:2rpx'>￥<text class='font-26'>0.00</text></text>
     </view>
   </view>
 </view>
@@ -23,7 +23,7 @@
   <block wx:if='{{discountsMoneyShow}}'>
     <view class='coupon option dp-flex flex-jc-sb'>
       <text class='font-28 c6'>优惠金额</text>
-      <view class='font-28 c2821'>￥{{math.toFix(favorMoney)}}</view>
+      <view class='font-28 c2821'>￥{{math.toFix(favorMoney/100)}}</view>
     </view>
   </block>
   <block wx:if='{{discountCouponShow}}'>

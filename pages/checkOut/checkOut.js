@@ -72,7 +72,7 @@ Page({
   onLoad: function (options) {
     var that = this;
     //获取传过来的数据
-    ORDER_PK = options.ORDER_PK
+    ORDER_PK = options.ORDER_PK;
     shouldMoney = options.shouldMoney//应收金额
     trueMoney = shouldMoney
     console.info("多少钱" + trueMoney);
@@ -182,9 +182,33 @@ Page({
         dataArray[i].selected = false;
       }
     }
+    that.computeFavorMoney(currentSelectedRuleId);
     that.setData({
       couponShow: false,
       ruleList:dataArray
+    })
+  },
+  //计算优惠金额
+  computeFavorMoney:function(rulePk){
+    var that = this;
+    app.sendRequest({
+      url: "ShopInfo_select_loadFavorMoney",
+      method: "post",
+      data: {
+        RULE_PK:rulePk,
+        ORDER_PK:ORDER_PK
+      },
+      success: function (res) {
+        var data = res.data.data;
+        if (res.data.code == '0000') {
+          that.setData({
+            favorMoney:res.data.data
+          })
+        } 
+      },
+      fail: function (error) {
+        console.info(error);
+      }
     })
   },
   /**
