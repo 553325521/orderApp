@@ -340,6 +340,23 @@ mapToJson: function (map) {
         if (res.confirm){
           if (opera == '1') {
             //补单，打印机操作
+            app.sendRequest({
+                url:'Print_insert_doPrint',
+                data:{
+                    ORDER_PK: ORDER_PK,
+                    FK_SHOP:app.globalData.shopid
+                },
+                success:function(res){
+                    if (res.data.code == '0000'){
+                        app.toast('打印成功')
+                    }else{
+                        app.hintBox(res.data.data,'none')
+                    }
+                       
+                }
+
+            })
+
           } else if (opera == '2') {
             that.cancalOrder()
           } else if (opera == '3') {

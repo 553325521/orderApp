@@ -112,8 +112,6 @@ Page({
             app.jumpMenu()
           }
 
-
-
           wx.showToast({
             title: '创建成功',
           })
