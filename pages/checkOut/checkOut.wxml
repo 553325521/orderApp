@@ -3,7 +3,7 @@
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 <view class='head'> 
   <view class='head-top dp-flex tc cf font-26'>
-    <view class='bg-EF9B' bindtap='showCoupon'>优惠</view>
+    <view class='bg-EF9B' bindtap='showCoupon' wx:if='{{discountsMoneyShow}}'>优惠</view>
     <view class='bg-EF9B vip' bindtap='addMember'>会员</view>
   </view>
   <view class='pay-money'>
@@ -13,7 +13,9 @@
     </view>
     <view class='should-pay dp-flex'>
       <text class='font-28 c6'>应收金额</text>
-      <view class='money c2821 font-26'>￥<text class='font-26'>{{math.toFix(shouldMoney/100.0)}}</text></view>
+      <text class='money c2821 font-26' style='margin-top:2rpx'>￥<text class='font-26'>{{math.toFix(shouldMoney/100.0)}}</text></text>
+      <text class='font-28 c6' style='margin-left:16rpx;'>抵扣金额</text>
+      <text class='money c2821 font-26' style='margin-top:2rpx'>￥<text class='font-26'>{{math.toFix(favorMoney)}}</text></text>
     </view>
   </view>
 </view>
@@ -21,7 +23,7 @@
   <block wx:if='{{discountsMoneyShow}}'>
     <view class='coupon option dp-flex flex-jc-sb'>
       <text class='font-28 c6'>优惠金额</text>
-      <view class='font-28 c2821'>￥8.20</view>
+      <view class='font-28 c2821'>￥{{math.toFix(favorMoney)}}</view>
     </view>
   </block>
   <block wx:if='{{discountCouponShow}}'>
@@ -121,8 +123,13 @@
 <!--优惠券  -->
 <view wx:if="{{couponShow}}" class='coupon footfixed' style='width:{{W}};heigth:{{H}}'>
   <view class='coupon-list dp-flex flex-wrap cf'>
-    <view class='coupon-item' bindtap='seleCoupon'>
-      <view class='coupon-selectedIcon'>已选择<icon type="success" color='green' size="10"></icon></view>
+    <view class='coupon-item' bindtap='seleCoupon' wx:for="{{ruleList}}" data-id="{{item.preferential_rule_pk}}" wx:key="keys" wx:for-item="item">
+      <view class='coupon-selectedIcon' wx:if="{{item.selected}}">已选择<icon type="success" color='green' size="10"></icon></view>
+      <view class='coupon-title font-35'>{{item.rule_name}}</view>
+      <view class='discount tr font-28'>{{item.yhContent}}</view>
+      <view class='tr font-26 goodsArea'>{{item.areaName}}</view>
+    </view>
+    <!-- <view class='coupon-item' bindtap='seleCoupon'>
       <view class='coupon-title font-35'>优惠标题</view>
       <view class='discount tr font-35'>9.5折</view>
       <view class='tr font-26'>全部商品</view>
@@ -131,12 +138,7 @@
       <view class='coupon-title font-35'>优惠标题</view>
       <view class='discount tr font-35'>9.5折</view>
       <view class='tr font-26'>全部商品</view>
-    </view>
-    <view class='coupon-item' bindtap='seleCoupon'>
-      <view class='coupon-title font-35'>优惠标题</view>
-      <view class='discount tr font-35'>9.5折</view>
-      <view class='tr font-26'>全部商品</view>
-    </view>
+    </view> -->
   </view>
   <view class='colse-btn' bindtap='vanish'>
     <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>

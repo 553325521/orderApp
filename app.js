@@ -23,6 +23,7 @@ App({
     }
     // this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
     this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
+    //this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d';
     this.globalData.appid = options.query.appid;
     that.wxLogin();
     wx.setStorageSync("Address", "not");

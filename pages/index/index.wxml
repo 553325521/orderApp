@@ -1,9 +1,9 @@
 <!--单页面化-->
 <view style="margin-bottom:100rpx;">
-<view class="weui-loadmore donghua" style="{{currentPage == '../indent/indent'?'margin-top:200rpx;':''}}display:{{downflush?'block':'none'}}">
+<!-- <view class="weui-loadmore donghua" style="{{currentPage == '../indent/indent'?'margin-top:200rpx;':''}}display:{{downflush?'block;position:absolute;':'none'}}">
             <view class="weui-loading"></view>
             <view class="weui-loadmore__tips">释放立即刷新</view>
-</view>
+</view> -->
   <!--加载哪个页面？-->
   <block wx:if="{{currentPage=='../founding/founding'}}"><founding bind:switchPage="switchPage" id="founding"></founding></block>
   <block wx:elif="{{currentPage=='../indent/indent'}}"><indent bind:onDownFlush="onDownFlush" bind:stopDownFlush="stopDownFlush" ></indent></block>

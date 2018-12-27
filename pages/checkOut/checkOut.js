@@ -63,8 +63,11 @@ Page({
     discountsMoneyShow: discountsMoneyShow,
     discountCouponShow: discountCouponShow,
     jfdxShow: jfdxShow,
-    czzfShow: czzfShow
-
+    czzfShow: czzfShow,
+    //优惠规则列表
+    ruleList:[],
+    //优惠金额
+    favorMoney:0
   },
   onLoad: function (options) {
     var that = this;
@@ -86,6 +89,40 @@ Page({
   },
   onReady: function () {
     
+  },
+  onShow:function(){
+    this.loadRuleByShop();
+  },
+
+  //加载优惠规则
+  loadRuleByShop:function(){
+    var that = this;
+    app.sendRequest({
+      url: "ShopInfo_select_loadPreferntialRuleByShop",
+      method: "post",
+      data: {
+        FK_SHOP: app.globalData.shopid
+      },
+      success: function (res) {
+          var data = res.data.data;
+          if(res.data.code == '0000' && res.data.data.length != 0){
+            for(var i = 0;i < data.length;i++){
+              data[i]['selected'] = false;
+            }
+              that.setData({
+                ruleList: data
+              })
+            console.info(that.data.ruleList);
+          }else{
+            that.setData({
+              discountsMoneyShow:false
+            })
+          }
+      },
+      fail: function (error) {
+        console.info(error);
+      }
+    })
   },
   checkboxChange:function(e){
     var that = this;
@@ -122,7 +159,7 @@ Page({
     })
   },
   /**
-   * 查看优惠券
+   * 查看优惠规则
    */
   showCoupon:function(){
     var that = this;
@@ -131,12 +168,23 @@ Page({
     })
   },
   /**
-   * 选择优惠券
+   * 选择优惠券规则
    */
-  seleCoupon:function(){
+  seleCoupon:function(e){
     var that = this;
+    //当前选中的优惠规则ID
+    var currentSelectedRuleId = e.currentTarget.dataset.id;
+    var dataArray = that.data.ruleList;
+    for(var i = 0; i < dataArray.length;i++){
+      if (dataArray[i].preferential_rule_pk == currentSelectedRuleId ){
+          dataArray[i].selected = true;
+      }else{
+        dataArray[i].selected = false;
+      }
+    }
     that.setData({
-      couponShow: false
+      couponShow: false,
+      ruleList:dataArray
     })
   },
   /**
