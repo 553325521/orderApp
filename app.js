@@ -1,6 +1,7 @@
 //app.js
 var util = require('utils/util.js');  
 var basePath =  'http://m.ddera.com/dcxt/'
+var initSuccess = false;
 
 App({
   data: {   
@@ -10,6 +11,7 @@ App({
   */
   onLaunch: function (options) {
     var that = this;
+    that.showLoading();
     if (options.query.appid == undefined) {
       // wx.showModal({
       //   title: '提示',
@@ -127,9 +129,7 @@ App({
       ]
     },
     appSetting:{
-      tddcsy:true,//堂点带出收银
-      foundingSwitch:true,// 是否开启开台
-      tdytmb:true,//堂点有图模板
+       
     }
   },
   /**
@@ -562,8 +562,38 @@ pushSession:function(){
    * 获取小程序设置
    */
   getAppSetting:function(){
-    var that = this;
-    
+      var that = this
+    //   var appSetting = wx.getStorageSync('appSetting'+that.globalData.shopid);
+    //   if (appSetting != undefined && appSetting != ""){
+    //       initSuccess = true;
+    //       that.globalData.appSetting = appSetting
+    //       that.showIndexPage()
+    //     //   that.reLaunch('../index/index')
+    //   }
+      that.sendRequest({
+          url: 'FunctionSwitch_select_XCXloadFuncSwitchList',
+          data: {
+              FK_SHOP: that.globalData.shopid
+          },
+          success: function (res) {
+              if (res.data.code == '0000') {
+                //   that.globalData.appSetting = res.data.data
+                //   wx.setStorage({
+                //       key: 'appSetting' + that.globalData.shopid,
+                //       data: res.data.data
+                //   })
+                //   if(!initSuccess){
+                      that.globalData.appSetting = res.data.data
+                      that.showIndexPage()
+                //   }
+                  initSuccess = true;
+               
+              } else {
+                  that.hintBox(res.data.data, 'none');
+              }
+          }
+      })
+      that.hideLoading();
   },
   /**
    * 刷新其他页面参数
@@ -615,7 +645,7 @@ pushSession:function(){
      //从购物车获取数据
     var shoppingCart = wx.getStorageSync('shopping_cart')
     var shopShoppingCart = shoppingCart[that.globalData.shopid];
-    if (that.globalData.appSetting.foundingSwitch) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true") {
       // shopShoppingCart[shopShoppingCart.currentTableId] = {}
       var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
       if (tableShoppingCart) {
@@ -806,7 +836,7 @@ pushSession:function(){
     if (shopShoppingCart == undefined) return
 
 
-    if (that.globalData.appSetting.foundingSwitch) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true") {
       var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
       if (tableShoppingCart == undefined) return
       //先判断允许减少商品的数量吗
@@ -884,7 +914,7 @@ pushSession:function(){
     if (shopShoppingCart == undefined) return
 
 
-    if (that.globalData.appSetting.foundingSwitch) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true") {
       var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
       if (tableShoppingCart == undefined) return
       //先判断允许减少商品的数量吗
@@ -907,7 +937,7 @@ pushSession:function(){
    */
   createShoppingCart: function (table, personNum) {
     var that = this
-    if (that.globalData.appSetting.foundingSwitch) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true") {
       var currentShopShoppingCart = wx.getStorageSync('shopping_cart')
       if (currentShopShoppingCart == undefined || currentShopShoppingCart == '') {
         currentShopShoppingCart = {}
@@ -962,7 +992,7 @@ pushSession:function(){
     var shoppingCart = wx.getStorageSync('shopping_cart')
     var shopShoppingCart = shoppingCart[this.globalData.shopid]
     
-    if (that.globalData.appSetting.foundingSwitch) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true") {
       var tableShoppingCart = shopShoppingCart[shoppingCart.currentTableId];
       tableShoppingCart.totalMoney = 0;
       tableShoppingCart.totalNumber = 0;
@@ -980,7 +1010,7 @@ pushSession:function(){
    */
   removeShoppingCart: function () {
     var that = this
-    if (that.globalData.appSetting.foundingSwitch) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true") {
       var shoppingCart = wx.getStorageSync('shopping_cart')
       var shopShoppingCart = shoppingCart[that.globalData.shopid]
       var tableShoppingCart = shopShoppingCart[shopShoppingCart.currentTableId];
@@ -1008,7 +1038,7 @@ pushSession:function(){
       return {}
     }
 
-    if (that.globalData.appSetting.foundingSwitch && table == undefined) {
+      if (that.globalData.appSetting.CHECK_TDKT == "true" && table == undefined) {
       if (shopShoppingCart[shopShoppingCart.currentTableId] != undefined){
         return shopShoppingCart[shopShoppingCart.currentTableId]
       }else{
@@ -1029,7 +1059,7 @@ pushSession:function(){
     }
     var shopShoppingCart = shoppingCart[this.globalData.shopid]
     
-    if(this.globalData.appSetting.foundingSwitch){
+      if (this.globalData.appSetting.CHECK_TDKT == "true"){
       var currentTableId = table.TABLES_PK
       if (table != undefined && table != '') {
         shopShoppingCart[currentTableId].table = table
@@ -1101,7 +1131,7 @@ pushSession:function(){
     var that = this;
     var pages = getCurrentPages()    //获取加载的页面
     var prePage = pages[pages.length - 2];
-    if (that.globalData.appSetting.foundingSwitch){
+      if (that.globalData.appSetting.CHECK_TDKT == "true"){
       if (prePage.route == 'pages/menu/menupage'){  
         wx.navigateBack({
           delta:1
@@ -1128,5 +1158,46 @@ pushSession:function(){
         that.reLaunch('/pages/index/index?page=../menu/menu&' + param)
       }
     }
-  }
+  },
+//     getFoundingSwitch:function(){
+//         debugger
+//         var that = this;
+//             that.sendRequest({
+//                 url: 'FunctionSwitch_select_XCXloadFuncSwitchList',
+//                 data: {
+//                     FK_SHOP: that.globalData.shopid
+//                 },
+//                 success: function (res) {
+//                     if (res.data.code == '0000') {
+//                         that.globalData.appSetting = res.data.data
+//                         initSuccess = true;
+//                         that.hideLoading();
+                       
+//                     } else {
+//                         that.hintBox(res.data.data, 'none');
+//                     }
+//                 }
+//             })
+           
+        
+//         return that.globalData.appSetting.CHECK_TDKT
+     
+//   }
+  /**
+   * 获取全局配置
+   */
+//   getAppSetting(){
+      
+//   }
+showIndexPage:function(){
+   
+    var pages = getCurrentPages();
+    var currentPage = pages[pages.length - 1]
+    if (currentPage == undefined) {
+        return
+    }
+    if (currentPage.route == 'pages/index/index') {
+        currentPage.setShow();
+    }
+}
 })

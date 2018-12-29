@@ -1,8 +1,9 @@
 // pages/index/index.js
 var app = getApp();
-var currentPage = app.globalData.tabBar.list[0].pagePath;//当前是哪个页面
-var foundingSwitch = app.globalData.appSetting.foundingSwitch;
-var indexPage = foundingSwitch ? '../founding/founding' : '../menu/menu';
+var currentPage ;//当前是哪个页面
+var foundingSwitch;
+var indexPage;
+
 
 //引入单页面页面的js
 // var indent = require('../indent/indent.js');//引入modul
@@ -12,15 +13,15 @@ Page({
    * 页面的初始数据
    */
   data: {
-    currentPage: currentPage,
-    tabBar: app.globalData.tabBar//获取tabBar
+    // currentPage: currentPage,
+    // tabBar: app.globalData.tabBar//获取tabBar
+      pageShow : false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-   
     if (options != undefined && options.page != undefined) {
       currentPage = options.page;
       if (options.page == 'indexPage'){
@@ -28,12 +29,20 @@ Page({
       }
       //set数据在上边，不然页面没出来，下边后去不到
       this.setData({
-        currentPage
+        currentPage,
+        tabBar : app.globalData.tabBar//获取tabBar
       })
       if (currentPage == '../menu/menu') {
         this.menu = this.selectComponent("#menu");
         this.menu.setOptions(options);
       }
+    }else{
+
+        // app.getFoundingSwitch();
+        if (app.globalData.appSetting.CHECK_TDKT != undefined && app.globalData.appSetting.CHECK_TDKT != ""){
+            this.setShow()
+        }
+      
     }
     this.pageInit()
     
@@ -158,6 +167,26 @@ Page({
       this.setData({
 
         downflush: false
+      })
+  },
+  setShow:function(){
+      currentPage = app.globalData.tabBar.list[0].pagePath;//当前是哪个页面
+      if (currentPage == undefined){
+          return
+      }
+      foundingSwitch = app.globalData.appSetting.CHECK_TDKT;
+      indexPage = foundingSwitch == "true" ? '../founding/founding' : '../menu/menu';
+      if (indexPage == '../menu/menu') {
+          app.globalData.tabBar.list[0].pagePath = "../menu/menu";
+          app.globalData.tabBar.list[0].text = "菜单";
+      }
+      currentPage = indexPage
+      var tabBar = app.globalData.tabBar//获取tabBar
+      this.setData({
+          currentPage,
+          foundingSwitch,
+          tabBar,
+          pageShow:true
       })
   }
     

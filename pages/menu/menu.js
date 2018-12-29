@@ -48,10 +48,10 @@ Component({
     tableList,
     menuStatus,
     shoppingCart,
-    allowChooseTable: !app.globalData.appSetting.foundingSwitch,
+    //   allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
     basePath: app.globalData.basePath,
     seachGoods: false,
-      tdytmb: app.globalData.appSetting.tdytmb
+    //   tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
     },
   /**
      * 组件周期函数
@@ -61,7 +61,7 @@ Component({
     //组件被加载
     attached: function () {
       var mobInfo = app.getSystemInfo();
-
+        
       this.setData({
         W: mobInfo.mob_width + 'px',
         H: mobInfo.mob_height + 'px',

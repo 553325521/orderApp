@@ -25,6 +25,10 @@ var goodsInfo = {};
 
 // 组件所在页面的生命周期函数
 function onLoad(that) {
+    that.setData({
+        allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
+        tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
+    })
   wx.showNavigationBarLoading()
   // initData(that)
   app.updateTitle(pageTitle)
@@ -71,10 +75,10 @@ function initData(that) {
     tableList,
     menuStatus,
     shoppingCart,
-    allowChooseTable: !app.globalData.appSetting.foundingSwitch,
+      allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
     basePath: app.globalData.basePath,
     seachGoods:false,
-    tdytmb:app.globalData.appSetting.tdytmb
+      tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
 
   })
   onerpx = app.getSystemInfo().mob_onerpx
@@ -83,8 +87,9 @@ function initData(that) {
 //自定义页面初始化函数
 function pageInit(that) {
 
-  app.showLoading();
 
+  app.showLoading();
+   
   // debugger
   // 查询菜单和数量
   getGoodsInfo(that);
@@ -629,7 +634,7 @@ function backMainPage(that) {
   if (shoppingCart == undefined || shoppingCart.table == undefined || shoppingCart.table == '' || shoppingCart.table == '') {
     var pages = getCurrentPages()
     var currentPage = pages[pages.length - 2]
-    if (app.globalData.appSetting.foundingSwitch && currentPage.route == 'pages/index/index' && currentPage.__data__.currentPage == '../founding/founding'){
+      if (app.globalData.appSetting.CHECK_TDKT == 'true' && currentPage.route == 'pages/index/index' && currentPage.__data__.currentPage == '../founding/founding'){
         wx.navigateBack({
           delta: 1
         })
@@ -686,7 +691,7 @@ function createSelectorQuery(that,e){
   //   currentCat: currentCat
   // })
 
-      if (!app.globalData.appSetting.foundingSwitch) {
+    if (!app.globalData.appSetting.CHECK_TDKT) {
         var query = wx.createSelectorQuery().in(that)
       } else {
         var query = wx.createSelectorQuery()
@@ -710,7 +715,7 @@ function createSelectorQuery(that,e){
 }
 
 function flushguadaiData(){
-  if(app.globalData.appSetting.foundingSwitch){
+    if (app.globalData.appSetting.CHECK_TDKT){
     app.flushOtherPage({ 'guadanshuju': app.getShoppingCart('all') })
   }
 }

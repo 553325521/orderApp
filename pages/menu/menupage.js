@@ -47,14 +47,16 @@ Page({
     tableList,
     menuStatus,
     shoppingCart,
-    allowChooseTable: !app.globalData.appSetting.foundingSwitch,
+      allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
     basePath: app.globalData.basePath,
     seachGoods: false,
-    tdytmb: app.globalData.appSetting.tdytmb
+      tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
   },
 
     // 组件所在页面的生命周期函数
     onLoad: function () {
+        console.info("堂点有图模板" + this.data.tdytmb)
+        console.info("堂点有图模板" + app.globalData.appSetting.CHECK_TDKT == "true")
       var mobInfo = app.getSystemInfo();
 
       this.setData({

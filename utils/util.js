@@ -33,7 +33,18 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+function sleep(numberMillis) {
+    var now = new Date();
+    var exitTime = now.getTime() + numberMillis;
+    while (true) {
+        now = new Date();
+        if (now.getTime() > exitTime)
+            return;
+    }
+}
+
 module.exports = {
   formatTime: formatTime,
-  nowTime: nowTime
+  nowTime: nowTime,
+  sleep: sleep
 }

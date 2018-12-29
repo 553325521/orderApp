@@ -20,7 +20,7 @@ Component({
     isUseTableNum,
     allTableNum,
     currentLookStatus,
-    allowChooseTable: app.globalData.appSetting.foundingSwitch
+    // allowChooseTable: app.globalData.appSetting.CHECK_TDKT
   },
   
   /**

@@ -10,11 +10,14 @@ var shoppingCart = {};//购物车信息
 
 Page({
   data: {
-    loadingHidden: true,
-    allowChooseTable: !app.globalData.appSetting.foundingSwitch,
+    loadingHidden: true
+      
   },
   onLoad: function (options) {
     var that = this;
+    that.setData({
+        allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
+    })
     //取出本地购物车，，先看看里边有没有当前桌位和当前桌位就餐人数信息
     that.flushShoppingCart()
     if (shoppingCart.table == undefined){  
@@ -105,7 +108,7 @@ Page({
           app.removeShoppingCart()
 
           //验证是否开启堂点带出收银
-          if (app.globalData.appSetting.tddcsy == true) {
+            if (app.globalData.appSetting.CHECK_TDDCSY == 'true') {
             app.redirectTo(`../checkOut/checkOut?shouldMoney=` + shoppingCart.totalMoney + '&ORDER_PK=' + res.data.data)
           } else {
             // app.reLaunch(`../index/index?page=menu`);

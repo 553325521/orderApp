@@ -25,10 +25,11 @@ Page({
     orderDetailMap:{},
     smallButton,
     sliderWidth,
-    foundingSwitch:app.globalData.appSetting.foundingSwitch,
+      foundingSwitch: app.globalData.appSetting.CHECK_TDKT,
     currentOrderPk:""
   },
   onLoad: function (options) {
+      debugger
     wx.showNavigationBarLoading()
     var that = this;
     that.initParam()
@@ -301,7 +302,7 @@ mapToJson: function (map) {
                     shoppingCart
                   })
                  that.loadOrderDetail();
-                 if (app.globalData.appSetting.tddcsy){
+                   if (app.globalData.appSetting.CHECK_TDDCSY == 'true'){
                    app.pageTurns('../checkOut/checkOut?shouldMoney=' + (Number(that.data.orderDetailMap.ORDER_YFMONEY) + Number(shoppingMoney)) + '&ORDER_PK=' + ORDER_PK)
                  }
                }else{

@@ -372,7 +372,7 @@ Page({
    */
   jumpPage:function(){
     var page = wx.getStorageSync('click_page')
-    if (page == '../founding/founding' && app.globalData.appSetting.foundingSwitch){
+      if (page == '../founding/founding' && app.globalData.appSetting.CHECK_TDKT){
       app.reLaunch('../index/index?page=../founding/founding')
     } else if (page == undefined || page == ''){
       app.reLaunch('../index/index?page=../indent/indent')
