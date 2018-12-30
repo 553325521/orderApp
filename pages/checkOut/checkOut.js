@@ -8,7 +8,8 @@ var discountCouponShow = true;//优惠券显示不显示
 var jfdxShow = true;//积分抵现显示不显示
 var czzfShow = true;//储值支付显示不显示
 var ORDER_PK;//订单ID
-
+//第一次随机价格值
+var firstSJMoney = -1;
 Page({
   data: {
     operList:[1,1,1],
@@ -201,9 +202,23 @@ Page({
       success: function (res) {
         var data = res.data.data;
         if (res.data.code == '0000') {
-          that.setData({
-            favorMoney:res.data.data
-          })
+          var favorName = res.data.data.favorName;
+          if(favorName == '随机满减'){
+            if (firstSJMoney == -1){
+              firstSJMoney = res.data.data.favourMoney;
+              that.setData({
+                favorMoney: firstSJMoney
+              })
+            }else{
+              that.setData({
+                favorMoney: firstSJMoney
+              })
+            }
+          }else{
+            that.setData({
+              favorMoney: res.data.data.favourMoney
+            })
+          }
         } 
       },
       fail: function (error) {

@@ -123,7 +123,7 @@
 <!--优惠券  -->
 <view wx:if="{{couponShow}}" class='coupon footfixed' style='width:{{W}};heigth:{{H}}'>
   <view class='coupon-list dp-flex flex-wrap cf'>
-    <view class='coupon-item' bindtap='seleCoupon' wx:for="{{ruleList}}" data-id="{{item.preferential_rule_pk}}" wx:key="keys" wx:for-item="item">
+    <view class='coupon-item' bindtap='seleCoupon' wx:for="{{ruleList}}" data-id="{{item.preferential_rule_pk}}"  wx:key="keys" wx:for-item="item">
       <view class='coupon-selectedIcon' wx:if="{{item.selected}}">已选择<icon type="success" color='green' size="10"></icon></view>
       <view class='coupon-title font-35'>{{item.rule_name}}</view>
       <view class='discount tr font-28'>{{item.yhContent}}</view>
