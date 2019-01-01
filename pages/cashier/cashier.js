@@ -49,6 +49,7 @@ Page({
 
   },
   changeComputeFocus:function(){
+    debugger;
     this.setData({
       isComputeFocus:true,
       isFocus:false
@@ -213,10 +214,13 @@ Page({
       bdsArray:[],
       yhMoney:"",
       noYH:true,
+      isComputeFocus:true,
+      isFocus:false,
       isFirst: true
     })
   },
   yhMoneyChange:function(e){
+    debugger;
     this.setData({
       yhMoney:e.detail.value
     })

@@ -6,7 +6,8 @@
       <view class='total-money flex-1 font-42 flex-jc-sb tr'>{{result}}</view>
     </view>
     <view class='process tr font-28 c6'>
-      <input class='flex-1 font-28 c6'  value="{{operateStr}}" focus='{{isComputeFocus}}' bindtap = 'changeComputeFocus'></input>
+      <text class='flex-1 font-28 c6' bindtap = 'changeComputeFocus'>{{operateStr}}</text>
+      <!-- <input class='flex-1 font-28 c6'  value="{{operateStr}}" focus='false' bindtap = 'changeComputeFocus'></input> -->
     </view>
   </view>
   <view class='discounts dp-flex'>
@@ -19,7 +20,10 @@
           <checkbox value="0" checked="false"/>
       </checkbox-group>
     </view>
-    <input class='flex-1 font-28 c6' disabled='{{noYH}}' type='digit' value="{{yhMoney}}" focus='{{isFocus}}' bindchange = 'yhMoneyChange' bindtap = 'changeYHINPUT'  placeholder='请输入优惠金额'></input>
+    <view class='yhm font-28 c6' style='padding-left:10rpx' type='digit'  bindtap = 'changeYHINPUT'>
+      <text>{{noYH ? '请输入优惠金额':yhMoney}}</text>
+    </view>
+    <!-- <input class='flex-1 font-28 c6' disabled='{{noYH}}' type='digit' value="{{yhMoney}}" focus='false' bindchange = 'yhMoneyChange' bindtap = 'changeYHINPUT'  placeholder='请输入优惠金额'></input> -->
   </view>
   <view class='keyboard dp-flex flex-jc-sb'>
     <view class='numeric-key dp-flex font-28 c6'>
