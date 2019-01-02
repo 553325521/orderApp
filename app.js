@@ -1199,5 +1199,36 @@ App({
         if (currentPage.route == 'pages/index/index') {
             currentPage.setShow();
         }
+    },
+    /**
+     * 无变化的回到主页，第一个参数，跳到哪，第二个参数，刷新页面吗
+     */
+    noFlushBackIndexPage: function (flush,param,page){
+        var that = this;
+        var pages = getCurrentPages()    //获取加载的页面
+        var prePage = pages[0];
+ 
+        if(page == undefined){
+            if (that.globalData.appSetting.CHECK_TDKT == "true") {
+                page = '../founding/founding'
+            } else {
+                page = '../menu/menu'
+            }
+
+            
+        }
+
+        if (prePage.route == 'pages/index/index') {
+            if (flush != undefined) {
+                var map = {}
+                map[param] = true;
+                prePage.flushComponentData(page, map)
+            }
+        }
+        
+        wx.navigateBack({
+            delta: pages.length - 1
+        })
+       
     }
 })

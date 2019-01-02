@@ -11,7 +11,7 @@ var tableList = []; //桌位列表
 var saveOrdersFalg = false; //挂单按钮是否显示
 var currentGood = {}; //当前商品
 var reserveShow = false; //显示选择餐位
-// var quorumShow = false;//显示选择人数
+var quorumShow = false;//显示选择人数
 var selectPersonNum = true; //选择人数开关是否开启
 var currentTable = {}; //当前桌位
 var currentEatPersonNum = 0; //当前餐桌就餐的人数
@@ -72,7 +72,7 @@ function initData(that) {
     entryShow: false, //购物车显示
     popShow: false,
     reserveShow,
-    quorumShow: false,
+    quorumShow,
     currentGood,
     currentIndex: null,
     currentItem: null,
@@ -341,15 +341,17 @@ function vanish(that) {
  */
 function emptyCat(that) {
   // app.clearShoppingCart()
-  app.hintBox('购物车已空')
-  app.removeShoppingCart()
-  flushShoppingCart(that)
-  that.setData({
-    greensList,
-    entryShow: false,
-  })
-  flushguadaiData()
-  backMainPage(that)
+    app.hintBox('购物车已空')
+    app.removeShoppingCart()
+    wx.setStorageSync('ORDER_PK', '');
+    wx.setStorageSync('ORDER_TYPE', '');
+    flushShoppingCart(that)
+    that.setData({
+        greensList,
+        entryShow: false,
+    })
+    flushguadaiData()
+    backMainPage(that)
 }
 /**
  * 移除购物车,和清除购物车最大的区别就是也清除桌位和就餐人员信息
@@ -376,8 +378,8 @@ function closePop(that) {
  * 选好了
  */
 function chosen(that) {
-
-  if (menuStatus == 2) {
+    var ORDER_PK = wx.getStorageSync('ORDER_PK');
+    if (menuStatus == 2 && ORDER_PK != undefined && ORDER_PK != '') {
     //加菜
     app.pageTurns('../indent/indentDateil')
     return;
@@ -685,11 +687,12 @@ function alterCount(that, e) {
 function backMainPage(that) {
   if (shoppingCart == undefined || shoppingCart.table == undefined || shoppingCart.table == '' || shoppingCart.table == '') {
     var pages = getCurrentPages()
-    var currentPage = pages[pages.length - 2]
+    var currentPage = pages[0]
       if (app.globalData.appSetting.CHECK_TDKT == 'true'){
-          if (currentPage.route == 'pages/index/index' && currentPage.__data__.currentPage == '../founding/founding'){
+          if (currentPage.route == 'pages/index/index'){
+             currentPage.__data__.currentPage = '../founding/founding'
               wx.navigateBack({
-                  delta: 1
+                  delta: pages.length - 1
               })
           }else{
               app.reLaunch('../index/index?page=indexPage')

@@ -387,12 +387,15 @@ Page({
    */
   jumpPage:function(){
     var page = wx.getStorageSync('click_page')
-      if (page == '../founding/founding' && app.globalData.appSetting.CHECK_TDKT){
-      app.reLaunch('../index/index?page=../founding/founding')
-    } else if (page == undefined || page == ''){
-      app.reLaunch('../index/index?page=../indent/indent')
+      if (page == '../founding/founding' && app.globalData.appSetting.CHECK_TDKT == 'true'){
+    //   app.reLaunch('../index/index?page=../founding/founding')
+          app.noFlushBackIndexPage(true)
+      } else if (page == '../indent/indent'){
+    //   app.reLaunch('../index/index?page=../indent/indent')
+          app.noFlushBackIndexPage(false, undefined,page)
     }else{
-      app.reLaunch('../index/index?page='+page)
+    //   app.reLaunch('../index/index?page='+page)
+          app.noFlushBackIndexPage(false)
     }
   },
   scanCode:function(){

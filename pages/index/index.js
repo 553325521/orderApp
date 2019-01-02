@@ -136,7 +136,7 @@ Page({
      */
     switchPage: function (page) {
         var switchPage = page.detail.page
-        this.switchMenu(switchPage)
+        // this.switchMenu(switchPage)
         currentPage = page.detail.page
         this.setData({ currentPage })
     },
@@ -151,9 +151,13 @@ Page({
         if (page == '../founding/founding') {
             this.menu = this.selectComponent("#founding");
             this.menu.indexFlushData(params);
+            this.menu.pageInit();
         } else if (page == '../menu/menu') {
             this.menu = this.selectComponent("#menu");
-            this.menu.setOptions(options);
+            this.menu.setOptions(params);
+        } else if (page == '../indent/indent'){
+            this.menu = this.selectComponent("#indent");
+            this.menu.init();
         }
     },
     onDownFlush: function () {
