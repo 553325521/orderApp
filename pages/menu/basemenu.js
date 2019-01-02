@@ -387,12 +387,23 @@ function chosen(that) {
       that.setData({
         reserveShow
       })
-    } else if (currentEatPersonNum == 0) {
-      that.setData({
-        quorumShow: true
-      })
+    } else if (app.globalData.appSetting.CHECK_JCRS == 'true') {
+        //如果当前餐位人数大于该餐桌容纳的数量，自动赋值
+        if (currentEatPersonNum > currentTable.TABLES_NUM) {
+            currentEatPersonNum = currentTable.TABLES_NUM; //当前桌位就餐人数
+        }
+        if (currentEatPersonNum == 0) {     
+
+            quorumShow = true;
+
+        } 
+        that.setData({
+            quorumShow
+        })
     } else {
-      app.pageTurns('../orderDetail/orderDetail')
+        currentEatPersonNum = 'X'
+        shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
+        app.pageTurns('../orderDetail/orderDetail')
     }
   }
 }
@@ -402,16 +413,27 @@ function chosen(that) {
 function reserveConfirm(that, e) {
 
   var quorumShow = false;
-  if (selectPersonNum != undefined && selectPersonNum != '' && currentEatPersonNum == 0) {
-    //如果选择就餐人数的开关是打开的，那么就显示就餐人数
-    quorumShow = true;
-  }
+//   if (selectPersonNum != undefined && selectPersonNum != '' && currentEatPersonNum == 0) {
+//     //如果选择就餐人数的开关是打开的，那么就显示就餐人数
+//     quorumShow = true;
+//   }
+    currentTable = tableList[e.target.dataset.index] //当前桌位信息
+    if (app.globalData.appSetting.CHECK_JCRS == 'true') {
+        //如果当前餐位人数大于该餐桌容纳的数量，自动赋值
+        if (currentEatPersonNum > currentTable.TABLES_NUM) {
+            currentEatPersonNum = currentTable.TABLES_NUM; //当前桌位就餐人数
+        }
+        //如果选择就餐人数的开关是打开的，那么就显示就餐人数
+        if (currentEatPersonNum == 0){
+            quorumShow = true;
+        }
+        
+    }else{
+        currentEatPersonNum = 'X'
+    }
 
-  currentTable = tableList[e.target.dataset.index] //当前桌位信息
-  //如果当前餐位人数等于0或者大于该餐桌容纳的数量，自动赋值
-  if (currentEatPersonNum == 0 || currentEatPersonNum > currentTable.TABLES_NUM) {
-    currentEatPersonNum = currentTable.TABLES_NUM; //当前桌位就餐人数
-  }
+  
+  
 
   shoppingCart = app.addTableInCart(currentTable, currentEatPersonNum)
   flushStroageData(that)
@@ -586,9 +608,9 @@ function addToCart2(that, e) {
   })
   closePop(that);
   currentGood = undefined
-    _last_type = "";
-    last_name = "";
-    last_price = "";
+    // _last_type = "";
+    // last_name = "";
+    // last_price = "";
   flushguadaiData()
 }
 
@@ -664,10 +686,15 @@ function backMainPage(that) {
   if (shoppingCart == undefined || shoppingCart.table == undefined || shoppingCart.table == '' || shoppingCart.table == '') {
     var pages = getCurrentPages()
     var currentPage = pages[pages.length - 2]
-      if (app.globalData.appSetting.CHECK_TDKT == 'true' && currentPage.route == 'pages/index/index' && currentPage.__data__.currentPage == '../founding/founding'){
-        wx.navigateBack({
-          delta: 1
-        })
+      if (app.globalData.appSetting.CHECK_TDKT == 'true'){
+          if (currentPage.route == 'pages/index/index' && currentPage.__data__.currentPage == '../founding/founding'){
+              wx.navigateBack({
+                  delta: 1
+              })
+          }else{
+              app.reLaunch('../index/index?page=indexPage')
+          }
+       
         return
     }    
     //  || !app.globalData.appSetting.foundingSwitch && currentPage.route == 'pages/index/index' && currentPage.__data__.currentPage == '../menu/menu'
