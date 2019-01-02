@@ -111,8 +111,8 @@ Page({
             if (app.globalData.appSetting.CHECK_TDDCSY == 'true') {
             app.redirectTo(`../checkOut/checkOut?shouldMoney=` + shoppingCart.totalMoney + '&ORDER_PK=' + res.data.data)
           } else {
-            // app.reLaunch(`../index/index?page=menu`);
-            app.jumpMenu()
+                app.reLaunch(`../index/index?page=indexPage`);
+            // app.jumpMenu()
           }
 
           wx.showToast({

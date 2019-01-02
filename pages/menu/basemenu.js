@@ -22,9 +22,15 @@ var clickcurrentCat = "";//当前点击的商品类别
 var lastTop = 0;
 var onerpx = 1;//1rpx对应多少px
 var goodsInfo = {};
+// var _last_type = "";
+// var last_name = "";
+var last_guige_price = 0;
+var last_kouwei_price = 0;
+var last_zuofa_price = 0;
 
 // 组件所在页面的生命周期函数
 function onLoad(that) {
+    onerpx = app.getSystemInfo().mob_onerpx
     that.setData({
         allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
         tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
@@ -473,7 +479,9 @@ function switchNav(that, e) {
  * 选择规格
  */
 function selectGuige(that, e) {
-
+    // _last_type = "";
+    // last_name = "";
+    // last_price = "";
   var data = greensList;
   currentGood = e.currentTarget.dataset.good;
   currentGood.LAST_PIRCE = currentGood.GOODS_TRUE_PRICE == undefined || currentGood.GOODS_TRUE_PRICE == "" ? currentGood.GOODS_PRICE : currentGood.GOODS_TRUE_PRICE;
@@ -487,46 +495,65 @@ function selectGuige(that, e) {
  */
 function selectGg(that, e) {
 
-  var _type = e.currentTarget.dataset.type;
-  var name = e.currentTarget.dataset.name;
-  var price = e.currentTarget.dataset.price;
-  var add = true; //是添加规格还是移除规格
-  if (_type != '' && _type != undefined) {
-    if (_type == 'guige') {
-      if (currentGood.guige == name) {
-        currentGood.guige = undefined
-        add = false
-      } else {
-        currentGood.guige = name
-      }
-    } else if (_type == 'kouwei') {
-      if (currentGood.kouwei == name) {
-        currentGood.kouwei = undefined
-        add = false
-      } else {
-        currentGood.kouwei = name
-      }
-    } else if (_type == 'zuofa') {
-      if (currentGood.zuofa == name) {
-        currentGood.zuofa = undefined
-        add = false
-      } else {
-        currentGood.zuofa = name
-      }
-    }
-
+    var _type = e.currentTarget.dataset.type;
+    var name = e.currentTarget.dataset.name;
+    var price = e.currentTarget.dataset.price;
     var opera = price.substring(0, 1);
     price = parseInt(parseFloat(price.substring(1, price.length)) * 100);
-    currentGood.LAST_PIRCE = parseInt(currentGood.LAST_PIRCE)
-    if (opera == "-" && add || opera == "+" && !add) {
-      currentGood.LAST_PIRCE -= price
-    } else {
-      currentGood.LAST_PIRCE += price
+   
+    if (opera == "-") {
+        price = -price
     }
+
+    var last_price = price;
+
+
+
+
+    //如果选的规格以前选过，减去上次选择的价格
+    if (currentGood.guige != undefined && _type == 'guige') {
+        last_price -= last_guige_price
+    } else if (currentGood.kouwei != undefined && _type == 'kouwei') {
+        last_price -= last_kouwei_price
+    } else if (currentGood.zuofa != undefined && _type == 'zuofa') {
+        last_price -= last_zuofa_price
+    }
+
+    if (_type != '' && _type != undefined) {
+        if (_type == 'guige') {
+            if (currentGood.guige != name) {
+                currentGood.guige = name
+                last_guige_price = price
+            }else{
+                last_price -= last_guige_price
+                currentGood.guige = undefined
+            }
+        } else if (_type == 'kouwei') {
+            if (currentGood.kouwei != name) {
+                currentGood.kouwei = name
+                last_kouwei_price = price
+            }else{
+                last_price -= last_kouwei_price
+                currentGood.kouwei = undefined
+            }
+        } else if (_type == 'zuofa') {
+            if (currentGood.zuofa != name) {
+                currentGood.zuofa = name
+                last_zuofa_price = price
+            } else {
+                last_price -= last_zuofa_price
+                currentGood.zuofa = undefined
+            }
+        }
+
+        currentGood.LAST_PIRCE = parseInt(currentGood.LAST_PIRCE) + last_price
+
+  
 
     that.setData({
       currentGood
     })
+
   }
 }
 /**
@@ -559,6 +586,9 @@ function addToCart2(that, e) {
   })
   closePop(that);
   currentGood = undefined
+    _last_type = "";
+    last_name = "";
+    last_price = "";
   flushguadaiData()
 }
 
@@ -691,7 +721,7 @@ function createSelectorQuery(that,e){
   //   currentCat: currentCat
   // })
 
-    if (!app.globalData.appSetting.CHECK_TDKT) {
+    if (app.globalData.appSetting.CHECK_TDKT == "false"){
         var query = wx.createSelectorQuery().in(that)
       } else {
         var query = wx.createSelectorQuery()
@@ -701,6 +731,7 @@ function createSelectorQuery(that,e){
       query.exec(function (res) {
         res[0].forEach(function (item) {
           if (item.dataset.id != currentCat && item.top < onerpx * 96 && item.bottom > onerpx * 96) {
+              console.info("换")
             currentCat = item.dataset.id
             that.setData({ currentCat })
             return
@@ -715,7 +746,7 @@ function createSelectorQuery(that,e){
 }
 
 function flushguadaiData(){
-    if (app.globalData.appSetting.CHECK_TDKT){
+    if (app.globalData.appSetting.CHECK_TDKT=="true"){
     app.flushOtherPage({ 'guadanshuju': app.getShoppingCart('all') })
   }
 }

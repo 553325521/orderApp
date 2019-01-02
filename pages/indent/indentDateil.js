@@ -25,17 +25,17 @@ Page({
     orderDetailMap:{},
     smallButton,
     sliderWidth,
-      foundingSwitch: app.globalData.appSetting.CHECK_TDKT,
+      
     currentOrderPk:""
   },
   onLoad: function (options) {
-      debugger
     wx.showNavigationBarLoading()
     var that = this;
     that.initParam()
     ORDER_PK = options.ORDER_PK
     that.setData({
-      currentOrderPk:ORDER_PK
+      currentOrderPk:ORDER_PK,
+        foundingSwitch: app.globalData.appSetting.CHECK_TDKT,
     })
     orderType = options.type
     if (ORDER_PK == undefined || ORDER_PK == '') {

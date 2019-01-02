@@ -135,7 +135,7 @@
     <scroll-view style="height: {{scrollHeight}}px;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'a' + clickcurrentCat}}" bindscroll='doScroll' scroll-with-animation="true" enable-back-to-top>
      <block wx:if='{{seachGoods == false}}'>
         <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
-                <view id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}'>
+                <view id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}' class='ball'>
             
                     <view class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
                     <view class='greens-list'>
