@@ -182,7 +182,7 @@ function loadTables(that) {
       }
     },
     fail: function(error) {
-      app.hintBox('查询失败', 'none')
+      app.hintBox('查询桌位失败', 'none')
     }
   });
 }

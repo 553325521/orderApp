@@ -23,10 +23,23 @@ App({
             // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
             options.query.appid = 'wx3326999f88e7077a';
         }
+        this.globalData.shopid = options.query.shopid
+        if (that.globalData.shopid == undefined){
+            that.globalData.shopid = wx.getStorageInfoSync('shopid');
+        }else{
+            wx.setStorageSync("shopid", this.globalData.shopid);
+        }
+
+        that.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0'
+        
+        if (that.globalData.shopid == undefined){
+            return;
+        }
+
         // this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
-        this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
+        // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
         //this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d';
-        this.globalData.appid = options.query.appid;
+        that.globalData.appid = options.query.appid;
         that.wxLogin();
         wx.setStorageSync("Address", "not");
     },
@@ -577,15 +590,14 @@ App({
             },
             success: function (res) {
                 if (res.data.code == '0000') {
-                    //   that.globalData.appSetting = res.data.data
-                    //   wx.setStorage({
-                    //       key: 'appSetting' + that.globalData.shopid,
-                    //       data: res.data.data
-                    //   })
-                    //   if(!initSuccess){
                     that.globalData.appSetting = res.data.data
+                    if(that.globalData.appSetting.CHECK_DYSYT == 'false'){
+                        that.globalData.tabBar.list.splice(4);
+                    }
+                    if (that.globalData.appSetting.CHECK_WMDC == 'false'){
+                        that.globalData.tabBar.list.splice(3);
+                    }
                     that.showIndexPage()
-                    //   }
                     initSuccess = true;
 
                 } else {
@@ -1213,11 +1225,9 @@ App({
                 page = '../founding/founding'
             } else {
                 page = '../menu/menu'
-            }
-
-            
+            }   
         }
-
+        prePage.switchPage({ detail: { page: page}})
         if (prePage.route == 'pages/index/index') {
             if (flush != undefined) {
                 var map = {}
@@ -1230,5 +1240,26 @@ App({
             delta: pages.length - 1
         })
        
+    },
+    /**
+     * 刷新主页数据，不跳转
+     */
+    flushIndexData:function(){
+        var that = this;
+        var pages = getCurrentPages()    //获取加载的页面
+        var prePage = pages[0];
+        var page=''
+
+        if (that.globalData.appSetting.CHECK_TDKT == "true") {
+            page = '../founding/founding'
+        } else {
+            page = '../menu/menu'
+        }
+        
+        prePage.switchPage({ detail: { page: page } })
+        if (prePage.route == 'pages/index/index') {
+                prePage.flushComponentData(page, {})
+        }
+
     }
 })

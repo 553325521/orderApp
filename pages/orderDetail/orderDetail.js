@@ -109,10 +109,14 @@ Page({
 
           //验证是否开启堂点带出收银
             if (app.globalData.appSetting.CHECK_TDDCSY == 'true') {
-            app.redirectTo(`../checkOut/checkOut?shouldMoney=` + shoppingCart.totalMoney + '&ORDER_PK=' + res.data.data)
+                //刷新主页数据
+                app.flushIndexData()
+                //跳转到支付页面
+                app.redirectTo(`../checkOut/checkOut?shouldMoney=` + shoppingCart.totalMoney + '&ORDER_PK=' + res.data.data)
           } else {
-                app.reLaunch(`../index/index?page=indexPage`);
+                // app.reLaunch(`../index/index?page=indexPage`);
             // app.jumpMenu()
+                app.noFlushBackIndexPage(true)
           }
 
           wx.showToast({

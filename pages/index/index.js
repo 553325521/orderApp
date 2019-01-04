@@ -178,6 +178,7 @@ Page({
         if (currentPage == undefined) {
             return
         }
+        
         foundingSwitch = app.globalData.appSetting.CHECK_TDKT;
         indexPage = foundingSwitch == "true" ? '../founding/founding' : '../menu/menu';
         if (indexPage == '../menu/menu') {

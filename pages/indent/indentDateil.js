@@ -45,11 +45,11 @@ Page({
         shoppingCart = app.getShoppingCart()
       }
       orderType = 0
-    } else if (app.getShoppingCart() != undefined && app.getShoppingCart().totalNumber > 0){
+    } else if (app.getShoppingCart() != undefined && app.getShoppingCart().totalNumber > 0 && app.getShoppingCart().table !=undefined && app.getShoppingCart().table.ORDER_PK != undefined && app.getShoppingCart().table.ORDER_PK == ORDER_PK){
       shoppingCart = app.getShoppingCart()
       orderType = 0
     }else{
-      jiacai = false;//是加菜状态
+      jiacai = false;//不是加菜状态
       shoppingCart = {
         totalMoney: 0,
         totalNumber: 0
@@ -197,10 +197,17 @@ mapToJson: function (map) {
 
     app.createShoppingCart({
       TABLES_PK: that.data.orderDetailMap.TABLES_PK,
-      TABLE_NAME: that.data.orderDetailMap.TABLES_NAME
+      TABLE_NAME: that.data.orderDetailMap.TABLES_NAME,
+        ORDER_PK: ORDER_PK
       }, 0)
 
-    app.jumpMenu()
+    // app.jumpMenu()
+    if(app.globalData.appSetting.CHECK_TDKT == 'true'){
+        app.jumpMenu()
+    }else{
+        app.noFlushBackIndexPage(false, {}, '../menu/menu')
+    }
+     
   },
   //退菜
   tuicai: function (e) {
@@ -429,8 +436,12 @@ mapToJson: function (map) {
   flushShoppingCart:function(){
     var that = this
     shoppingCart = app.getShoppingCart()
+      if (app.getShoppingCart() == undefined || app.getShoppingCart().totalNumber == 0){
+        jiacai = false;
+    }
     that.setData({
-      shoppingCart
+      shoppingCart,
+        jiacai
     })
   }
 })
