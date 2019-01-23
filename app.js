@@ -23,18 +23,22 @@ App({
             // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
             options.query.appid = 'wx3326999f88e7077a';
         }
-        this.globalData.shopid = options.query.shopid
-        if (that.globalData.shopid == undefined){
-            that.globalData.shopid = wx.getStorageInfoSync('shopid');
-        }else{
-            wx.setStorageSync("shopid", this.globalData.shopid);
-        }
 
-        that.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0'
+
+        // this.globalData.shopid = options.query.shopid
+        // if (that.globalData.shopid == undefined){
+        //     that.globalData.shopid = wx.getStorageSync('shopid');
+        // }else{
+        //     wx.setStorageSync("shopid", this.globalData.shopid);
+        // }
+
+        // // that.globalData.shopid = wx.getStorageSync("shopid");
+        // //  that.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0'
+        // // that.globalData.shopid = '6e7c30e587904c24915c561836b3092e'
         
-        if (that.globalData.shopid == undefined){
-            return;
-        }
+        // if (that.globalData.shopid == undefined){
+        //     return;
+        // }
 
         // this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
         // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
@@ -154,6 +158,8 @@ App({
             success: function (res) {
                 that.getUserAuth(res.code);
                 // that.pushSession();
+                //开始获取自己的店铺
+                // that.getShopId();
             },
             fail: function (res) {
                 if (wx.hideLoading) {
@@ -220,10 +226,12 @@ App({
                 wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
                 //连接websocket
                 that.connectWebsocket();
+
+                //获取商铺ID
+                that.getShopId();
                 //授权成功
 
-                //获取全局设置
-                that.getAppSetting();
+                
             },
             fail: function (error) {
                 wx.showToast({
@@ -278,7 +286,41 @@ App({
             that.getPhoneSysInfo();
         }
     },
+    //获取用户所在商铺ID
+    getShopId:function(){
+        var that = this;
+        // this.globalData.shopid = options.query.shopid
+        // that.globalData.shopid = wx.getStorageSync('shopid');
+        // if (that.globalData.shopid == undefined || that.globalData.shopid == "") {
+            //获取店铺ID
+            that.sendRequest({
+                url:'getGZHShopIdByXCX',
+                data:{
+                    openid: wx.getStorageSync('openid'),
+                    unionid: wx.getStorageSync('unionId')
+                },
+                success: function (res) {
+                    if(res.data.code == '0000'){
+                        that.globalData.shopid = res.data.data;
+                        wx.setStorageSync("shopid", that.globalData.shopid);
+                        //获取全局设置
+                        that.getAppSetting();
+                    }else{
+                        app.hintBox(res.data.data, 'none')
+                    }
+                }
+            })
+        // }
 
+        // that.globalData.shopid = wx.getStorageSync("shopid");
+        //  that.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0'
+        // that.globalData.shopid = '6e7c30e587904c24915c561836b3092e'
+
+        // if (that.globalData.shopid != undefined) {
+            //获取全局设置
+            // that.getAppSetting();
+        // }
+    },
     /**
        * 得到授权获取用户信息
        * params : code-临时code, appid-对应appid

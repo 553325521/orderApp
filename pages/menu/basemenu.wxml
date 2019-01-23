@@ -150,7 +150,7 @@
     <block wx:else>
         <view style='display:flex;flex-wrap:wrap;padding:10rpx'>
             <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
-                <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index' wx:key="keys" wx:if='{{math.goodsContain(every.GOODS_NAME,seachGoods)}}' >  
+                <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index' wx:key="keys" wx:if='{{math.goodsContain(every,seachGoods)}}' >  
                     <include wx:if='{{tdytmb}}' src="menupic.wxml"/>
                     <include wx:if='{{!tdytmb}}' src="menunopic.wxml"/>
                 </block> 
@@ -160,3 +160,5 @@
     <view style="height:50rpx;"></view>
     </scroll-view>
 </view>
+
+<view style='position:fixed;top:0;z-index:0;left:180rpx;height:100vh;width:1px;background-color:#EDECEC;'></view>
