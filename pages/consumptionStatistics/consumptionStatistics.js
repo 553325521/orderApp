@@ -10,20 +10,70 @@ Page({
     wayArr: ['微信', '支付宝', '现金', 'POS刷卡'],
     wayIndex: 0,
     orderArray: {},
-    pageShow:false,
-    isExistData:true
+    pageShow: false,
+    isExistData: true,
+    selectShow: false, //控制下拉列表的显示隐藏，false隐藏、true显示
+    selectData: ['15:10', '15:15', '15:20'], //下拉列表的数据
+    index: 0, //选择的下拉列表下标
+    font_color: "select-before-color",
+    select_img_name: "select_down",
+    selectShow: 0
   },
-  onLoad: function (options) {
-  
+
+  //关闭筛选
+  closeSelectArea:function(){
+    var that = this;
+    that.setData({
+      font_color: "select-before-color",
+      select_img_name: "select_down",
+      selectShow: 0
+    })
   },
-  onReady: function () {
-  
+  //点击筛选
+  openSelect: function() {
+    var that = this;
+    var current_font_color = that.data.font_color;
+    if (current_font_color == 'select-before-color') {
+      that.setData({
+        font_color: "select-after-color",
+        select_img_name: "select_down_red",
+        selectShow: 100
+      })
+    } else {
+      that.setData({
+        font_color: "select-before-color",
+        select_img_name: "select_down",
+        selectShow: 0
+      })
+    }
   },
-  onShow: function () {
+  // 点击下拉显示框
+  selectTap() {
+    this.setData({
+      selectShow: !this.data.selectShow
+    });
+  },
+  // 点击下拉列表
+  optionTap(e) {
+    let Index = e.currentTarget.dataset.index; //获取点击的下拉列表的下标
+    this.setData({
+      index: Index,
+      selectShow: !this.data.selectShow
+    });
+  },
+
+
+  onLoad: function(options) {
+
+  },
+  onReady: function() {
+
+  },
+  onShow: function() {
     this.loadShopConsumeData();
   },
   //切换商铺事件
-  bindShopChange: function (e) {
+  bindShopChange: function(e) {
     this.setData({
       pageShow: false,
       shopIndex: e.detail.value
@@ -31,15 +81,15 @@ Page({
     this.loadShopConsumeData();
   },
   //切换日期事件
-  bindDateChange: function (e) {
+  bindDateChange: function(e) {
     this.setData({
-     pageShow: false,
+      pageShow: false,
       dateIndex: e.detail.value
     });
     this.loadShopConsumeData();
   },
   //切换支付方式事件
-  bindPayWayChange:function(e){
+  bindPayWayChange: function(e) {
     this.setData({
       pageShow: false,
       wayIndex: e.detail.value
@@ -81,7 +131,7 @@ Page({
   //   })
   // },
   //根据选择店铺、时间、支付方式加载消费统计
-  loadShopConsumeData: function () {
+  loadShopConsumeData: function() {
     var that = this;
     //当前选择的时间
     var selectTime = that.data.dateArr[that.data.dateIndex];
@@ -100,7 +150,7 @@ Page({
       header: {
         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
       },
-      success: function (res) {
+      success: function(res) {
         if (res.data.code == '0000') {
           that.dealOrderDate(res.data.data);
           that.data.orderArray = that.dealOrderDate(res.data.data);
@@ -108,31 +158,72 @@ Page({
             pageShow: true,
             orderArray: that.data.orderArray
           });
-          if(that.data.orderArray.length!=0){
+          if (that.data.orderArray.length != 0) {
             that.setData({
               isExistData: true
             })
-          }else{
+          } else {
+            var initDataArray = [];
+            var orderBigList = [];
+            initDataArray[0] = {
+              "SF": "--:--",
+              "ORDER_POSITION": "-",
+              "TOTAL_FS": "0",
+              "TOTAL_MONEY": "0",
+              "payWay": "-"
+            };
+            var orderMap = new Map();
+            orderMap.set("data", initDataArray);
+            orderMap.set("keyName", "xxxx-xx-xx");
+            orderMap.set("totalMoney", 0);
+            orderMap.set("timeWidth", "140rpx");
+            orderMap.set("seatWidth", "100rpx");
+            orderMap.set("partWidth", "140rpx");
+            orderMap.set("moneyWidth", "120rpx");
+            orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
+            that.data.orderArray = orderBigList;
             that.setData({
-              isExistData: false
+              pageShow: true,
+              orderArray: that.data.orderArray
+            });
+            that.setData({
+              isExistData: true
             })
           }
-        }else{
-            that.setData({
-              isExistData: false
-            })
+        } else {
+          var initDataArray = [];
+          var orderBigList = [];
+          initDataArray[0] = {
+            "SF": "--:--",
+            "ORDER_POSITION": "-",
+            "TOTAL_FS": "0",
+            "TOTAL_MONEY": "0",
+            "payWay": "-"
+          };
+          var orderMap = new Map();
+          orderMap.set("data", initDataArray);
+          orderMap.set("keyName", "xxxx-xx-xx");
+          orderMap.set("totalMoney", 0);
+          orderMap.set("timeWidth", "140rpx");
+          orderMap.set("seatWidth", "100rpx");
+          orderMap.set("partWidth", "140rpx");
+          orderMap.set("moneyWidth", "180rpx");
+          orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
+          that.setData({
+            isExistData: true
+          })
         }
-       
+
       },
-      fail: function (error) {
+      fail: function(error) {
         wx.showToast({
           title: '加载订单数据失败',
         })
       }
     })
-    },
+  },
   //分组订单数据
-  dealOrderDate: function (data) {
+  dealOrderDate: function(data) {
     var that = this;
     var dateStr = "";
     var allMoney = 0;
@@ -152,9 +243,9 @@ Page({
               data[j].payWay = '微信';
             } else if (data[j].ORDER_PAY_WAY == 2) {
               data[j].payWay = 'POS';
-            } else if (data[j].ORDER_PAY_WAY == 1){
+            } else if (data[j].ORDER_PAY_WAY == 1) {
               data[j].payWay = '支付宝';
-            }else {
+            } else {
               data[j].payWay = '现金';
             }
             orderList.push(data[j]);
@@ -174,7 +265,7 @@ Page({
     }
     return orderBigList;
   },
-  strMapToObj: function (strMap) {
+  strMapToObj: function(strMap) {
     let obj = Object.create(null);
     for (let [k, v] of strMap) {
       obj[k] = v;
@@ -182,9 +273,9 @@ Page({
     return obj;
   },
   /**
-  *map转换为json
-  */
-  mapToJson: function (map) {
+   *map转换为json
+   */
+  mapToJson: function(map) {
     return JSON.stringify(this.strMapToObj(map));
   }
 })

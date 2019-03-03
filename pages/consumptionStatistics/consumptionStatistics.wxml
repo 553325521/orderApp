@@ -1,7 +1,7 @@
 <!--pages/consumptionStatistics/consumptionStatistics.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
-<view class='type-parameter dp-flex font-28 c6 bg-fff'>
-  <!-- <view class='flex-1 dp-flex'>
+<!--<view class='type-parameter dp-flex font-28 c6 bg-fff'>
+   <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
       <view class="picker">
         {{shopArr[shopIndex]}}
@@ -9,38 +9,54 @@
     </picker>
     <image src='../../images/icon/down-icon.png'></image>
   </view> -->
-  <view class='flex-1 dp-flex'>
+
+   <!--<view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
       <view class="picker">
         {{dateArr[dateIndex]}}
       </view>
     </picker>
     <image src='../../images/icon/down-icon.png'></image>
+    <view class='select_box'>
+      <view class='select' catchtap='selectTap'>
+        <text class='select_text'>{{selectData[index]}}</text>
+        <image class='select_img {{selectShow&&"select_img_rotate"}}' src='/images/icon/select_down.png' background-size="contain"></image>
+      </view>
+    </view>
   </view>
+    <view class='option_box' style='height:{{selectShow?(selectData.length>5?325:selectData.length*50):0}}rpx;'>
+        <text class='option' wx:for='{{selectData}}' wx:key='this' data-index='{{index}}' catchtap='optionTap'>{{item}}</text>
+      </view>
   <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{wayIndex}}" range="{{wayArr}}" bindchange="bindPayWayChange">
+    <!-- <picker class='w100 tc' value="{{wayIndex}}" range="{{wayArr}}" bindchange="bindPayWayChange">
       <view class="picker">
         {{wayArr[wayIndex]}}
       </view>
     </picker>
-    <image src='../../images/icon/down-icon.png'></image>
+    <image src='../../images/icon/down-icon.png'></image> 
   </view>
-</view>
+</view>-->
+ <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
+       <view class='select-area' catchtap="aaa()"></view>
+ </view>
 <view class='indent-list font-28 c6'>
   <view class='head dp-flex flex-jc-sb'>
     <view>交易日期</view>
     <view>应付金额</view>
     <view>优惠</view>
     <view>实付金额</view>
+    <view class='{{font_color}}' catchtap="openSelect" style='width:60rpx'>
+    <!-- <text  catchtap="openSelect">筛选</text> -->
+    <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' background-size="contain"></image></view>
   </view>
-  <view class='indent-item' wx:for="{{orderArray}}" wx:key="keys"  wx:for-item="itemName" style='display:{{pageShow?"block":"none"}}'>
+  <view class='indent-item' wx:for="{{orderArray}}" wx:key="keys" wx:for-item="itemName" style='display:{{pageShow?"block":"none"}}'>
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
       <text>{{itemName.keyName}}</text>
       <text>总计:{{math.toFix(itemName.totalMoney)}}元</text>
     </view>
     <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
       <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
-        <view class='label pa'>*</view>
+        <!-- <view class='label pa'>*</view> -->
         <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>
         <view class='seat' style="width:{{itemName.seatWidth}}">{{item.ORDER_POSITION}}</view>
         <view class='part' style="width:{{itemName.partWidth}}">{{item.TOTAL_FS}}份 </view>
@@ -48,13 +64,12 @@
         <view class='pay-way'>{{item.payWay}}</view>
       </view>
     </view>
-    </view>
-     <view class="weui-loadmore" style='display:{{pageShow?"none":"block"}}'>
-            <view class="weui-loading"></view>
-            <view class="weui-loadmore__tips">正在加载</view>
-      </view>
-     <view class="weui-loadmore weui-loadmore_line"  style='display:{{isExistData?"none":"block"}}'>
-            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
-    </view>
+  </view>
+  <view class="weui-loadmore" style='display:{{pageShow?"none":"block"}}'>
+    <view class="weui-loading"></view>
+    <view class="weui-loadmore__tips">正在加载</view>
+  </view>
+  <view class="weui-loadmore weui-loadmore_line" style='display:{{isExistData?"none":"block"}}'>
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+  </view>
 </view>
-
