@@ -5,7 +5,7 @@ Page({
     shopArr: [],
     shopIndexArray: [],
     shopIndex: 0,
-    dateArr: ['今天', '昨天', '本周', '本月'],
+    dateArr: ['今天', '昨天', '本周', '本月','自定义'],
     dateIndex: 0,
     wayArr: ['微信', '支付宝', '现金', 'POS刷卡'],
     wayIndex: 0,
@@ -17,9 +17,39 @@ Page({
     index: 0, //选择的下拉列表下标
     font_color: "select-before-color",
     select_img_name: "select_down",
-    selectShow: 0
+    selectShow: 0,
+    select_id:-1,
+    start_date:'2019-01-01',
+    end_date:'2019-01-01',
+    dateAreaIsShow:false
   },
 
+  selectBtn:function(e){
+    var id = e.currentTarget.dataset.id;
+    var that = this;
+    if(id == 4){
+      that.setData({
+        dateAreaIsShow: true
+      })
+    }else{
+      that.setData({
+        dateAreaIsShow: false
+      })
+    }
+    that.setData({
+      select_id:id
+    })
+  },
+  bindStartDateChange: function (e) {
+    this.setData({
+      start_date: e.detail.value
+    })
+  },
+  bindEndDateChange: function (e) {
+    this.setData({
+      end_date: e.detail.value
+    })
+  },
   //关闭筛选
   closeSelectArea:function(){
     var that = this;

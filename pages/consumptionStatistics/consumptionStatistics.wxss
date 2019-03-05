@@ -100,3 +100,43 @@
 .select-area{
   width:100%;height:700rpx;background:#fff
 }
+.select-content-padding{
+  margin-left:10%;
+  padding-top:40rpx;
+  color: #666
+}
+.select-btn-before{
+    margin: 8px 10px 12px 0;
+    border-radius:25px;
+    padding: 3px 9px;
+    font-size:12px;
+    float:left;
+}
+.select-area-date{
+   margin: 8px 10px 12px 0;
+    border-radius:25px;
+    padding: 3px 9px;
+    font-size:12px;
+    float:left;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+.select-btn-bg-white{
+  background: white;
+  border: 1px solid rgba(0, 0, 0, .2);
+  color:#666;
+}
+.select-btn-bg-pink{
+  background: #EF9BA0;
+  border: 1px solid rgba(0, 0, 0,0);
+  color:white;
+}
+.select-date-separator{
+  float:left;
+  margin-top:8px;
+  margin-right:10px;
+  color:#666
+}
+.select-date-img{
+  float:left;
+margin-top:8px;
+}

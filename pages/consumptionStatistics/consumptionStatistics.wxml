@@ -10,7 +10,7 @@
     <image src='../../images/icon/down-icon.png'></image>
   </view> -->
 
-   <!--<view class='flex-1 dp-flex'>
+<!--<view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
       <view class="picker">
         {{dateArr[dateIndex]}}
@@ -36,9 +36,35 @@
     <image src='../../images/icon/down-icon.png'></image> 
   </view>
 </view>-->
- <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
-       <view class='select-area' catchtap="aaa()"></view>
- </view>
+<view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
+  <view class='select-area' catchtap='aaa()'>
+    <view class="page__bd page__bd_spacing select-content-padding">
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <view class="placeholder" style='font-size:18px;color:#666'>时间</view>
+        </view>
+      </view>
+      <view class="weui-flex">
+        <view class="weui-flex__item" wx:for='{{dateArr}}' wx:key='this'>
+          <view class="placeholder  select-btn-before {{select_id == index ? 'select-btn-bg-pink':'select-btn-bg-white' }} " data-id='{{index}}' catchtap='selectBtn'>{{item}}</view>
+        </view>
+      </view>
+      <view class="weui-flex" style='display:{{dateAreaIsShow?"flex":"none"}}'>
+        <view class="weui-flex__item">
+          <picker mode="date"  value="{{start_date}}" class='select-area-date' bindchange="bindStartDateChange">
+            <view class="weui-input" style='float:left'>{{start_date}}</view>
+             <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker><text class='select-date-separator'>—</text>
+          <picker mode="date"  value="{{end_date}}" class='select-area-date' bindchange="bindEndDateChange">
+            <view class="weui-input" style='float:left'>{{end_date}}</view>
+            <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker>
+        </view>
+        
+      </view>
+    </view>
+  </view>
+</view>
 <view class='indent-list font-28 c6'>
   <view class='head dp-flex flex-jc-sb'>
     <view>交易日期</view>
@@ -46,8 +72,9 @@
     <view>优惠</view>
     <view>实付金额</view>
     <view class='{{font_color}}' catchtap="openSelect" style='width:60rpx'>
-    <!-- <text  catchtap="openSelect">筛选</text> -->
-    <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' background-size="contain"></image></view>
+      <!-- <text  catchtap="openSelect">筛选</text> -->
+      <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' background-size="contain"></image>
+    </view>
   </view>
   <view class='indent-item' wx:for="{{orderArray}}" wx:key="keys" wx:for-item="itemName" style='display:{{pageShow?"block":"none"}}'>
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
