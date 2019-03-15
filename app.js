@@ -1,6 +1,6 @@
 //app.js
 var util = require('utils/util.js');
-var basePath = 'http://m.ddera.com/dcxt/'
+var basePath = 'http://m.ddera.com/'
 var initSuccess = false;
 
 App({
@@ -12,17 +12,17 @@ App({
     onLaunch: function (options) {
         var that = this;
         that.showLoading();
-        if (options.query.appid == undefined) {
-            // wx.showModal({
-            //   title: '提示',
-            //   content: '页面跳转错误，请勿进行操作！',
-            //   showCancel: false,
-            //   confirmText: "知道了",
-            //   confirmColor: "#ffbe00",
-            // })
-            // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
-            options.query.appid = 'wx3326999f88e7077a';
-        }
+        // if (options.query.appid == undefined) {
+        //     // wx.showModal({
+        //     //   title: '提示',
+        //     //   content: '页面跳转错误，请勿进行操作！',
+        //     //   showCancel: false,
+        //     //   confirmText: "知道了",
+        //     //   confirmColor: "#ffbe00",
+        //     // })
+        //     // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
+        //     options.query.appid = 'wx3326999f88e7077a';
+        // }
 
 
         // this.globalData.shopid = options.query.shopid
@@ -42,8 +42,8 @@ App({
 
         // this.globalData.shopid = '6e7c30e587904c24915c561836b3092e';
         // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
-        //this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d';
-        that.globalData.appid = options.query.appid;
+        // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
+        that.globalData.appid = 'wx76adf64995670e71';
         that.wxLogin();
         wx.setStorageSync("Address", "not");
     },
@@ -51,7 +51,7 @@ App({
     connectWebsocket: function () {
         var that = this;
         var task = wx.connectSocket({
-            url: 'ws://m.ddera.com/dcxt/json/webSocket.json',
+            url: 'ws://m.ddera.com/json/webSocket.json',
             data: {
                 userid: "123455"
             },
@@ -172,6 +172,7 @@ App({
                     confirmText: "知道了",
                     confirmColor: "#ffbe00",
                 })
+                console.info(res)
             }
         })
     },
@@ -210,7 +211,7 @@ App({
             method: "post",
             data: {
                 code: code,
-                appid: this.globalData.appid
+                appid: that.globalData.appid
             },
             header: {
                 'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
@@ -290,7 +291,6 @@ App({
     getShopId:function(){
         var that = this;
         // this.globalData.shopid = options.query.shopid
-        // that.globalData.shopid = wx.getStorageSync('shopid');
         // if (that.globalData.shopid == undefined || that.globalData.shopid == "") {
             //获取店铺ID
             that.sendRequest({
@@ -306,7 +306,13 @@ App({
                         //获取全局设置
                         that.getAppSetting();
                     }else{
-                        app.hintBox(res.data.data, 'none')
+                        that.globalData.shopid = wx.getStorageSync('shopid');
+                        if (that.globalData.shopid == undefined || that.globalData.shopid == ""){
+                            that.hintBox(res.data.data, 'none')
+                        }else{
+                            that.getAppSetting();
+                        }
+                       
                     }
                 }
             })
@@ -695,6 +701,7 @@ App({
      * 添加商品到购物车（本地版）
      */
     addShoppingCart: function (good) {
+        debugger
         var that = this
         //从购物车获取数据
         var shoppingCart = wx.getStorageSync('shopping_cart')
@@ -741,7 +748,8 @@ App({
                         GOODS_DW: good.GOODS_DW,
                         GOODS_TYPE: good.GOODS_TYPE,
                         GTYPE_NAME: good.GTYPE_NAME,
-                        GTYPE_FK: good.GTYPE_FK
+                        GTYPE_FK: good.GTYPE_FK,
+                        GOODS_PRINT_LABEL: good.GOODS_PRINT_LABEL
                     })
                     wx.setStorageSync('shopping_cart', shoppingCart)
                 }
@@ -847,7 +855,8 @@ App({
                         GOODS_DW: good.GOODS_DW,
                         GOODS_TYPE: good.GOODS_TYPE,
                         GTYPE_NAME: good.GTYPE_NAME,
-                        GTYPE_FK: good.GTYPE_FK
+                        GTYPE_FK: good.GTYPE_FK,
+                        GOODS_PRINT_LABEL: good.GOODS_PRINT_LABEL
                     })
                     wx.setStorageSync('shopping_cart', shoppingCart)
                 }
@@ -869,7 +878,8 @@ App({
                             GOODS_DW: good.GOODS_DW,
                             GOODS_TYPE: good.GOODS_TYPE,
                             GTYPE_NAME: good.GTYPE_NAME,
-                            GTYPE_FK: good.GTYPE_FK
+                            GTYPE_FK: good.GTYPE_FK,
+                            GOODS_PRINT_LABEL: good.GOODS_PRINT_LABEL
                         }
                     ]
                 }

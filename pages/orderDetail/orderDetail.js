@@ -103,9 +103,12 @@ Page({
         ORDER_DIVISION:0//客户端类型 0店内
       },
       success: function (res) {
-        if (res.data.code == '0000') {
+          if (res.data.code == '0000' || res.data.code == '5555') {
           //移除购物车
           app.removeShoppingCart()
+              if (res.data.code == '5555'){
+                  app.hintBox(res.data.data, 'none')
+              }
 
           //验证是否开启堂点带出收银
             if (app.globalData.appSetting.CHECK_TDDCSY == 'true') {

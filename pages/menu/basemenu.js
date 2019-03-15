@@ -281,7 +281,8 @@ function addQity(that, e) {
     GOODS_DW: clickgood.GOODS_DW,
     GOODS_TYPE: clickgood.GOODS_TYPE,
     GTYPE_NAME: clickgood.GTYPE_NAME,
-    GTYPE_FK: clickgood.GTYPE_PK
+    GTYPE_FK: clickgood.GTYPE_PK,
+      GOODS_PRINT_LABEL: clickgood.GOODS_PRINT_LABEL
   }
 
   if (type == "+") {

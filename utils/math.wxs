@@ -154,6 +154,7 @@ var filters = {
     if(str == undefined || str == {}){
         return false;
     }
+      str2 = str2.toLowerCase()
       if (str.GOODS_NAME.indexOf(str2) != -1 || str.GOODS_CODE.indexOf(str2) != -1){
       return true;
     }

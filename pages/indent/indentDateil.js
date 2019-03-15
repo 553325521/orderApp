@@ -349,7 +349,7 @@ mapToJson: function (map) {
           if (opera == '1') {
             //补单，打印机操作
             app.sendRequest({
-                url:'Print_insert_doPrint',
+                url:'Print_insert_BD',
                 data:{
                     ORDER_PK: ORDER_PK,
                     FK_SHOP:app.globalData.shopid
