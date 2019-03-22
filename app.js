@@ -700,8 +700,7 @@ App({
     /**
      * 添加商品到购物车（本地版）
      */
-    addShoppingCart: function (good) {
-        debugger
+    addShoppingCart: function (good) {  
         var that = this
         //从购物车获取数据
         var shoppingCart = wx.getStorageSync('shopping_cart')

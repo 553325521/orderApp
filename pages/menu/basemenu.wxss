@@ -46,7 +46,8 @@
 .search-box .ss-icon{
   width: 28rpx;
   height: 32rpx;
-  top: 50%;left: 28rpx;
+  top: 52%;
+  left: 28rpx;
   z-index: 30
 }
 
@@ -156,7 +157,7 @@
 .greens-item .img{
   width: 168rpx;
   height: 116rpx;
-  margin-right: 28rpx
+  margin-right: 28rpx;
 }
 .info{
   flex: 1;

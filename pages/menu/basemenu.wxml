@@ -18,7 +18,8 @@
 <!-- 搜索框  -->
 <view class='search-box' id='search-box'>
   <image class='ss-icon pa tf-y50' src='../../images/icon/ss.png'></image>
-  <input class='box-s bg-fff font-26' type='text' bindinput='searchGoods' placeholder='请输入商品名称'></input>
+  <input class='box-s bg-fff font-26' type='text' value="{{seachGoods === false ? '':seachGoods}}" bindinput='searchGoods' placeholder='请输入商品名称'></input>
+  <image wx:if='{{seachGoods}}' bindtap='clearSearchContent' class='pa tf-y50' style="width:28rpx;height:32rpx;top:52%;z-index:30;right:20px;" src='../../images/icon/ss.png'></image>
 </view>
 <!-- 购物车  -->
 <view class='cat' bindtap="{{shoppingCart.totalNumber>0?'entryOrders':''}}">

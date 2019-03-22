@@ -199,7 +199,7 @@ function getGoodsInfo(that){
     that.setData({
       navList,
       greensList,
-      currentCat: navList[0].GTYPE_PK
+    currentCat: navList[0] != null ? navList[0].GTYPE_PK : null,
     })
 console.info("缓存取的数据")
     
@@ -240,11 +240,12 @@ function loadGoodsInfo(that) {
         greensList = res.data.data.greensList;
         navList = res.data.data.navList;
         
+        
         if (goodsInfo == undefined){
           that.setData({
             navList,
             greensList,
-            currentCat: navList[0].GTYPE_PK,
+              currentCat: navList[0] != null ? navList[0].GTYPE_PK : null,
           })
           wx.hideNavigationBarLoading()
         }
@@ -277,7 +278,7 @@ function addQity(that, e) {
   var good = {
     GOODS_PK: clickgood.GOODS_PK,
     GOODS_NAME: clickgood.GOODS_NAME,
-    GOODS_PRICE: clickgood.GOODS_TRUE_PRICE == undefined ? clickgood.GOODS_PRICE : clickgood.GOODS_TRUE_PRICE,
+      GOODS_PRICE: clickgood.GOODS_TRUE_PRICE == undefined || clickgood.GOODS_TRUE_PRICE == '' ? clickgood.GOODS_PRICE : clickgood.GOODS_TRUE_PRICE,
     GOODS_DW: clickgood.GOODS_DW,
     GOODS_TYPE: clickgood.GOODS_TYPE,
     GTYPE_NAME: clickgood.GTYPE_NAME,
@@ -793,34 +794,45 @@ function searchGoods(that, e){
   })
 }
 
+/**
+ * 清空搜索条件
+ */
+function clearSearchContent (that) {
+    that.setData({
+        seachGoods: false
+    }) 
+}
+
 
 module.exports = {
-  operaGoodsNumber: operaGoodsNumber,
-  setOptions: setOptions,
-  addToCart2: addToCart2,
-  selectGg: selectGg,
-  selectGuige,
-  switchNav,
-  doScroll,
-  checkEntryOrders,
-  reserveQuorum,
-  reserveConfirm,
-  chosen,
-  closePop,
-  removeShoppingCart,
-  emptyCat,
-  vanish,
-  getOrdersList,
-  entryOrders,
-  addQity,
-  loadGoodsInfo,
-  loadTables,
-  flushShoppingCart: flushShoppingCart,
-  flushStroageData: flushStroageData,
-  pageInit,
-  onLoad,
-  alterCount,
-  onShow,
-  backMainPage,
-  searchGoods
+    operaGoodsNumber: operaGoodsNumber,
+    setOptions: setOptions,
+    addToCart2: addToCart2,
+    selectGg: selectGg,
+    selectGuige,
+    switchNav,
+    doScroll,
+    checkEntryOrders,
+    reserveQuorum,
+    reserveConfirm,
+    chosen,
+    closePop,
+    removeShoppingCart,
+    emptyCat,
+    vanish,
+    getOrdersList,
+    entryOrders,
+    addQity,
+    loadGoodsInfo,
+    loadTables,
+    flushShoppingCart: flushShoppingCart,
+    flushStroageData: flushStroageData,
+    pageInit,
+    onLoad,
+    alterCount,
+    onShow,
+    backMainPage,
+    searchGoods,
+    clearSearchContent
 };
+

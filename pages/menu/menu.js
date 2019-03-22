@@ -193,7 +193,12 @@ Component({
      */
     searchGoods: function (e) {
       basemenu.searchGoods(this, e)
+    },
+    /**
+     * 用户清空菜品
+     */
+    clearSearchContent: function () {
+        basemenu.clearSearchContent(this);
     }
-
   }
 })
