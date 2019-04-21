@@ -279,12 +279,12 @@ Component({
           orderList = [];
           orderMap.clear();
           for (var j = 0; j < data.length; j++) {
-            if (data[j].CREATE_TIME.indexOf(dateStr) != -1) {
-              data[j].SF = data[j].CREATE_TIME.substring(10, 16);
-              data[j].WM_USERPHONE = "*" + data[j].WM_USERPHONE.substring(7);
-              orderList.push(data[j]);
-              allMoney = allMoney + parseFloat(data[j].ORDER_SHOPMONEY);
-            }
+                if (data[j].CREATE_TIME.indexOf(dateStr) != -1) {
+                    data[j].SF = data[j].CREATE_TIME.substring(10, 16);
+                    data[j].WM_USERPHONE = "*" + data[j].WM_USERPHONE.substring(7);
+                    orderList.push(data[j]);
+                    allMoney = allMoney + parseFloat(data[j].ORDER_SHOPMONEY);
+                }
           }
           orderMap.set(dateStr, null);
           orderMap.set("data", orderList);

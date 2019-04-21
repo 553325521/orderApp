@@ -1,7 +1,9 @@
 //app.js
 var util = require('utils/util.js');
-var basePath = 'http://m.ddera.com/'
+var basePath = 'https://m.ddera.com/'
 var initSuccess = false;
+var appVersion = '1.0.0'
+var webSocketUrl = 'ws://m.ddera.com/json/webSocket.json';
 
 App({
     data: {
@@ -51,7 +53,7 @@ App({
     connectWebsocket: function () {
         var that = this;
         var task = wx.connectSocket({
-            url: 'ws://m.ddera.com/json/webSocket.json',
+            url: that.webSocketUrl,
             data: {
                 userid: "123455"
             },
@@ -211,7 +213,8 @@ App({
             method: "post",
             data: {
                 code: code,
-                appid: that.globalData.appid
+                appid: that.globalData.appid,
+                vision: that.appVersion
             },
             header: {
                 'content-type': 'application/x-www-form-urlencoded;charset=utf-8'

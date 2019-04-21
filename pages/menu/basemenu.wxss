@@ -41,7 +41,7 @@
   margin: auto;
   margin-top: 46rpx;
   transform: translateY(-50%);
-  padding-left: 64rpx
+  padding:0 64rpx;
 }
 .search-box .ss-icon{
   width: 28rpx;
