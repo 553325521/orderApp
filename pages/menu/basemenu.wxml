@@ -24,6 +24,12 @@
   </view>
   
 </view>
+<!-- <view style='margin-top:50px;text-align:center;'>正在加载菜单</view> -->
+<view class="weui-loadmore" wx:if="{{greensList.length == 0}}" style='margin-top:110rpx;'>
+	<i class="weui-loading"></i>
+	<span class="weui-loadmore-tips">正在加载菜品</span>
+</view>
+
 <!-- 购物车  -->
 <view class='cat' bindtap="{{shoppingCart.totalNumber>0?'entryOrders':''}}">
   <image wx:if="{{shoppingCart.totalNumber==0}}" class='w100 h100' src='../../images/icon/car-unll.png'></image>

@@ -1,9 +1,14 @@
 //app.js
+var constant = require('utils/constant.js');
+
+// 开发配置
+let local = true;
+
 var util = require('utils/util.js');
-var basePath = 'https://m.ddera.com/'
+var basePath = 'http://m.ddera.com/' + (local ? 'dcxt/' : '');
 var initSuccess = false;
-var appVersion = '1.0.0'
-var webSocketUrl = 'ws://m.ddera.com/json/webSocket.json';
+var appVersion = '1.0.0';
+var webSocketUrl = 'ws://m.ddera.com/' + (local ? 'dcxt/' : '') + 'json/webSocket.json';
 
 App({
     data: {
@@ -46,14 +51,26 @@ App({
         // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
         // this.globalData.shopid = 'f11099f4816f4a6c99e511c4a7aa82d0';
         that.globalData.appid = 'wx76adf64995670e71';
-        that.wxLogin();
+        // that.wxLogin();
         wx.setStorageSync("Address", "not");
+
+        let userInfo = that.getLocalUserInfo();
+       
+        if (userInfo) {
+            that.getSetting();
+            that.connectWebsocket(userInfo["openid"], userInfo["unionId"]);
+        } else {
+            that.wxLogin();
+        }
+
+//socket给我传什么东西,,传过来商铺id，商铺设置，看看本地的对不对，不对，先修改，再直接刷新
+
     },
     //声明连接socket方法
-    connectWebsocket: function () {
+    connectWebsocket: function (openid, unionId) {
         var that = this;
         var task = wx.connectSocket({
-            url: that.webSocketUrl,
+            url: webSocketUrl,
             data: {
                 userid: "123455"
             },
@@ -67,7 +84,9 @@ App({
                 msgType: 0,
                 msgContent: {
                     openid: wx.getStorageSync('openid'),
-                    shopid: that.globalData.shopid
+                    shopid: that.globalData.shopid,
+                    openid: openid,
+                    unionId: unionId
                 }
             };
             wx.sendSocketMessage({
@@ -85,16 +104,86 @@ App({
                 currentRoute = page.route;
             }
             //处理订单数据更新
-            if (res.data == "101") {
+            if (!res.data){
+                return;
+            }
+            let data = JSON.parse(res.data);
+            
+            if (data.code == "101") {
                 console.info("有新的订单");
                 if (currentRoute == "pages/indent/indent") {
                     page.loadOrderData();
                     page.loadOrderNumber();
                 }
+            } else if (data.code === constant.get.socketCode.update.setting.code) { //更新了开关设置
+                let setting = data.data;
+                let localSetting = wx.getStorageSync('setting');
+                if (JSON.stringify(setting) !== JSON.stringify(localSetting)) {
+                    wx.setStorageSync('setting', setting);
+                    that.globalData.appSetting = setting;
+                    let update = false;
+                    // 判断堂点开台更新没
+                    if (setting.CHECK_TDKT !== localSetting.CHECK_TDKT) {
+                        if (setting.CHECK_TDKT == 'false') {
+                            that.globalData.tabBar.list[0].pagePath = "../menu/menu";
+                            that.globalData.tabBar.list[0].text = "菜单";
+                        } else {
+                            that.globalData.tabBar.list[0].pagePath = "../founding/founding";
+                            that.globalData.tabBar.list[0].text = "开台";
+                        }
+                        update = true;
+                    }
+                    if (setting.CHECK_WMTC !== localSetting.CHECK_WMTC) {
+                        if (localSetting.CHECK_WMTC === "true"){
+                            that.globalData.tabBar.list[3].show = false;
+                        } else {
+                            that.globalData.tabBar.list[3].show = true;
+                        }
+                        update = true;
+                    }
+                    if (setting.CHECK_DYSYT !== localSetting.CHECK_DYSYT) {
+                        if (localSetting.CHECK_DYSYT === "true") {
+                            that.globalData.tabBar.list[4].show = false;
+                        } else {
+                            that.globalData.tabBar.list[4].show = true;
+                        }
+                        update = true;
+                    }
+                    if (setting.CHECK_TDYTMB !== localSetting.CHECK_TDYTMB) {
+                        update = true;
+                    }
+                    if (update){
+                        that.playCue("1")
+                        that.reLaunch('/pages/index/index?page=' + that.globalData.tabBar.list[0].pagePath);
+                    }
+                    
+                }
+            } else if (data === constant.get.socketCode.shopInfo.code) {
+                let localShopId = wx.getStorageSync('shopId');
+                let shopId = data.shopId;
+                let setting = data.shopSetting; //TODO 后台别忘了加
+                let localSetting = wx.getStorageSync('setting');
+                if (localShopId !== shopId) {
+                    wx.setStorageSync('shopId', shopId);
+                    wx.setStorageSync('setting', setting);
+                    that.globalData.shopId = shopId;
+                    that.globalData.shopid = shopId;
+                    if (setting.CHECK_TDKT !== localSetting.CHECK_TDKT) {
+                        if (setting.CHECK_TDKT == 'false') {
+                            that.globalData.tabBar.list[0].pagePath = "../menu/menu";
+                            that.globalData.tabBar.list[0].text = "菜单";
+                        } else {
+                            that.globalData.tabBar.list[0].pagePath = "../founding/founding";
+                            that.globalData.tabBar.list[0].text = "开台";
+                        }
+                        that.reLaunch('/pages/index/index?page=' + that.globalData.tabBar.list[0].pagePath);
+                    }
+                }
             }
         })
         wx.onSocketClose(function (res) {
             console.log('关闭socket')
+            that.playCue("2")
         })
     },
     onShow: function () {
@@ -103,50 +192,42 @@ App({
     onHide: function () {
 
     },
+    // 获取本地存储的用户信息 (openid, unionId, shopId)
+    getLocalUserInfo: function () {
+        let that = this;
+        let openid = wx.getStorageSync('openid');
+        let unionId = wx.getStorageSync('unionId');
+        let shopId = wx.getStorageSync('shopId');
+
+        if (openid && unionId && shopId) {
+            that.globalData.openid = openid;
+            that.globalData.shopid = shopId
+            return {
+                "openid": openid,
+                "unionId": unionId,
+                "shopId": shopId
+            }
+        }
+
+        return null;
+    },
+    // 获取本地设置
+    getLocalSetting: function () {
+        let that = this;
+        let setting = wx.getStorageSync('setting');
+        if (!setting || setting === {}) {
+            return null;
+        }
+
+        return setting;
+    },
     globalData: {
         userInfo: null,
         appid: null,
         shopid: null,
         basePath: basePath,
         loginUrl: basePath + 'json/toSmallProgram.json',
-        tabBar: {
-            "color": "#5C5A58",
-            "selectedColor": "#DA251D",
-            "borderStyle": "#000",
-            "backgroundColor": "#EF9BA0",
-            "list": [{
-                "pagePath": "../founding/founding",
-                "iconPath": "../../images/icon/caidan.png",
-                "selectedIconPath": "../../images/icon/caidan.png",
-                "text": "开台"
-            },
-            {
-                "pagePath": "../indent/indent",
-                "iconPath": "../../images/icon/dindan.png",
-                "selectedIconPath": "../../images/icon/dindan.png",
-                "text": "订单"
-
-            },
-            {
-                "pagePath": "../statement/statement",
-                "iconPath": "../../images/icon/bb-icon.png",
-                "selectedIconPath": "../../images/icon/bb-icon.png",
-                "text": "报表"
-            },
-            {
-                "pagePath": "../takeOut/takeOut",
-                "iconPath": "../../images/icon/wm-icon.png",
-                "selectedIconPath": "../../images/icon/wm-icon.png",
-                "text": "外卖"
-            },
-            {
-                "pagePath": "../cashier/cashier",
-                "iconPath": "../../images/icon/shouyin.png",
-                "selectedIconPath": "../../images/icon/shouyin.png",
-                "text": "收银"
-            }
-            ]
-        },
+        tabBar: constant.get.tabBar,
         appSetting: {
 
         }
@@ -155,6 +236,7 @@ App({
      * 登录
      */
     wxLogin: function () {
+        
         var that = this;
         wx.login({
             success: function (res) {
@@ -178,6 +260,7 @@ App({
             }
         })
     },
+   
 
     //shopid,userid放入session
     pushSession: function () {
@@ -214,25 +297,31 @@ App({
             data: {
                 code: code,
                 appid: that.globalData.appid,
-                vision: that.appVersion
+                vision: appVersion
             },
             header: {
                 'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
             },
             success: function (res) {
+                wx.hideLoading()
                 if (res.data.code != '0000') {
                     // 提示登录失败
-                    wx.showToast({
-                        title: '登录失败',
-                    })
+                    that.hintBox(res.data.data, 'none')
                 }
                 wx.setStorageSync("openid", res.data.data.OPENID);
                 wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
+                wx.setStorageSync("shopId", res.data.data.FK_SHOP);
                 //连接websocket
                 that.connectWebsocket();
 
+
+                that.globalData.shopid = res.data.data.FK_SHOP;
+                wx.setStorageSync("shopid", that.globalData.shopid);
+                //获取全局设置
+                that.getSetting();
+
                 //获取商铺ID
-                that.getShopId();
+                // that.getShopId();
                 //授权成功
 
                 
@@ -249,10 +338,12 @@ App({
      */
     getUserInfo: function (cb) {
         var that = this;
+        debugger
         if (wx.authorize) {
             wx.authorize({
                 scope: 'scope.userInfo',
                 success: function (res) {
+                    debugger
                     if (wx.showLoading) {
                         wx.showLoading({
                             title: '加载中',
@@ -307,13 +398,13 @@ App({
                         that.globalData.shopid = res.data.data;
                         wx.setStorageSync("shopid", that.globalData.shopid);
                         //获取全局设置
-                        that.getAppSetting();
+                        that.getSetting();
                     }else{
                         that.globalData.shopid = wx.getStorageSync('shopid');
                         if (that.globalData.shopid == undefined || that.globalData.shopid == ""){
                             that.hintBox(res.data.data, 'none')
                         }else{
-                            that.getAppSetting();
+                            that.getSetting();
                         }
                        
                     }
@@ -625,7 +716,7 @@ App({
     /**
      * 获取小程序设置
      */
-    getAppSetting: function () {
+    getServerSetting: function (shopId) {
         var that = this
         //   var appSetting = wx.getStorageSync('appSetting'+that.globalData.shopid);
         //   if (appSetting != undefined && appSetting != ""){
@@ -637,26 +728,45 @@ App({
         that.sendRequest({
             url: 'FunctionSwitch_select_XCXloadFuncSwitchList',
             data: {
-                FK_SHOP: that.globalData.shopid
+                FK_SHOP: shopId
             },
             success: function (res) {
                 if (res.data.code == '0000') {
-                    that.globalData.appSetting = res.data.data
-                    if(that.globalData.appSetting.CHECK_DYSYT == 'false'){
-                        that.globalData.tabBar.list.splice(4);
+                    let setting = wx.getStorageSync('setting');
+                    if (JSON.stringify(setting) != JSON.stringify(res.data.data)) {
+                        wx.setStorageSync("setting", res.data.data)
+                        that.globalData.appSetting = res.data.data
+                        if (that.globalData.appSetting.CHECK_DYSYT == 'false') {
+                            that.globalData.tabBar.list[4].show = false;
+                        }
+                       
+                        if (that.globalData.appSetting.CHECK_WMDC == 'false') {
+                            that.globalData.tabBar.list[3].show = false;
+                        }
+                        that.showIndexPage()
+                        initSuccess = true;
                     }
-                    if (that.globalData.appSetting.CHECK_WMDC == 'false'){
-                        that.globalData.tabBar.list.splice(3);
-                    }
-                    that.showIndexPage()
-                    initSuccess = true;
-
                 } else {
                     that.hintBox(res.data.data, 'none');
                 }
             }
         })
         that.hideLoading();
+    },
+    /**
+     * 
+     */
+    getSetting: function() {
+        var that = this;
+        let setting = wx.getStorageSync('setting');
+        if (setting) {
+            that.globalData.appSetting = setting;     
+            that.showIndexPage();
+            that.hideLoading();
+        } else {
+            let shopId = wx.getStorageSync('shopId');
+            that.getServerSetting(shopId);
+        }
     },
     /**
      * 刷新其他页面参数
@@ -1315,5 +1425,21 @@ App({
                 prePage.flushComponentData(page, {})
         }
 
+    },
+
+    /**
+     * 播放提示音
+     */
+    playCue: function(i){
+        const innerAudioContext = wx.createInnerAudioContext();//新建一个createInnerAudioContext();
+        innerAudioContext.autoplay = true;//音频自动播放设置
+        if (i === "1") {
+            innerAudioContext.src = '/media/audio/提示音.wav';//链接到音频的地址
+        } else if (i === "2") {
+            innerAudioContext.src = '/media/audio/ao.wav';//链接到音频的地址
+        }else {
+            return;
+        }
+        innerAudioContext.onPlay(() => { });//播放音效
     }
 })

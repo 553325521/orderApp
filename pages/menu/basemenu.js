@@ -214,7 +214,6 @@ console.info("缓存取的数据")
     loadGoodsInfo(that)
   }else{
     console.info("正常加载的数据")
-    app.showLoading()
     loadGoodsInfo(that)
   }
 }
@@ -233,13 +232,10 @@ function loadGoodsInfo(that) {
     },
     success: function(res) {
       if (res.data.code == '0000') {
-        app.hideLoading()
         // 查询购物车
         getOrdersList(that);
-
         greensList = res.data.data.greensList;
         navList = res.data.data.navList;
-        
         
         if (goodsInfo == undefined){
           that.setData({
