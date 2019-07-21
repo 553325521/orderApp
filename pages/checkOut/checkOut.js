@@ -68,7 +68,12 @@ Page({
     //优惠规则列表
     ruleList:[],
     //优惠金额
-    favorMoney:0
+    favorMoney:0,
+    //会员卡号
+    vipNumber:'',
+    kyjf: 0 , //可用积分
+    kdje:0, //积分可抵金额
+    kycz:0 //可用储值
   },
   onLoad: function (options) {
     var that = this;
@@ -95,6 +100,13 @@ Page({
     this.loadRuleByShop();
   },
 
+//输入会员卡号发生变化
+  vipNumberChange:function(e){
+    var that = this;
+    that.setData({
+      vipNumber:e.detail.value
+    });
+  },
   //加载优惠规则
   loadRuleByShop:function(){
     var that = this;
@@ -134,6 +146,12 @@ Page({
     that.setData({
       operList: that.data.operList
     })
+  },
+  //积分选择方法
+  checkboxJFChange:function(e){
+     var that = this;
+     //app.toast('成功');
+     console.info(app.globalData.shopid);
   },
   /**
    * 
@@ -263,6 +281,30 @@ Page({
    */
   vanish:function(){
     var that = this;
+    //根据当前店铺的id，用户输入的会员卡号判断会员卡是否存在
+    app.sendRequest({
+      url: "VipCard_select_selectVipCardListByShopIdAndVipNumber",
+      method: "post",
+      data: {
+        vipNumber: that.data.vipNumber,
+        shopId: app.globalData.shopid
+      },
+      success: function (res) {
+        console.info(res.data.code);
+        if (res.data.code == '9999'){
+          app.toast("会员卡不存在");
+        }else{ //会员卡号存在，初始化可用积分，储值
+          that.setData({
+            kyjf: res.data.data[0].USER_VCARD_JF,
+            kdje: res.data.data[0].USER_VCARD_JF,
+            kycz: res.data.data[0].USER_VCARD_CZ
+          });
+        }
+      },
+      fail: function (error) {
+        console.info(error);
+      }
+    });
     that.setData({
       wzShow: false,
       couponShow:false,

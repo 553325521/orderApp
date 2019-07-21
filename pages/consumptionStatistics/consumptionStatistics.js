@@ -5,9 +5,19 @@ Page({
     shopArr: [],
     shopIndexArray: [],
     shopIndex: 0,
-    dateArr: ['今天', '昨天', '本周', '本月','自定义'],
+    dateArr: ['今天', '昨天', '本周', '本月','本年'],
     dateIndex: 0,
-    wayArr: ['微信', '支付宝', '现金', 'POS刷卡'],
+    wayArr: [{'checked':false,'name':'现金'},
+      { 'checked': false, 'name': '微信' },
+      { 'checked': false, 'name': '支付宝' },
+      { 'checked': false, 'name': 'POS' },
+      { 'checked': false, 'name': '储值' }],
+    wayResultArr: [{ 'checked': false, 'name': '现金' },
+    { 'checked': false, 'name': '微信' },
+    { 'checked': false, 'name': '支付宝' },
+    { 'checked': false, 'name': 'POS' },
+    { 'checked': false, 'name': '储值' },
+    { 'checked': false, 'name': '其他' }],
     wayIndex: 0,
     orderArray: {},
     pageShow: false,
@@ -19,21 +29,200 @@ Page({
     select_img_name: "select_down",
     selectShow: 0,
     select_id:-1,
+    select_way_id: -1,
     start_date:'2019-01-01',
     end_date:'2019-01-01',
-    dateAreaIsShow:false
+    dateAreaIsShow:false,
+    isSelectCancel:false,
+    isSelectConfirm:false,
+    wayUser:false,
+    takeView:54
   },
+  loadXFData:function(){
 
+  },
+  cancelChoose:function(){
+    var that = this;
+    for (var i = 0; i < that.data.wayArr.length; i++) {
+      that.data.wayArr[i].checked = false;
+    }
+    for (var i = 0; i < that.data.wayResultArr.length; i++) {
+      that.data.wayResultArr[i].checked = false;
+    }
+    that.setData({
+      select_id: -1,
+      wayArr: that.data.wayArr,
+      wayUser: false,
+      wayResultArr: that.data.wayResultArr,
+      dateAreaIsShow: false,
+      takeView: 54
+    });
+  },
+  selectCancel:function(){
+    var that =this;
+    for(var i = 0;i < that.data.wayArr.length;i++){
+      that.data.wayArr[i].checked = false;
+    }
+    that.setData({
+      select_id:-1,
+      wayArr:that.data.wayArr,
+      wayUser:false
+    })
+  },
+  choose:function(){
+    var that = this;
+    var choosePay = "";
+    if(that.data.select_id == 5){
+      choosePay = '自定义';
+    }else{
+      choosePay = that.data.dateArr[that.data.select_id];
+    }
+    console.info(choosePay);
+    console.info(that.data.start_date);
+    console.info(that.data.end_date);
+    var chooseWay = that.data.wayResultArr;
+    var chooseWayArray = [];
+    for(var i = 0; i< chooseWay.length;i++){
+      if (chooseWay[i].checked){
+        if (chooseWay[i].name == '现金'){
+          chooseWayArray.push('1');
+        } else if (chooseWay[i].name == '微信'){
+          chooseWayArray.push('31');
+        } else if (chooseWay[i].name == '支付宝') {
+          chooseWayArray.push('32');
+        } else if (chooseWay[i].name == 'POS') {
+          chooseWayArray.push('4');
+        } else if (chooseWay[i].name == '储值') {
+          chooseWayArray.push('5');
+        } else if (chooseWay[i].name == '其他') {
+          chooseWayArray.push('6');
+        }
+        
+      }
+    }
+
+    console.info(JSON.stringify(chooseWayArray));
+
+    var shopId = app.globalData.shopid;
+    wx.request({
+      url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
+      method: "post",
+      data: {
+        SELECT_PERIOD: choosePay,
+        START_DATE: that.data.start_date,
+        END_DATE: that.data.end_date,
+        ORDER_PAY_WAY: JSON.stringify(chooseWayArray),
+        FK_SHOP: shopId,
+      },
+      header: {
+        'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      success: function (res) {
+        if (res.data.code == '0000') {
+          that.dealOrderDate(res.data.data);
+          that.data.orderArray = that.dealOrderDate(res.data.data);
+          that.setData({
+            pageShow: true,
+            orderArray: that.data.orderArray
+          });
+          if (that.data.orderArray.length != 0) {
+            that.setData({
+              isExistData: true
+            })
+          } else {
+            var initDataArray = [];
+            var orderBigList = [];
+            initDataArray[0] = {
+              "SF": "--:--",
+              "ORDER_POSITION": "-",
+              "TOTAL_FS": "0",
+              "TOTAL_MONEY": "0",
+              "payWay": "-"
+            };
+            var orderMap = new Map();
+            orderMap.set("data", initDataArray);
+            orderMap.set("keyName", "xxxx-xx-xx");
+            orderMap.set("totalMoney", 0);
+            orderMap.set("timeWidth", "140rpx");
+            orderMap.set("seatWidth", "100rpx");
+            orderMap.set("partWidth", "140rpx");
+            orderMap.set("moneyWidth", "120rpx");
+            orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
+            that.data.orderArray = orderBigList;
+            that.setData({
+              pageShow: true,
+              orderArray: that.data.orderArray
+            });
+            that.setData({
+              isExistData: true
+            })
+          }
+        } else {
+          var initDataArray = [];
+          var orderBigList = [];
+          initDataArray[0] = {
+            "SF": "--:--",
+            "ORDER_POSITION": "-",
+            "TOTAL_FS": "0",
+            "TOTAL_MONEY": "0",
+            "payWay": "-"
+          };
+          var orderMap = new Map();
+          orderMap.set("data", initDataArray);
+          orderMap.set("keyName", "xxxx-xx-xx");
+          orderMap.set("totalMoney", 0);
+          orderMap.set("timeWidth", "140rpx");
+          orderMap.set("seatWidth", "100rpx");
+          orderMap.set("partWidth", "140rpx");
+          orderMap.set("moneyWidth", "180rpx");
+          orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
+          that.setData({
+            isExistData: true
+          })
+        }
+      },
+      fail: function (error) {
+        wx.showToast({
+          title: '加载订单数据失败',
+        })
+      }
+    });
+    that.cancelChoose();
+    that.closeSelectArea();
+  },
+  selectWayBtn:function(e){
+    var id = e.currentTarget.dataset.id;
+    var index = parseInt(id);
+    var that = this;
+    if(index == 5){
+      that.setData({
+        wayUser: true
+      })
+    }else{
+      that.data.wayArr[index].checked = true;
+      var newArray = that.data.wayArr;
+      that.setData({
+        wayArr: newArray
+      })
+    }
+    that.data.wayResultArr[index].checked = true;
+    that.setData({
+      wayResultArr: that.data.wayResultArr
+    })
+  },
   selectBtn:function(e){
     var id = e.currentTarget.dataset.id;
+    console.info(e);
     var that = this;
-    if(id == 4){
+    if(id == 5){
       that.setData({
-        dateAreaIsShow: true
+        dateAreaIsShow: true,
+        takeView:0
       })
     }else{
       that.setData({
-        dateAreaIsShow: false
+        dateAreaIsShow: false,
+        takeView:54
       })
     }
     that.setData({
@@ -163,18 +352,18 @@ Page({
   //根据选择店铺、时间、支付方式加载消费统计
   loadShopConsumeData: function() {
     var that = this;
-    //当前选择的时间
-    var selectTime = that.data.dateArr[that.data.dateIndex];
     //当前选择的店铺
     var shopId = app.globalData.shopid;
-    //当前选择的支付方式
-    var payWay = that.data.wayIndex;
+    var choosePay = '今天';
+    var chooseWayArray = ['现金','微信'];
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
       method: "post",
       data: {
-        selectTime: selectTime,
-        ORDER_PAY_WAY: payWay,
+        SELECT_PERIOD: choosePay,
+        START_DATE: that.data.start_date,
+        END_DATE: that.data.end_date,
+        ORDER_PAY_WAY: JSON.stringify(chooseWayArray),
         FK_SHOP: shopId,
       },
       header: {
@@ -269,14 +458,30 @@ Page({
         for (var j = 0; j < data.length; j++) {
           if (data[j].CREATE_TIME.indexOf(dateStr) != -1) {
             data[j].SF = data[j].CREATE_TIME.substring(11);
-            if (data[j].ORDER_PAY_WAY == 0) {
-              data[j].payWay = '微信';
-            } else if (data[j].ORDER_PAY_WAY == 2) {
-              data[j].payWay = 'POS';
-            } else if (data[j].ORDER_PAY_WAY == 1) {
-              data[j].payWay = '支付宝';
-            } else {
+            if (data[j].ORDER_PAY_WAY == 1) {
               data[j].payWay = '现金';
+            } else if (data[j].ORDER_PAY_WAY == 2) {
+              data[j].payWay = '扫一扫';
+            } else if (data[j].ORDER_PAY_WAY == 3) {
+              data[j].payWay = '二维码';
+            } else if (data[j].ORDER_PAY_WAY == 4){
+              data[j].payWay = 'POS';
+            } else if (data[j].ORDER_PAY_WAY == 5) {
+              data[j].payWay = '储值';
+            } else if (data[j].ORDER_PAY_WAY == 6) {
+              data[j].payWay = '其他';
+            } else if (data[j].ORDER_PAY_WAY == 21) {
+              data[j].payWay = '微信扫一扫';
+            } else if (data[j].ORDER_PAY_WAY == 22) {
+              data[j].payWay = '支付宝扫一扫';
+            } else if (data[j].ORDER_PAY_WAY == 23) {
+              data[j].payWay = '银联扫一扫';
+            } else if (data[j].ORDER_PAY_WAY == 31) {
+              data[j].payWay = '微信二维码';
+            } else if (data[j].ORDER_PAY_WAY == 31) {
+              data[j].payWay = '支付宝二维码';
+            } else {
+              data[j].payWay = '未知';
             }
             orderList.push(data[j]);
             allMoney = allMoney + parseFloat(data[j].TOTAL_MONEY);

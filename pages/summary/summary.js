@@ -112,10 +112,15 @@ loadShopRunData:function(){
           sendCardNumber: res.data.data.sendCardNumber,
           useCardNumber: res.data.data.useCardNumber,
           totalOrderNumber: res.data.data.totalOrderNumber,
+          totalOrderMoney: res.data.data.totalOrderMoney,
           wxPayOrderNumber: res.data.data.wxPayOrderNumber,
+          wxPayOrderMoney: res.data.data.wxPayOrderMoney,
           aliPayOrderNumber: res.data.data.aliPayOrderNumber,
+          aliPayOrderMoney: res.data.data.aliPayOrderMoney,
           posPayOrderNumber: res.data.data.posPayOrderNumber,
+          posPayOrderMoney: res.data.data.posPayOrderMoney,
           cashPayOrderNumber: res.data.data.cashPayOrderNumber,
+          cashPayOrdeMoney: res.data.data.cashPayOrdeMoney,
         })
       }
     },

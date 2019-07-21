@@ -39,40 +39,80 @@
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
+      <!-- <view class='weui-flex select-top-style' style='border-bottom:1px #EAD5D7 solid'>
+        <view class=" pl5" style=''>
+          <view class="placeholder" style='font-size:18px;color:#666'>选择筛选条件 </view>
+        </view>
+        <view class="weui-flex__item"><view class="placeholder"></view></view>
+        <view class="">
+          <view class="placeholder select-btn-before select-btn-bg-white" catchtap='selectCancel' style='margin-top:0px' hover-class='select-btn-bg-pink'>取消</view>
+        </view>
+         <view class="">
+          <view class="placeholder select-btn-before select-btn-bg-white" catchtap='loadXFData' style='margin-top:0px' hover-class='select-btn-bg-pink'>确定</view>
+        </view>
+      </view> -->
       <view class="weui-flex">
-        <view class="weui-flex__item">
-          <view class="placeholder" style='font-size:18px;color:#666'>时间</view>
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:18px;color:#666'>支付期间</view>
         </view>
       </view>
-      <view class="weui-flex">
+      <view class="weui-flex pl5">
         <view class="weui-flex__item" wx:for='{{dateArr}}' wx:key='this'>
           <view class="placeholder  select-btn-before {{select_id == index ? 'select-btn-bg-pink':'select-btn-bg-white' }} " data-id='{{index}}' catchtap='selectBtn'>{{item}}</view>
         </view>
       </view>
-      <view class="weui-flex" style='display:{{dateAreaIsShow?"flex":"none"}}'>
+       <view class="weui-flex pl5">
         <view class="weui-flex__item">
-          <picker mode="date"  value="{{start_date}}" class='select-area-date' bindchange="bindStartDateChange">
+          <view class="placeholder  select-btn-before {{select_id == 5 ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:135rpx;' data-id='5' catchtap='selectBtn'>自定义</view></view></view>
+
+      <view class="weui-flex pl5" style='display:{{dateAreaIsShow?"flex":"none"}}'>
+        <view class="weui-flex__item">
+          <picker mode="date" value="{{start_date}}" class='select-area-date' bindchange="bindStartDateChange">
             <view class="weui-input" style='float:left'>{{start_date}}</view>
-             <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
-          </picker><text class='select-date-separator'>—</text>
-          <picker mode="date"  value="{{end_date}}" class='select-area-date' bindchange="bindEndDateChange">
+            <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker>
+          <text class='select-date-separator'>—</text>
+          <picker mode="date" value="{{end_date}}" class='select-area-date' bindchange="bindEndDateChange">
             <view class="weui-input" style='float:left'>{{end_date}}</view>
             <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
           </picker>
         </view>
-        
+      </view>
+
+       <view class="weui-flex" style='margin-top:20rpx;'>
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:18px;color:#666'>支付方式</view>
+        </view>
+      </view>
+      <view class="weui-flex pl5">
+        <view class="weui-flex__item" wx:for='{{wayArr}}' wx:key='this'>
+          <view class="placeholder  select-btn-before {{item.checked ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='text-align:center;width:{{item.name.length ==2 ? 110:135}}rpx' data-id='{{index}}' catchtap='selectWayBtn'>{{item.name}}</view>
+        </view>
+      </view>
+      <view class="weui-flex  pl5">
+        <view class="weui-flex__item">
+          <view class="placeholder  select-btn-before {{wayUser ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='5' catchtap='selectWayBtn'>其他</view>
+        </view>
+      </view>
+      <view class="weui-flex" style='height:{{takeView}}px'>
+        <view class="weui-flex__item">
+        </view>
+      </view>
+      <view class="weui-flex weui-dialog__ft">
+           <view class="weui-flex__item weui-dialog__btn" style='color:#666' catchtap="cancelChoose">取消</view>
+           <view class="weui-flex__item weui-dialog__btn" catchtap="choose">确定</view>
       </view>
     </view>
   </view>
 </view>
-<view class='indent-list font-28 c6'>
+<view class='indent-list font-33 c6'>
   <view class='head dp-flex flex-jc-sb'>
     <view>交易日期</view>
     <view>应付金额</view>
     <view>优惠</view>
     <view>实付金额</view>
-    <view class='{{font_color}}' catchtap="openSelect" style='width:60rpx'>
-      <!-- <text  catchtap="openSelect">筛选</text> -->
+    <view class='{{font_color}}' catchtap="openSelect">
+      <text catchtap="openSelect">筛选</text>
       <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' background-size="contain"></image>
     </view>
   </view>

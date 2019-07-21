@@ -1,4 +1,5 @@
 <!--pages/summary/summary.wxml-->
+<wxs module="math" src="../../utils/math.wxs"></wxs>
 <view class='type-parameter dp-flex font-28 c6 bg-fff'>
   <!-- <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
@@ -51,28 +52,28 @@
   <view class='consume-head dp-flex'>
     <view>消费</view>
     <view class='number'>{{totalOrderNumber}}笔</view>
-    <view class='total flex-1 tr'>总金额{{totalOrderMoney}}元</view>
+    <view class='total flex-1 tr'>总金额{{math.toFix(totalOrderMoney)}}元</view>
   </view>
   <view class='consume-dateils'>
     <view class='item dp-flex'>
       <view class='pay-way'>微信支付</view>
       <view class='pay-number tr'>{{wxPayOrderNumber}}笔</view>
-      <view class='flex-1 tr'>总额{{wxPayOrderMoney}}元</view>
+      <view class='flex-1 tr'>总额{{math.toFix(wxPayOrderMoney)}}元</view>
     </view>
     <view class='item dp-flex'>
       <view class='pay-way'>支付宝支付</view>
       <view class='pay-number tr'>{{aliPayOrderNumber}}笔</view>
-      <view class='flex-1 tr'>总额{{aliPayOrderMoney}}元</view>
+      <view class='flex-1 tr'>总额{{math.toFix(aliPayOrderMoney)}}元</view>
     </view>
     <view class='item dp-flex'>
       <view class='pay-way'>POS支付</view>
       <view class='pay-number tr'>{{posPayOrderNumber}}笔</view>
-      <view class='flex-1 tr'>总额{{posPayOrderMoney}}元</view>
+      <view class='flex-1 tr'>总额{{math.toFix(posPayOrderMoney)}}元</view>
     </view>
     <view class='item dp-flex'>
       <view class='pay-way'>现金支付</view>
       <view class='pay-number tr'>{{cashPayOrderNumber}}笔</view>
-      <view class='flex-1 tr'>总额{{cashPayOrderMoney}}元</view>
+      <view class='flex-1 tr'>总额{{math.toFix(cashPayOrdeMoney)}}元</view>
     </view>
   </view>
 </view>

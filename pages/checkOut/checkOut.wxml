@@ -49,9 +49,9 @@
     <view class='integral option dp-flex flex-jc-sb'>
       <text class='font-28 c6'>积分抵现</text>
       <view class='font-28 dp-flex'>
-        <view class='hint font-20 c9'>可用积分1531，可抵45.5元</view>
+        <view class='hint font-20 c9'>可用积分{{kyjf}}，可抵{{kdje}}元</view>
         <view class='check pr'>
-          <checkbox-group  bindchange="checkboxChange" data-index="1">
+          <checkbox-group  bindchange="checkboxJFChange" data-index="1">
               <checkbox value="0" checked="true"/>
           </checkbox-group>
           <view class='check-img'>
@@ -66,7 +66,7 @@
     <view class='stored option dp-flex flex-jc-sb'>
       <text class='font-28 c6'>储值支付</text>
       <view class='font-28 dp-flex'>
-        <view class='hint font-20 c9'>可用储值120.00元，已用120.00元</view>
+        <view class='hint font-20 c9'>可用储值{{math.toFix(kycz/100)}}元</view>
         <view class='check pr'>
           <checkbox-group  bindchange="checkboxChange" data-index="2">
               <checkbox value="0" checked="true"/>
@@ -151,7 +151,7 @@
     <!-- <view style='height:40rpx;background-color:#EF9BA0'></view> -->
     <view style='padding: 0 18rpx;'>
       <view class='input font-32 c6 dp-flex'>
-        <input class='flex-1' type='number' maxlength='11' placeholder='请输入会员手机号'></input>
+        <input class='flex-1' type='number' maxlength='11' bindinput="vipNumberChange" placeholder='请输入会员手机号'></input>
         <view class='icon' bindtap='richScan'>
           <image src='../../images/icon/yhsys.png'></image>
         </view>
