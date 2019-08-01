@@ -16,7 +16,8 @@ Page({
     bdsArray:[],
     operateStr:"",
     yhMoney:"",
-    isFirst:true
+    isFirst:true,
+    tempTime:0 //第几次输入数字
   },
   // 组件所在页面的生命周期函数
   onLoad: function() {
@@ -188,11 +189,19 @@ Page({
           that.data.bdsArray.push(str);
         }
         that.setData({
+          tempTime: 1 //当输入运算符的时候，输入结果和运算结果不再保持一致
+        })
+        that.setData({
           process: "",
           bdsArray: that.data.bdsArray
         })
       } else {
         var process = that.data.process;
+        if(that.data.tempTime == 0){
+          that.setData({
+            result: process + str
+          })
+        }
         that.setData({
           process: process + str
         })
@@ -210,6 +219,7 @@ Page({
     that.setData({
       process: '',
       result: '',
+      tempTime: 0,
       operateStr:'',
       bdsArray:[],
       yhMoney:"",
