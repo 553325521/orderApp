@@ -59,7 +59,7 @@
         <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>
         <view class='seat' style="width:{{itemName.seatWidth}}">{{item.ORDER_POSITION}}</view>
         <view class='part' style="width:{{itemName.partWidth}}">{{item.TOTAL_FS}}份</view>
-        <view class='money' style="width:{{itemName.moneyWidth}}">{{math.toFix(item.ORDER_YFMONEY/100)}}元</view>
+        <view class='money' style="width:{{itemName.moneyWidth}}">{{math.toFix(item.TOTAL_MONEY)}}元</view>
         <view class='pay-way' wx:if="{{currentTab == 1 || currentTab == 2}}">{{math.payWay(item.ORDER_PAY_WAY)}}</view>
         <!-- <view class='pay-way' wx:if="{{currentTab == 1}}">{{item.payWay}}</view> 
         <view class='pay-way' wx:if="{{currentTab == 0}}">{{item.payWay}}</view>         -->
