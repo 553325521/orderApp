@@ -36,7 +36,8 @@ Page({
     isSelectCancel:false,
     isSelectConfirm:false,
     wayUser:false,
-    takeView:54
+    takeView:54,
+    isDataHide:false //是否显示数据
   },
   loadXFData:function(){
 
@@ -127,7 +128,7 @@ Page({
           });
           if (that.data.orderArray.length != 0) {
             that.setData({
-              isExistData: true
+              isDataHide:false
             })
           } else {
             var initDataArray = [];
@@ -141,7 +142,7 @@ Page({
             };
             var orderMap = new Map();
             orderMap.set("data", initDataArray);
-            orderMap.set("keyName", "xxxx-xx-xx");
+            orderMap.set("keyName", "");
             orderMap.set("totalMoney", 0);
             orderMap.set("timeWidth", "140rpx");
             orderMap.set("seatWidth", "100rpx");
@@ -151,7 +152,8 @@ Page({
             that.data.orderArray = orderBigList;
             that.setData({
               pageShow: true,
-              orderArray: that.data.orderArray
+              orderArray: that.data.orderArray,
+              isDataHide: true
             });
             that.setData({
               isExistData: true
@@ -169,7 +171,7 @@ Page({
           };
           var orderMap = new Map();
           orderMap.set("data", initDataArray);
-          orderMap.set("keyName", "xxxx-xx-xx");
+          orderMap.set("keyName", "");
           orderMap.set("totalMoney", 0);
           orderMap.set("timeWidth", "140rpx");
           orderMap.set("seatWidth", "100rpx");
@@ -379,7 +381,7 @@ Page({
           });
           if (that.data.orderArray.length != 0) {
             that.setData({
-              isExistData: true
+              isDataHide: false
             })
           } else {
             var initDataArray = [];
@@ -393,7 +395,7 @@ Page({
             };
             var orderMap = new Map();
             orderMap.set("data", initDataArray);
-            orderMap.set("keyName", "xxxx-xx-xx");
+            orderMap.set("keyName", "");
             orderMap.set("totalMoney", 0);
             orderMap.set("timeWidth", "140rpx");
             orderMap.set("seatWidth", "100rpx");
@@ -406,7 +408,7 @@ Page({
               orderArray: that.data.orderArray
             });
             that.setData({
-              isExistData: true
+              isDataHide: true
             })
           }
         } else {
@@ -429,7 +431,7 @@ Page({
           orderMap.set("moneyWidth", "180rpx");
           orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
           that.setData({
-            isExistData: true
+            isDataHide: true
           })
         }
 

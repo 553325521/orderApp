@@ -63,7 +63,7 @@
       </view>
        <view class="weui-flex pl5">
         <view class="weui-flex__item">
-          <view class="placeholder  select-btn-before {{select_id == 5 ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:135rpx;' data-id='5' catchtap='selectBtn'>自定义</view></view></view>
+          <view class="placeholder user-setting {{select_id == 5 ? 'select-btn-bg-pink':'select-btn-bg-white' }}"  data-id='5' catchtap='selectBtn'>自定义</view></view></view>
 
       <view class="weui-flex pl5" style='display:{{dateAreaIsShow?"flex":"none"}}'>
         <view class="weui-flex__item">
@@ -86,12 +86,12 @@
       </view>
       <view class="weui-flex pl5">
         <view class="weui-flex__item" wx:for='{{wayArr}}' wx:key='this'>
-          <view class="placeholder  select-btn-before {{item.checked ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='text-align:center;width:{{item.name.length ==2 ? 110:135}}rpx' data-id='{{index}}' catchtap='selectWayBtn'>{{item.name}}</view>
+          <view class="placeholder  select-btn-before {{item.checked ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='text-align:center;padding-left:{{item.name.length ==2 ? 18:3}}%;width:{{item.name.length ==2 ? 90:98}}%' data-id='{{index}}' catchtap='selectWayBtn'>{{item.name}}</view>
         </view>
       </view>
       <view class="weui-flex  pl5">
         <view class="weui-flex__item">
-          <view class="placeholder  select-btn-before {{wayUser ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='5' catchtap='selectWayBtn'>其他</view>
+          <view class="placeholder  user-setting {{wayUser ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='5' catchtap='selectWayBtn'>其他</view>
         </view>
       </view>
       <view class="weui-flex" style='height:{{takeView}}px'>
@@ -124,11 +124,14 @@
     <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
       <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
         <!-- <view class='label pa'>*</view> -->
-        <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>
-        <view class='seat' style="width:{{itemName.seatWidth}}">{{item.ORDER_POSITION}}</view>
-        <view class='part' style="width:{{itemName.partWidth}}">{{item.TOTAL_FS}}份 </view>
-        <view class='money' style="width:{{itemName.moneyWidth}}">{{math.toFix(item.TOTAL_MONEY)}}元</view>
-        <view class='pay-way'>{{item.payWay}}</view>
+        <view class='time' style="width:{{itemName.timeWidth}};display:{{isDataHide?'none':'block'}} ">{{item.SF}}</view>
+        <view class='seat' style="width:{{itemName.seatWidth}};display:{{isDataHide?'none':'block'}}">{{item.ORDER_POSITION}}</view>
+        <view class='part' style="width:{{itemName.partWidth}};display:{{isDataHide?'none':'block'}}">{{item.TOTAL_FS}}份 </view>
+        <view class='money' style="width:{{itemName.moneyWidth}};display:{{isDataHide?'none':'block'}}">{{math.toFix(item.TOTAL_MONEY)}}元</view>
+        <view class='pay-way' style="display:{{isDataHide?'none':'block'}}">{{item.payWay}}</view>
+         <view class="weui-loadmore weui-loadmore_line"  style="display:{{isDataHide?'block':'none'}}">
+          <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+        </view>
       </view>
     </view>
   </view>
