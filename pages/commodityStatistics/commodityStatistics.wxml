@@ -1,14 +1,14 @@
 <!--pages/commodityStatistics/commodityStatistics.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
-<view class='type-parameter dp-flex font-28 c6 bg-fff'>
-  <!-- <view class='flex-1 dp-flex'>
+<!--<view class='type-parameter dp-flex font-28 c6 bg-fff'>
+  <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
       <view class="picker">
         {{shopArr[shopIndex]}}
       </view>
     </picker>
     <image src='../../images/icon/down-icon.png'></image>
-  </view> -->
+  </view>
   <view class='flex-1 dp-flex'>
     <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
       <view class="picker">
@@ -25,6 +25,64 @@
     </picker>
     <image src='../../images/icon/down-icon.png'></image>
   </view>
+</view> -->
+<view class="type-parameter weui-flex pl5">
+  <view class="weui-flex__item">
+    <view class="shaixuan-btn {{shaiXuanBtnIsActive == true?'shaixuan-btn-after':'shaixuan-btn-before'}}" catchtap="openSelect">筛选</view>
+  </view>
+</view>
+<view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
+  <view class='select-area' catchtap='aaa()'>
+    <view class="page__bd page__bd_spacing select-content-padding">
+      <view class="weui-flex">
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:18px;color:#666'>时间选择</view>
+        </view>
+      </view>
+      <view class="weui-flex pl5">
+        <view class="weui-flex__item" wx:for='{{dateArr}}' wx:key='this'>
+          <view class="placeholder  select-btn-before {{select_id == index ? 'select-btn-bg-pink':'select-btn-bg-white' }} " data-id='{{index}}' catchtap='selectBtn'>{{item}}</view>
+        </view>
+      </view>
+      <view class="weui-flex pl5">
+        <view class="weui-flex__item">
+          <view class="placeholder user-setting {{select_id == 5 ? 'select-btn-bg-pink':'select-btn-bg-white' }}" data-id='5' catchtap='selectBtn'>自定义</view>
+        </view>
+      </view>
+
+      <view class="weui-flex pl5" style='display:{{dateAreaIsShow?"flex":"none"}}'>
+        <view class="weui-flex__item">
+          <picker mode="date" value="{{start_date}}" class='select-area-date' bindchange="bindStartDateChange">
+            <view class="weui-input" style='float:left'>{{start_date}}</view>
+            <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker>
+          <text class='select-date-separator'>—</text>
+          <picker mode="date" value="{{end_date}}" class='select-area-date' bindchange="bindEndDateChange">
+            <view class="weui-input" style='float:left'>{{end_date}}</view>
+            <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-flex" style='height:{{takeView}}px'>
+        <view class="weui-flex__item">
+        </view>
+      </view>
+      <view class="weui-flex">
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:18px;color:#666'>操作人</view>
+        </view>
+      </view>
+      <view class="weui-flex pl5">
+        <view class="weui-flex__item" wx:for='{{operatorArr}}' wx:key='this'>
+          <view class="placeholder  operator_btn {{operator_id == index ? 'select-btn-bg-pink':'select-btn-bg-white' }} " data-id='{{index}}' catchtap='selectOperator'>{{item}}</view>
+        </view>
+      </view>
+      <view class="weui-flex weui-dialog__ft">
+        <view class="weui-flex__item weui-dialog__btn" style='color:#666' catchtap="cancelChoose">取消</view>
+        <view class="weui-flex__item weui-dialog__btn" catchtap="choose">确定</view>
+      </view>
+    </view>
+  </view>
 </view>
 <view class='product-list font-28 c6'>
   <view class='head dp-flex flex-jc-sb'>
@@ -33,7 +91,7 @@
     <view>商品金额</view>
   </view>
   <scroll-view scroll-y class='list' style='display:{{isExistData?"block":"none"}}'>
-    <block wx:for = "{{productList}}" wx:key="{{index}}">
+    <block wx:for="{{productList}}" wx:key="{{index}}">
       <view class='item dp-flex font-28 c6 pr' data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
         <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
         <view class='part tr'>{{item.TOTAL_FS}}份</view>
@@ -41,7 +99,7 @@
       </view>
     </block>
   </scroll-view>
-   <view class="weui-loadmore weui-loadmore_line"  style='display:{{isExistData?"none":"block"}}'>
-            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
-    </view>
+  <view class="weui-loadmore weui-loadmore_line" style='display:{{isExistData?"none":"block"}}'>
+    <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+  </view>
 </view>
