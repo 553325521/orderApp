@@ -106,6 +106,9 @@
   line-height: 28rpx;
   flex: 1;
 }
+.f30{
+  font-size: 30rpx
+}
 
 .select_box .select .select_img {
   width: 30rpx;
@@ -263,8 +266,8 @@
  .select-btn-before {
   margin: 8px 10px 12px 0;
   border-radius: 25px;
-  padding: 1% 29%;
-  font-size: 15px;
+  padding: 1% 31%;
+  font-size: 28rpx;
   float: left;
   width: 80%;
   }
@@ -276,7 +279,7 @@
    .user-setting{
     margin: 8px 10px 12px 0;
       border-radius: 25px;
-      font-size: 15px;
+      font-size: 28rpx;
       float: left;
       width: 20%;
       text-align: center;
@@ -294,8 +297,8 @@
  .select-btn-before {
   margin: 8px 10px 12px 0;
   border-radius: 25px;
-  padding: 1% 18%;
-  font-size: 15px;
+  padding: 1% 20%;
+  font-size: 28rpx;
   float: left;
   width: 85%;
   }
@@ -303,7 +306,7 @@
    .user-setting{
     margin: 8px 10px 12px 0;
       border-radius: 25px;
-      font-size: 15px;
+      font-size: 28rpx;
       float: left;
       width: 23%;
       text-align: center;
@@ -314,8 +317,8 @@
    .select-btn-before {
   margin: 8px 10px 12px 0;
   border-radius: 25px;
-  padding: 1% 13%;
-  font-size: 15px;
+  padding: 1% 15%;
+  font-size: 28rpx;
   float: left;
   width: 80%;
   }
@@ -327,9 +330,12 @@
   .user-setting{
     margin: 8px 10px 12px 0;
       border-radius: 25px;
-      font-size: 15px;
+      font-size: 28rpx;
       float: left;
       width: 20%;
       text-align: center;
   }
+ }
+ .f28{
+   font-size: 28rpx;
  }

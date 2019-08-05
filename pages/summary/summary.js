@@ -30,7 +30,8 @@ Page({
     end_date: '2019-01-01',
     dateArr: ['今天', '昨天', '本周', '本月', '本年'],
     dateIndex: 0,
-    select_id: -1
+    select_id: -1,
+    takeView:54
   },
   onLoad: function (options) {
   

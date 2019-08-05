@@ -88,7 +88,7 @@ Page({
     } else {
       choosePay = that.data.dateArr[that.data.select_id];
     }
-    // this.loadShopRunData(choosePay);
+    that.loadGoodsData(choosePay);
     this.closeSelectArea();
   },
   bindStartDateChange: function (e) {

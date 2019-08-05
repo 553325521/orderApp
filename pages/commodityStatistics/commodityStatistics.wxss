@@ -235,7 +235,7 @@
   margin: 8px 10px 12px 0;
   border-radius: 25px;
   padding: 1% 25%;
-  font-size: 15px;
+  font-size: 28rpx;
   float: left;
   width: 80%;
   }
@@ -243,7 +243,7 @@
   margin: 8px 10px 12px 0;
   border-radius: 25px;
   padding: 1% 29%;
-  font-size: 15px;
+  font-size: 28rpx;
   float: left;
   width: 80%;
   }
@@ -255,7 +255,7 @@
    .user-setting{
     margin: 8px 10px 12px 0;
       border-radius: 25px;
-      font-size: 15px;
+      font-size: 28rpx;
       float: left;
       width: 20%;
       text-align: center;
@@ -273,7 +273,7 @@
   margin: 8px 10px 12px 0;
   border-radius: 25px;
   padding: 1% 13%;
-  font-size: 15px;
+  font-size: 28rpx;
   float: left;
   width: 85%;
   }
@@ -281,7 +281,7 @@
   margin: 8px 10px 12px 0;
   border-radius: 25px;
   padding: 1% 18%;
-  font-size: 15px;
+  font-size: 28rpx;
   float: left;
   width: 85%;
   }
@@ -289,7 +289,7 @@
    .user-setting{
     margin: 8px 10px 12px 0;
       border-radius: 25px;
-      font-size: 15px;
+      font-size: 28rpx;
       float: left;
       width: 23%;
       text-align: center;
@@ -301,7 +301,7 @@
   margin: 8px 10px 12px 0;
   border-radius: 25px;
   padding: 1% 13%;
-  font-size: 15px;
+  font-size: 28rpx;
   float: left;
   width: 80%;
   }
@@ -309,7 +309,7 @@
   margin: 8px 10px 12px 0;
   border-radius: 25px;
   padding: 1% 8%;
-  font-size: 15px;
+  font-size: 28rpx;
   float: left;
   width: 80%;
   }
@@ -321,9 +321,12 @@
   .user-setting{
     margin: 8px 10px 12px 0;
       border-radius: 25px;
-      font-size: 15px;
+      font-size: 28rpx;
       float: left;
       width: 20%;
       text-align: center;
   }
+ }
+ .f28{
+   font-size: 28rpx
  }

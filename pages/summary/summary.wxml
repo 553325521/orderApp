@@ -21,7 +21,7 @@
 </view> -->
 <view class="type-parameter weui-flex pl5">
   <view class="weui-flex__item">
-    <view class="shaixuan-btn {{shaiXuanBtnIsActive == true?'shaixuan-btn-after':'shaixuan-btn-before'}}" catchtap="openSelect">筛选</view>
+    <view class="shaixuan-btn f30 {{shaiXuanBtnIsActive == true?'shaixuan-btn-after':'shaixuan-btn-before'}}" catchtap="openSelect">筛选</view>
   </view>
 </view>
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
@@ -29,7 +29,7 @@
     <view class="page__bd page__bd_spacing select-content-padding">
       <view class="weui-flex">
         <view class="weui-flex__item pl5">
-          <view class="placeholder" style='font-size:18px;color:#666'>时间选择</view>
+          <view class="placeholder" style='font-size:30rpx;color:#666'>时间选择</view>
         </view>
       </view>
       <view class="weui-flex pl5">
@@ -61,8 +61,8 @@
         </view>
       </view>
       <view class="weui-flex weui-dialog__ft">
-        <view class="weui-flex__item weui-dialog__btn" style='color:#666' catchtap="cancelChoose">取消</view>
-        <view class="weui-flex__item weui-dialog__btn" catchtap="choose">确定</view>
+        <view class="weui-flex__item weui-dialog__btn f28" style='color:#666' catchtap="cancelChoose">取消</view>
+        <view class="weui-flex__item weui-dialog__btn f28" catchtap="choose">确定</view>
       </view>
     </view>
   </view>
