@@ -72,3 +72,9 @@ page{
 .oper>view:first-child{
   margin-left: 0;
 }
+
+.cart{
+    text-align:center;
+    font-size:24rpx;
+    height:60rpx;
+}

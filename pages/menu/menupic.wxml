@@ -1,7 +1,7 @@
 <view class="greens-item dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}"  style="{{seachGoods != false ? 'padding:6rpx;':''}}">
     <view class='img'>
-        <image style="border-radius: 1px;" class='w100 h100' wx:key wx:for="{{math.parseImage(every.PICTURE_URL)}}" wx:if='{{index == 0 && every.PICTURE_URL != "{}"}}' wx:for-index='pic' src="{{basePath}}{{pic}}"></image>   
-        <image style="border-radius: 1px;" class='w100 h100' wx:if='{{every.PICTURE_URL == "{}"}}' src='../../images/cai.jpg'></image>  
+        <image style="border-radius: 1px;height:116rpx;" class='w100' wx:if='{{every.PICTURE_URL != "{}"}}' src="{{basePath}}{{math.getFristGoodImage(every.PICTURE_URL)}}"></image>
+        <image style="border-radius: 1px;height:116rpx;" class='w100' wx:if='{{every.PICTURE_URL == "{}"}}' src='../../images/cai.jpg'></image>  
     </view>
     <view class='info pr'>
         <view class='greens-name1 c3 font-28'>{{every.GOODS_NAME}}</view>

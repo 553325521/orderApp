@@ -13,20 +13,53 @@
 <view class='indent-dateil font-28'>
   <view class='title font-24'>消费明细</view>
   <view class='menu-list'>
+  <block wx:if="{{SOURCENAME == '智慧云'}}">
     <view class='menu-item dp-flex' wx:for = "{{orderDetails.orderDetailList}}"  wx:key="keys"  wx:for-item="goods">
       <view class='menu-name flex-2'>{{goods.ORDER_DETAILS_GNAME}}</view>
       <view class='number flex-1'>{{goods.ORDER_DETAILS_FS}}份</view>
       <view class='money'>￥{{math.toFix(goods.ORDER_DETAILS_GMONEY/100)}}</view>
     </view>
+    </block>
+    <block wx:if="{{SOURCENAME == '饿了么' || SOURCENAME == '百度外卖'}}">
+        <!-- 第三方外卖菜品 -->
+        <view wx:for="{{math.parseImage(orderDetails.PRODUCTS)}}" wx:for-item="carts" wx:key="index">
+            <view class='cart'>
+            ------------------{{index + 1}}号口袋------------------
+            </view>
+            <view class='menu-item dp-flex' wx:for="{{carts}}" wx:for-item="goods">
+                <view class='menu-name flex-2'>{{goods.product_name}}</view>
+                <view class='number flex-1'>{{goods.total_weight}}份</view>
+                <view class='money'>￥{{math.toFix(goods.product_price/100)}}</view>
+            </view>
+        </view>
+    </block>
+        <block wx:if="{{SOURCENAME == '美团外卖'}}">
+        <!-- 第三方外卖菜品 -->
+        <view wx:for="{{math.paseMTDetail(orderDetails.DETAIL)}}" wx:for-item="carts" wx:key="index">
+            <view class='cart'>
+            ------------------{{index + 1}}号口袋------------------
+            </view>
+            <view class='menu-item dp-flex' wx:for="{{carts}}" wx:for-item="goods">
+                <view class='menu-name flex-2'>{{goods.food_name}}</view>
+                <view class='number flex-1'>{{goods.quantity}}{{good.spec}}</view>
+                <view class='money'>￥{{math.toFix(goods.price)}}</view>
+            </view>
+        </view>
+    </block>
     <view class='total number dp-flex flex-jc-sb'>
-      <view>{{orderDetails.GOODS_NUMBER}}份菜品</view>
-      <view>配送费{{math.toFix(orderDetails.WM_ORDER_SEND_FEE/100)}}/餐盒费{{math.toFix(orderDetails.WM_ORDER_PACKAGE_FEE/100)}}</view>
+        <view wx:if="{{SOURCENAME == '智慧云'}}">{{orderDetails.GOODS_NUMBER}}份菜品</view>
+        <view wx:if="{{SOURCENAME == '饿了么'}}">{{math.getEBGoodsCount(orderDetails.PRODUCTS)}}份菜品</view>
+        <view wx:if="{{SOURCENAME == '美团外卖'}}">{{math.getMTGoodsCount(orderDetails.DETAIL)}}份菜品</view>
+        <view wx:if="{{SOURCENAME != '美团外卖'}}">配送费{{math.toFix(orderDetails.WM_ORDER_SEND_FEE/100)}}/餐盒费{{math.toFix(orderDetails.WM_ORDER_PACKAGE_FEE/100)}}</view>
+        <view wx:if="{{SOURCENAME == '美团外卖'}}">配送费{{math.toFix(orderDetails.WM_ORDER_SEND_FEE)}}/餐盒费{{math.getMTCKF(orderDetails.DETAIL)}}</view>
     </view>
   </view>
   <view class='dateil-list'>
     <view class='total-prices dp-flex flex-jc-sb'>
-      <view>优惠金额￥{{math.toFix(orderDetails.ORDER_YHMONEY/100)}}</view>
-      <view>应付￥{{math.toFix(orderDetails.ORDER_YFMONEY/100)}}/实付￥{{math.toFix(orderDetails.ORDER_SHOPMONEY/100)}}</view>
+      <view wx:if="{{SOURCENAME != '美团外卖'}}">优惠金额￥{{math.toFix(orderDetails.ORDER_YHMONEY/100)}}</view>
+       <view wx:if="{{SOURCENAME == '美团外卖'}}">优惠金额￥{{math.toFix(math.toFix(orderDetails.ORDER_SHOPMONEY) - math.toFix(orderDetails.ORDER_YFMONEY))}}</view>
+      <view wx:if="{{SOURCENAME != '美团外卖'}}">应付￥{{math.toFix(orderDetails.ORDER_YFMONEY/100)}}/实付￥{{math.toFix(orderDetails.ORDER_SHOPMONEY/100)}}</view>
+      <view wx:if="{{SOURCENAME == '美团外卖'}}">应付￥{{math.toFix(orderDetails.ORDER_YFMONEY)}}/实付￥{{math.toFix(orderDetails.ORDER_SHOPMONEY)}}</view>
     </view>
     <view class='dateil-item dp-flex'>
       订单备注：
@@ -34,13 +67,13 @@
         <!-- <text>不加香菜</text>
         <text style='margin-left:16rpx'>不加香菜</text>
         <text style='margin-left:16rpx'>不加香菜</text> -->
-        <text style='margin-left:16rpx'>{{orderDetails.WM_ORDER_REMARK}}</text>
+        <text style='margin-left:16rpx'>{{orderDetails.WM_ORDER_REMARK ? orderDetails.WM_ORDER_REMARK : '无'}}</text>
       </view>
     </view>
     <view class='dateil-item dp-flex'>
       联系方式：
       <view>
-        {{orderDetails.WM_ORDER_USERNAME}} <text style='margin-left:35rpx'>{{orderDetails.WM_USERPHONE}}</text>
+        {{orderDetails.WM_ORDER_USERNAME + (orderDetails.USER_GENDER || "")}} <text style='margin-left:35rpx'>{{orderDetails.WM_USERPHONE}}</text>
       </view>
     </view>
     <view class='dateil-item dp-flex'>
@@ -55,19 +88,50 @@
     </view>
     <view class='dateil-item dp-flex'>
       <text class='flex-1'>订单状态</text>
-      <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '1'}}">待确认</text>
-       <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}">待配送</text>
+        <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '1'}}">待确认</text>
+        <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}">待配送</text>
         <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '9'}}">已完成</text>
+        <block wx:if="{{SOURCENAME == '饿了么' || SOURCENAME == '百度外卖'}}">
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '7'}}">骑士已接单</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '8'}}">骑士已取餐</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '10'}}">已取消</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '15'}}">订单退款</text>
+        </block>
+        <block wx:if="{{SOURCENAME == '美团外卖'}}">
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '1'}}">用户已提交订单</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '2'}}">待确认</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '4'}}">已确认</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '6'}}">配送中</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '7'}}">已送达</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '8'}}">已完成</text>
+            <text class='flex-1' wx:if="{{orderDetails.WM_ORDER_STATE == '9'}}">已取消</text>
+        </block>
     </view>
   </view>
 </view>
- <view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==1}}">
-  <view class='flex-1  tc' bindtap='changeType'>商家自送</view>
-  <!-- <view class='flex-1  tc'>平台配送</view> -->
-  <view class='flex-1  tc'>取消订单</view>
-</view> 
-<view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==5}}">
-  <view class='flex-1 tc' style='background-color:#fff'></view>
-  <view class='flex-1  tc'>确定送达</view>
-  <view class='flex-1  tc'>取消订单</view>
+<block wx:if="{{SOURCENAME == '智慧云'}}">
+    <view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==1}}">
+        <view class='flex-1  tc' bindtap='changeType'>商家自送</view>
+        <view class='flex-1  tc'>平台配送</view>
+        <view class='flex-1  tc'>取消订单</view>
+    </view> 
+    <view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{type==5}}">
+    <view class='flex-1 tc' style='background-color:#fff'></view>
+    <view class='flex-1  tc'>确定送达</view>
+    <view class='flex-1  tc'>取消订单</view>
+    </view>
+</block>
+<view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{SOURCENAME == '饿了么' || SOURCENAME == '百度外卖'}}">
+    <view wx:if="{{orderDetails.WM_ORDER_STATE == '1' || orderDetails.WM_ORDER_STATE == '5'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='cancelEBOrder'>取消订单</view>
+    <view wx:if="{{orderDetails.WM_ORDER_STATE == '1'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='enterEBOrder'>确认订单</view>
+     <view wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='eBOrderComplete'>确认送达</view>
+      <view wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='eBOrderSendout'>确认送出</view>
+</view>
+
+<!-- 美团外卖的订单底部按钮样式 -->
+<view class='oper bottom-fixed dp-flex font-32 cf' wx:if="{{SOURCENAME == '美团外卖'}}">
+    <view wx:if="{{orderDetails.WM_ORDER_STATE == '1' || orderDetails.WM_ORDER_STATE == '2' || orderDetails.WM_ORDER_STATE == '3'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='cancelEBOrder'>取消订单</view>
+    <view wx:if="{{orderDetails.WM_ORDER_STATE == '2' || orderDetails.WM_ORDER_STATE == '3'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='enterMTOrder'>确认订单</view>
+     <view wx:if="{{orderDetails.WM_ORDER_STATE == '6'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='mTOrderComplete'>确认送达</view>
+      <view wx:if="{{orderDetails.WM_ORDER_STATE == '4'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='mTOrderSendout'>确认送出</view>
 </view>

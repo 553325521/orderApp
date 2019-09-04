@@ -6,10 +6,11 @@
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
+		"nodeModules": false,
 		"autoAudits": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.5",
+	"libVersion": "2.7.7",
 	"appid": "wx76adf64995670e71",
 	"projectname": "%E6%99%BA%E6%85%A7%E5%BA%97%E5%91%98",
 	"isGameTourist": false,

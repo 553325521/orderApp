@@ -314,7 +314,7 @@ Component({
     navTo:function(e){
       var currentItem = e.currentTarget.dataset.id;
       console.info(currentItem.SOURCENAME);
-      app.pageTurns(`../takeOut/takeOutDateil?type=${this.data.currentTab}&ORDER_PK=${currentItem.ORDER_PK}&SOURCE_NAME=${currentItem.SOURCENAME}`)
+        app.pageTurns(`../takeOut/takeOutDateil?type=${this.data.currentTab}&ORDER_PK=${currentItem.ORDER_PK || currentItem.MTWM_ORDER_PK}&SOURCE_NAME=${currentItem.SOURCENAME}`)
     }
   }
 })

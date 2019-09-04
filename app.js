@@ -5,10 +5,10 @@ var constant = require('utils/constant.js');
 let local = true;
 
 var util = require('utils/util.js');
-var basePath = 'http://m.ddera.com/' + (local ? 'dcxt/' : '');
+var basePath = local ? 'http://localhost/dcxt/' : 'https://m.ddera.com/';
 var initSuccess = false;
 var appVersion = '1.0.0';
-var webSocketUrl = 'ws://m.ddera.com/' + (local ? 'dcxt/' : '') + 'json/webSocket.json';
+var webSocketUrl = (local ? 'ws://localhost/dcxt/' : 'wss://m.ddera.com/') + 'json/webSocket.json';
 
 App({
     data: {
@@ -108,7 +108,6 @@ App({
                 return;
             }
             let data = JSON.parse(res.data);
-            
             if (data.code == "101") {
                 console.info("有新的订单");
                 if (currentRoute == "pages/indent/indent") {
@@ -133,8 +132,8 @@ App({
                         }
                         update = true;
                     }
-                    if (setting.CHECK_WMTC !== localSetting.CHECK_WMTC) {
-                        if (localSetting.CHECK_WMTC === "true"){
+                    if (setting.CHECK_WMDC !== localSetting.CHECK_WMDC) {
+                        if (localSetting.CHECK_WMDC === "true"){
                             that.globalData.tabBar.list[3].show = false;
                         } else {
                             that.globalData.tabBar.list[3].show = true;
@@ -158,16 +157,24 @@ App({
                     }
                     
                 }
-            } else if (data === constant.get.socketCode.shopInfo.code) {
+            } else if (data.code === constant.get.socketCode.shopInfo.code) {
                 let localShopId = wx.getStorageSync('shopId');
-                let shopId = data.shopId;
-                let setting = data.shopSetting; //TODO 后台别忘了加
+                let shopId = data.data.shopId;
+                let setting = data.data.shopSetting; //TODO 后台别忘了加
                 let localSetting = wx.getStorageSync('setting');
+            
                 if (localShopId !== shopId) {
+                    console.info(data)
                     wx.setStorageSync('shopId', shopId);
                     wx.setStorageSync('setting', setting);
                     that.globalData.shopId = shopId;
                     that.globalData.shopid = shopId;
+                    that.globalData.appSetting = setting;
+                    debugger
+                    if (!setting){
+                        that.hintBox('请在公众号设置功能开关', 'none')
+                        return;
+                    }
                     if (setting.CHECK_TDKT !== localSetting.CHECK_TDKT) {
                         if (setting.CHECK_TDKT == 'false') {
                             that.globalData.tabBar.list[0].pagePath = "../menu/menu";
@@ -179,6 +186,8 @@ App({
                         that.reLaunch('/pages/index/index?page=' + that.globalData.tabBar.list[0].pagePath);
                     }
                 }
+            }else{
+                that.hintBox(data.data.data, 'none')
             }
         })
         wx.onSocketClose(function (res) {

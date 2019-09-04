@@ -35,6 +35,7 @@ function onLoad(that) {
         allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
         tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
     })
+
   wx.showNavigationBarLoading()
   // initData(that)
   app.updateTitle(pageTitle)

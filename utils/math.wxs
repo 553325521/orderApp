@@ -82,6 +82,26 @@ var filters = {
     return JSON.parse(map);
   },
   /**
+   * 获取商品第一张图片
+   */
+  getFristGoodImage:function(map){
+      var aa = map.split('"')[1];
+      return aa;
+  },
+  /**
+   * 获取饿百商品总数
+   */
+    getEBGoodsCount: function(products){
+        var productsList = JSON.parse(products);
+        var count = 0;
+        for (var i = 0; i < productsList.length; i++){
+            for (var j = 0; j < productsList[i].length; j++){
+                count += productsList[i][j].total_weight;
+            }
+        }
+        return count;
+    },
+  /**
    * 该类别在购物车上的数量
    */
   catNum: function (goods, gtype_pk){
@@ -108,12 +128,9 @@ var filters = {
           return 0;
       }
       shoppingCartGoods.forEach(function (g) {
-
           if (goods.GOODS_PK == g.GOODS_PK) {
               num += g.GOODS_NUMBER;
           }
-
-
       })
       return num;
   },
@@ -159,21 +176,56 @@ var filters = {
       return true;
     }
     return false;
-  }
+  },
+  /**
+   * 解析美团订单详情
+   */
+    paseMTDetail:function(detail){
+        var detailList = JSON.parse(detail);
+        var bb = [];
+        for (var d = 0; d < detailList.length; d++){
+            if (bb.length == detailList[d].cart_id){
+                bb.push([]);
+            }
+            bb[detailList[d].cart_id].push(detailList[d]);
+        }
+        return bb;
+    },
+    getMTGoodsCount: function(detail) {
+        var detailList = JSON.parse(detail);
+        var num = 0;
+        for (var d = 0; d < detailList.length; d++) {
+            num += detailList[d].quantity;
+        }
+        return num;
+    },
+    getMTCKF: function(detail){
+        var detailList = JSON.parse(detail);
+        var num = 0.0;
+        for (var d = 0; d < detailList.length; d++) {
+            num += detailList[d].box_price;
+        }
+        return parseFloat(num).toFixed(2)//此处2为保留两位小数;
+    }
 }
 module.exports = {
-  toFix: filters.toFix,
-  calcDate: filters.calcDate,
-  getYMD: filters.getYMD,
-  subString: filters.subString,
-  payWay: filters.payWay,
-  parseImage: filters.parseImage,
-  showCatNum: filters.showCatNum,
-  catNum: filters.catNum,
-  parseGoods: filters.parseGoods,
-  parseJSON: filters.parseJSON,
-  isNotUndefined: filters.isNotUndefined,
-  goodsContain: filters.goodsContain,
+    toFix: filters.toFix,
+    calcDate: filters.calcDate,
+    getYMD: filters.getYMD,
+    subString: filters.subString,
+    payWay: filters.payWay,
+    parseImage: filters.parseImage,
+    getEBGoodsCount: filters.getEBGoodsCount,
+    getFristGoodImage: filters.getFristGoodImage,
+    showCatNum: filters.showCatNum,
+    catNum: filters.catNum,
+    parseGoods: filters.parseGoods,
+    parseJSON: filters.parseJSON,
+    isNotUndefined: filters.isNotUndefined,
+    goodsContain: filters.goodsContain,
     goodsNum: filters.goodsNum,
-    isSingleGoods: filters.isSingleGoods
+    isSingleGoods: filters.isSingleGoods,
+    paseMTDetail: filters.paseMTDetail,
+    getMTGoodsCount: filters.getMTGoodsCount,
+    getMTCKF: filters.getMTCKF,
 }

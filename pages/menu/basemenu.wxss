@@ -155,9 +155,11 @@
   margin-bottom: 0
 }
 .greens-item .img{
-  width: 168rpx;
-  height: 116rpx;
-  margin-right: 28rpx;
+    width: 168rpx;
+    height: 100%;
+    display:flex;
+    align-items:center;
+    margin-right: 28rpx;
 }
 .info{
   flex: 1;
