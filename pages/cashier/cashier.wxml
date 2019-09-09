@@ -43,7 +43,7 @@
     <view class='oper-key font-28 c6'>
       <view class='tc' hover-class='bg-hui' bindtap='empty'>c</view>
       <view class='tc' hover-class='bg-hui' data-number='×' bindtap='processString'> 
-        ×
+         <image src='../../images/icon/compute_remove.png' style='width:40rpx;height:40rpx'></image>
       </view>
       <view class='equal-to tc' hover-class='bg-hui' id="{{ide}}" bindtap='calculate'>=</view>
     </view>
