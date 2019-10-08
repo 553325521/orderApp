@@ -5,7 +5,7 @@
   <view class='head-top dp-flex tc cf font-26'>
     <view class='bg-EF9B' bindtap='showCoupon' wx:if='{{discountsMoneyShow}}'>优惠</view>
     <view class='bg-EF9B vip' bindtap='addMember'>会员</view>
-  </view>
+  </view> 
   <view class='pay-money'>
     <view class='reality-pay dp-flex'>
       <text class='font-28 c6'>实收金额</text>

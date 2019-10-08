@@ -161,19 +161,24 @@ Page({
     var str = e.currentTarget.dataset.number;
     var isFoucs = that.data.isFocus;
     var yhMoney = that.data.yhMoney+"";
+    var operateStr = that.data.operateStr;
     if (isFoucs && that.data.noYH == false){
       if (str != '×' && str != '+'){
         var why = yhMoney.indexOf(".");
         if (str == "." && why == -1){
-          yhMoney = yhMoney + str;
-          this.setData({
-            yhMoney:yhMoney
-          })
+          if(yhMoney.indexOf(".") == -1){
+            yhMoney = yhMoney + str;
+            this.setData({
+              yhMoney: yhMoney
+            })
+          }
         }else{
-          yhMoney = yhMoney + str;
-          this.setData({
-            yhMoney: parseFloat(yhMoney)
-          })
+          if (yhMoney.indexOf(".") == -1 || str != '.') {
+            yhMoney = yhMoney + str;
+            this.setData({
+              yhMoney: yhMoney
+            })
+          }
         }
        
       }
@@ -183,10 +188,47 @@ Page({
         if(process != ""){
           that.data.bdsArray.push(parseFloat(process));
         }
-        if (str == '×') {
-          that.data.bdsArray.push("*");
+        if (str == '×') {//删除按钮
+          var len = that.data.bdsArray.length;
+          if(len != 0 && operateStr != ""){
+            var lastSign = that.data.bdsArray[len - 1];
+            if(lastSign != '+'){
+              that.data.bdsArray.splice(len-1,1);
+              if(operateStr.indexOf("+") == -1){//如果当前输入串不包含+，删除所有
+                operateStr = operateStr.substring(0, operateStr.length - 1);
+                that.data.bdsArray[0] = operateStr;
+                that.data.process = operateStr;
+                that.setData({
+                  result: operateStr,
+                  process:that.data.process
+                })
+              }else{//如果包含+,删除到+
+                that.data.bdsArray.splice(len-1, 1);//删除倒数第一个元素
+                operateStr = operateStr.substring(0,operateStr.lastIndexOf("+")+1);
+              }
+            }else{
+              that.data.bdsArray.splice(len - 1, 1);//删除倒数第一个元素
+              operateStr = operateStr.substring(0,operateStr.length-1);
+            }
+          }
         } else {
-          that.data.bdsArray.push(str);
+          if(str == '+'){//解决连续输入两次+的情况
+            //查看当前计算数组最后一位是不是+号
+            var len = that.data.bdsArray.length;
+            if (len == 0 || operateStr == ""){ //第一次不能输入+
+              return;
+              //that.data.bdsArray.push(str);
+              //operateStr = operateStr + str;
+            }else{
+              var lastSign = that.data.bdsArray[len-1];
+              if(lastSign != '+'){//最后一个不是+,往数组里新增，否则不做处理
+                that.data.bdsArray.push(str);
+                operateStr = operateStr + str;  
+              }
+            }
+          }else{
+            that.data.bdsArray.push(str);
+          }
         }
         that.setData({
           tempTime: 1 //当输入运算符的时候，输入结果和运算结果不再保持一致
@@ -197,21 +239,27 @@ Page({
         })
       } else {
         var process = that.data.process;
-        if(that.data.tempTime == 0){
+        if(process == "" && str == "."){//第一次不能输入.
+          return;
+        }else if(process.indexOf(".") != -1 && str == "."){//包含.不能再次输入.
+          return;
+        }else{
+          if (that.data.tempTime == 0) {
+            that.setData({
+              result: process + str
+            })
+          }
           that.setData({
-            result: process + str
-          })
+            process: process + str
+          });
+          operateStr = operateStr + str;
         }
-        that.setData({
-          process: process + str
-        })
-      }
-      var operateStr = that.data.operateStr;
-      that.setData({
-        operateStr: operateStr + str
-      })   
+        
+      } 
     }
-   
+    that.setData({
+      operateStr: operateStr
+    }); 
   },
   //清空
   empty: function() {

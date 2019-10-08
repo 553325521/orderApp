@@ -65,7 +65,9 @@ Component({
  */
   pageLifetimes: {
     // 组件所在页面的生命周期函数
-    show: function () {this.init();},
+    show: function () {
+      this.init();
+      },
     hide: function () { },
     resize: function () { },
   },
@@ -125,7 +127,6 @@ methods:{
       endIndex: that.data.endIndex
     });
     that.loadOrderNumber();
-    that.loadOrderData();
   },
   //加载订单数量
   loadOrderNumber: function(){
@@ -169,6 +170,9 @@ methods:{
         wx.showToast({
           title: '加载订单数量失败',
         })
+      },
+      complete:function(){
+        that.loadOrderData();
       }
     })
   },

@@ -5,10 +5,10 @@ var constant = require('utils/constant.js');
 let local = true;
 
 var util = require('utils/util.js');
-var basePath = local ? 'http://localhost/dcxt/' : 'https://m.ddera.com/';
+var basePath = local ? 'http://m.ddera.com/dcxt/' : 'https://m.ddera.com/';
 var initSuccess = false;
 var appVersion = '1.0.0';
-var webSocketUrl = (local ? 'ws://localhost/dcxt/' : 'wss://m.ddera.com/') + 'json/webSocket.json';
+var webSocketUrl = (local ? 'ws://m.ddera.com/dcxt/' : 'wss://m.ddera.com/') + 'json/webSocket.json';
 
 App({
     data: {
