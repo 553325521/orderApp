@@ -109,12 +109,30 @@ App({
             }
             let data = JSON.parse(res.data);
             if (data.code == "101") {
-                console.info("有新的订单");
+                console.info("语音通知：有新的订单");
                 if (currentRoute == "pages/indent/indent") {
                     page.loadOrderData();
                     page.loadOrderNumber();
                 }
-            } else if (data.code === constant.get.socketCode.update.setting.code) { //更新了开关设置
+            }
+            else if(data.code == "202"){ // 美团自动接单
+                console.log("语音通知：智慧云为你自动接到美团新订单")
+                debugger
+                if(currentRoute == "pages/takeOut/takeOut"){
+                    // page.
+                }
+            } 
+            else if (data.code == "203") { // 美团自动接单
+                console.log("语音通知：你有新的美团订单")
+               
+                let flag = that.isIndexWhichPage("../takeOut/takeOut");
+                if(flag){
+                    console.info("是当前页")
+                    page.flushComponentData("../takeOut/takeOut", null)
+                }
+                
+            }
+            else if (data.code === constant.get.socketCode.update.setting.code) { //更新了开关设置
                 let setting = data.data;
                 let localSetting = wx.getStorageSync('setting');
                 if (JSON.stringify(setting) !== JSON.stringify(localSetting)) {
@@ -170,7 +188,7 @@ App({
                     that.globalData.shopId = shopId;
                     that.globalData.shopid = shopId;
                     that.globalData.appSetting = setting;
-                    debugger
+                    
                     if (!setting){
                         that.hintBox('请在公众号设置功能开关', 'none')
                         return;
@@ -187,7 +205,9 @@ App({
                     }
                 }
             }else{
-                that.hintBox(data.data.data, 'none')
+                that.hintBox(data && data.data && data.data.data, 'none')
+                console.info(data && data.data && data.data.data)
+                console.info(data)
             }
         })
         wx.onSocketClose(function (res) {
@@ -347,7 +367,7 @@ App({
      */
     getUserInfo: function (cb) {
         var that = this;
-        debugger
+        
         if (wx.authorize) {
             wx.authorize({
                 scope: 'scope.userInfo',
@@ -1450,5 +1470,18 @@ App({
             return;
         }
         innerAudioContext.onPlay(() => { });//播放音效
+    },
+
+    /**
+     * 判断是否是主页的某个页面
+     */
+    isIndexWhichPage(page){
+        var currentPage = getCurrentPages()[0];
+        if (currentPage.route == 'pages/index/index'){
+            if (currentPage.data.currentPage == page) {
+                return true;
+            }
+        }
+        return false;
     }
 })

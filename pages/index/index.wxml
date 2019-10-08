@@ -9,7 +9,7 @@
     <block wx:if="{{currentPage=='../founding/founding'}}"><founding bind:switchPage="switchPage" id="founding"></founding></block>
     <block wx:elif="{{currentPage=='../indent/indent'}}"><indent bind:onDownFlush="onDownFlush" bind:stopDownFlush="stopDownFlush" id="indent"></indent></block>
     <block wx:elif="{{currentPage=='../statement/statement'}}"><statement></statement></block>
-    <block wx:elif="{{currentPage=='../takeOut/takeOut'}}"><takeOut></takeOut></block>
+    <block wx:elif="{{currentPage=='../takeOut/takeOut'}}"><takeOut id="takeOut"></takeOut></block>
     <!-- <block wx:elif="{{currentPage=='../cashier/cashier'}}"><cashier></cashier></block> -->
     <block wx:elif="{{currentPage=='../menu/menu'}}"><menu id="menu"></menu></block>
     </view>

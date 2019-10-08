@@ -158,6 +158,9 @@ Page({
         } else if (page == '../indent/indent'){
             this.menu = this.selectComponent("#indent");
             this.menu.init();
+        } else if (page == '../takeOut/takeOut') {
+            this.menu = this.selectComponent("#takeOut");
+            this.menu.loadWMData();
         }
     },
     onDownFlush: function () {

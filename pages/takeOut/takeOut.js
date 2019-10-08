@@ -201,6 +201,7 @@ Component({
     },
     // 加载外卖数据
     loadWMData: function () {
+        console.info('加载外卖数据')
       var that = this;
       //选择状态 1:待确定 5：待配送 9:已完成
       var orderState = that.data.currentTab;
