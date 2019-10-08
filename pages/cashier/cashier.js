@@ -217,8 +217,6 @@ Page({
             var len = that.data.bdsArray.length;
             if (len == 0 || operateStr == ""){ //第一次不能输入+
               return;
-              //that.data.bdsArray.push(str);
-              //operateStr = operateStr + str;
             }else{
               var lastSign = that.data.bdsArray[len-1];
               if(lastSign != '+'){//最后一个不是+,往数组里新增，否则不做处理
@@ -226,6 +224,14 @@ Page({
                 operateStr = operateStr + str;  
               }
             }
+            //每次点击+，计算一下
+            var tempArray = that.data.bdsArray.join(",").split(",");
+            tempArray.splice(tempArray.length-1,1);
+            var hz = this.dal2Rpn(tempArray);
+            var result = this.calc(hz);
+            that.setData({
+              result:result
+            });
           }else{
             that.data.bdsArray.push(str);
           }
@@ -236,7 +242,8 @@ Page({
         that.setData({
           process: "",
           bdsArray: that.data.bdsArray
-        })
+        });
+     
       } else {
         var process = that.data.process;
         if(process == "" && str == "."){//第一次不能输入.
