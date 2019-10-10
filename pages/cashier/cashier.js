@@ -327,8 +327,24 @@ Page({
    */
   qrCodeCollection: function(e) {
     var that = this
-    var money = Math.floor(Number(that.data.result) * 100)
-    app.pageTurns('../payMent/payMent?money=' + money + '&orderType=2');
+    var money = Math.floor(Number(that.data.result) * 100);
+    // 生成支付记录表数据
+    app.sendRequest({
+        url: 'savePaymentRecord',
+        data: {
+            PAY_SOURCE: 2,
+            FK_SHOP: app.globalData.shopid
+        },
+        success: function(res){
+            if(res.data.code === '0000'){
+                app.pageTurns('../payMent/payMent?money=' + money + '&orderType=2&orderId=' + res.data.data);
+
+            }
+            else {
+                app.hintBox('操作失败','none')
+            }
+        }
+    });
   },
   /**
    * 扫一扫收款

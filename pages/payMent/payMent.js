@@ -7,7 +7,6 @@ var aaa;
 
 Page({
   data: {
-
   },
   onLoad: function (options) {
     var that = this;
@@ -23,8 +22,13 @@ Page({
     aaa = setInterval(function(){
         console.info('1')
         app.sendRequest({
-            url: "findOrderPayStatusByOrderId",
-            data: {
+            url: orderType === '2' ? "findPaymentRecordPayStatusByPayId" : "findOrderPayStatusByOrderId",
+            data: orderType === '2' ? 
+            {
+                PAY_PK: orderId
+            } 
+            : 
+            {
                 ORDER_PK: orderId
             },
             success: function (res) {
@@ -33,13 +37,14 @@ Page({
                        app.hintBox('收款成功', 'success')
                        // 播报语音，支付成功
                        that.jumpPage()
-                   }
-               } else {
-                   if(failCount ++ > 5){
-                       app.hintBox('收款成功', 'success')
-                       //语音播报，支付查询异常
-                       clearStorage(aaa)
-                   }
+                   } 
+                   else {
+                       if (failCount++ > 20) {
+                           app.hintBox('支付超时，请稍后查看', 'none')
+                           //语音播报，支付查询异常
+                           clearInterval(aaa)
+                       }
+                    } 
                }
             },
             fail: function (error) {
