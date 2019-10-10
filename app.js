@@ -336,6 +336,7 @@ App({
                 if (res.data.code != '0000') {
                     // 提示登录失败
                     that.hintBox(res.data.data, 'none')
+                    return;
                 }
                 wx.setStorageSync("openid", res.data.data.OPENID);
                 wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
