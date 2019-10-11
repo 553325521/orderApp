@@ -11,6 +11,7 @@
     "pages/template/chosenPosition",
     "pages/summary/summary",
     "pages/consumptionStatistics/consumptionStatistics",
+    "pages/fixedScanReport/fixedScanReport",
     "pages/commodityStatistics/commodityStatistics",
     "pages/statement/statement",
     "pages/entryOrders/entryOrders",

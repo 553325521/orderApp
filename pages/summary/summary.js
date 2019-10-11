@@ -34,7 +34,7 @@ Page({
     takeView:54
   },
   onLoad: function (options) {
-  
+    
   },
   onReady: function () {
   
@@ -211,6 +211,10 @@ loadShopRunData:function(selectTime){
     }
   })
 
-}
+},
+  navTo: function (e) {
+    var url = e.currentTarget.dataset.url
+    app.pageTurns(url)
+  }
 
 })

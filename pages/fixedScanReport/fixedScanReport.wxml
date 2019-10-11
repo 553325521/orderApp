@@ -1,0 +1,25 @@
+<wxs module="math" src="../../utils/math.wxs"></wxs>
+<view class='indent-list font-28 c6'>
+   <view class='head dp-flex flex-jc-sb'>
+    <view>交易日期</view>
+    <view>支付方式</view>
+    <view>金额</view>
+  </view>
+  <view class='indent-item'>
+    <view class="weui-loadmore weui-loadmore_line" hidden='{{!noData}}'>
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
+  </view>
+    <view class='item-list' wx:for="{{list}}" wx:key="keys" wx:for-item="item">
+        <view class='item dp-flex font-30 c3 pr' style='padding:0 10rpx 0 18rpx;border-top:1px solid #E4E4E4'>
+          <view class='time' style="width:320rpx;">{{item.PAY_TIME}}</view>
+          <view class='pay-way' style="width:258rpx;" wx:if="{{item.ORDER_PAY_WAY == 31}}">微信</view>
+          <view class='pay-way' style="width:258rpx;" wx:if="{{item.ORDER_PAY_WAY == 32}}">支付宝</view>
+          <view class='money' style="width:120rpx">{{math.toFix(item.PAY_MONEY/100)}}元</view>
+        </view>
+    </view>
+   </view>
+  </view>
+<view class="weui-loadmore" hidden="{{!loading}}">
+  <view class="weui-loading"></view>
+  <view class="weui-loadmore__tips">正在加载</view>
+</view>

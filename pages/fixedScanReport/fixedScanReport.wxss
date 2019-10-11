@@ -1,80 +1,10 @@
-/* pages/summary/summary.wxss */
-@import '../../weui.wxss';
-/* page{
-  padding-top: 80rpx
-} */
-.type-parameter{
-  position: relative;
-  top: 0;left: 0;
-  width: 100%;
-  /* line-height: 86rpx;
-  border-bottom: 1px solid #D4D3D3; */
-  height: 86rpx; 
-}
-.type-parameter>view{
-  padding-right: 16rpx;
-  border-right: 1px solid #E4E4E4 
-}
-.type-parameter>view:last-child{
-  border-right: none
-}
-.type-parameter image{
-  width: 42rpx;
-  height: 20rpx;
-  margin-top: 43rpx;
-  transform: translateY(-50%)
-}
-.summary-list{
-  border-top: 1px solid #D4D3D3;
-  padding:36rpx 50rpx 0  
-}
-.summary-list .item{
-  margin-bottom: 50rpx
-}
-/*  */
-.consume{
-  padding-left: 50rpx;
-  padding-right: 30rpx
-}
-.consume-head .number{
-  margin-left: 266rpx
-}
-.consume-dateils{
-  padding: 36rpx 0 0 28rpx;
-  margin-top: 16rpx;
-  position: relative
-}
-.consume-dateils::after{
-  display: block;
-  content: "";
-  width: 1px;
-  height: 338rpx;
-  background-color: #949291;
-  position: absolute;
-  left: 28rpx;top: 0
-}
-.consume-dateils .item{
-  margin-bottom: 52rpx
-}
-.consume-dateils .item .pay-way{
-  padding-left: 80rpx;
-  position: relative;
-  width: 230rpx
-}
-.consume-dateils .item .pay-way::after{
-  display: block;
-  content: "";
-  width: 56rpx;
-  height: 1px;
-  background-color: #949291;
-  position: absolute;
-  left: 0;top: 18rpx
-}
-.consume-dateils .item .pay-number{
-  width: 127rpx
-}
+/* pages/consumptionStatistics/consumptionStatistics.wxss */
+@import "../indent/indent.wxss";
 
-/* 筛选样式开始 */
+/* page{
+  padding-top: 100rpx
+} */
+
 .select-before-color {
   color: #666;
 }
@@ -106,9 +36,6 @@
   line-height: 28rpx;
   flex: 1;
 }
-.f30{
-  font-size: 30rpx
-}
 
 .select_box .select .select_img {
   width: 30rpx;
@@ -123,7 +50,7 @@
 
 .option_box {
   position: absolute;
-  top: 86rpx;
+  top: 122rpx;
   width: 100%;
   box-sizing: border-box;
   height: 0;
@@ -143,6 +70,56 @@
   border-bottom: 1px solid #efefef;
   padding: 10rpx;
 }
+
+.type-parameter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  line-height: 86rpx;
+  border-bottom: 1px solid #d4d3d3;
+  z-index: 9999;
+}
+
+.type-parameter>view {
+  padding-right: 16rpx;
+  border-right: 1px solid #e4e4e4;
+}
+
+.type-parameter>view:last-child {
+  border-right: none;
+}
+
+.type-parameter image {
+  width: 42rpx;
+  height: 20rpx;
+  margin-top: 43rpx;
+  transform: translateY(-50%);
+}
+
+/* .indent-list{
+  margin-top: 22rpx;
+  border-top: 1px solid #D4D3D3;
+} */
+
+.head {
+  padding: 50rpx 26rpx 20rpx 50rpx;
+}
+
+.indent-list {
+  background: #fff;
+}
+
+.sx_img {
+  width: 28rpx;
+  height: 28rpx;
+}
+
+.font-33 {
+  font-size: 33rpx;
+}
+
+
 
 .select-content-padding {
   padding-top: 40rpx;
@@ -184,8 +161,6 @@
 .select-date-img {
   float: left;
   margin-top: 8px;
-  width: 30rpx;
-  height: 30rpx;
 }
 
 .select-top-style {
@@ -242,38 +217,19 @@
     -webkit-transform: scaleX(0.5);
     transform: scaleX(0.5);
 }
-   .shaixuan-btn{/*筛选按钮样式 */
-    border-radius: 25px;
-    padding: 0 3%;
-    font-size: 28rpx;
-    width: 15%;
-    border:1px solid lightgray;
-    color: #666;
-    margin: 4% 83%;
-  }
-   .shaixuan-btn-before{
-    background-color: #F9F4F4;
-    border:1px solid lightgray;
-    color: #666;
-  }
-  .shaixuan-btn-after{
-    background-color: #EF9BA0;
-    border: none;
-    color: #FFF;
-  }
 
 @media (max-width:768px) {	
  .select-btn-before {
   margin: 8px 10px 12px 0;
   border-radius: 25px;
-  padding: 1% 31%;
+  padding: 1% 29%;
   font-size: 28rpx;
   float: left;
   width: 80%;
   }
   .select-area {
   width: 100%;
-  height: 560rpx;
+  height: 750rpx;
   background: #fff;
 }
    .user-setting{
@@ -288,16 +244,15 @@
  @media (min-height: 568px) and (max-height: 700px) {
   .select-area {
   width: 100%;
-  height: 560rpx;
+  height: 850rpx;
   background: #fff;
 }
  }
  @media (min-width: 321px) and (max-width: 415px) {
-
  .select-btn-before {
   margin: 8px 10px 12px 0;
   border-radius: 25px;
-  padding: 1% 20%;
+  padding: 1% 18%;
   font-size: 28rpx;
   float: left;
   width: 85%;
@@ -317,14 +272,14 @@
    .select-btn-before {
   margin: 8px 10px 12px 0;
   border-radius: 25px;
-  padding: 1% 15%;
+  padding: 1% 13%;
   font-size: 28rpx;
   float: left;
   width: 80%;
   }
   .select-area {
   width: 100%;
-  height: 560rpx;
+  height: 950rpx;
   background: #fff;
 }
   .user-setting{
@@ -336,6 +291,6 @@
       text-align: center;
   }
  }
- .f28{
-   font-size: 28rpx;
+ .font-28{
+   font-size: 28rpx
  }
