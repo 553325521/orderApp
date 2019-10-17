@@ -126,6 +126,7 @@
     <view wx:if="{{orderDetails.WM_ORDER_STATE == '1'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='enterEBOrder'>确认订单</view>
      <view wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='eBOrderComplete'>确认送达</view>
       <view wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='eBOrderSendout'>确认送出</view>
+      <view wx:if="{{orderDetails.WM_ORDER_STATE == '5'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='eBOrderZhongbaoShippingFee'>众包配送</view>
 </view>
 
 <!-- 美团外卖的订单底部按钮样式 -->
@@ -134,4 +135,5 @@
     <view wx:if="{{orderDetails.WM_ORDER_STATE == '2' || orderDetails.WM_ORDER_STATE == '3'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='enterMTOrder'>确认订单</view>
      <view wx:if="{{orderDetails.WM_ORDER_STATE == '6'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='mTOrderComplete'>确认送达</view>
       <view wx:if="{{orderDetails.WM_ORDER_STATE == '4'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='mTOrderSendout'>确认送出</view>
+       <view wx:if="{{orderDetails.WM_ORDER_STATE == '4'}}" class='flex-1  tc' data-order='{{orderDetails.ORDER_CODE}}' bindtap='mtOrderZhongbaoShippingFee'>众包配送</view>
 </view>

@@ -355,5 +355,72 @@ Page({
             }
         })
 
+    },
+    /**
+     * 饿百获取众包配送配
+     */
+    eBOrderZhongbaoShippingFee: function(e){
+        var orderId = e.currentTarget.dataset.order;
+        this.zhongbaoShippingFee('eb', orderId);
+    },
+    /**
+     * 美团获取费用并呼叫配送
+     */
+    mtOrderZhongbaoShippingFee: function(e){
+        var orderId = e.currentTarget.dataset.order;
+        this.zhongbaoShippingFee('mt', orderId);
+    },
+    /**
+     * 呼叫众包配送
+     */
+    zhongbaoShippingFee: function(orderId, source){
+        app.sendRequest({
+            url: "order/zhongbao/shippingFee",
+            method: "post",
+            data: {
+                SOURCE: source,
+                orderId: orderId
+            },
+            success: function (res) {
+                if (res.data.code == '0000') {
+                    var fee = res.data.data.fee;
+                    wx.showModal({
+                        title: '众包配送费' + fee + '元',
+                        content: '确认呼叫？',
+                        confirmColor: '#EF9BA0',
+                        success(res) {
+                            if (res.confirm) {
+                                app.sendRequest({
+                                    url: "/order/zhongbao/dispatch",
+                                    method: "post",
+                                    data: {
+                                        SOURCE: source,
+                                        orderId: orderId,
+                                        fee: fee
+                                    },
+                                    success: function (res) {
+                                        wx.showToast({
+                                            title: res.data.data,
+                                            icon: 'success',
+                                            duration: 1000
+                                        })
+                                        wx.redirectTo({
+                                            url: '/pages/takeOut/takeOutDateil?ORDER_PK=' + orderPk + '&SOURCE_NAME=' + sourceType
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    })
+
+                } else {
+                    wx.showToast({
+                        title: res.data.data,
+                        icon: 'fail',
+                        duration: 1000
+                    })
+                }
+            }
+        })
     }
 })
