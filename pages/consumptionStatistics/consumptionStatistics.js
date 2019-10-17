@@ -37,10 +37,19 @@ Page({
     isSelectConfirm:false,
     wayUser:false,
     takeView:54,
-    isDataHide:false //是否显示数据
+    isDataHide:false, //是否显示数据
+    isContainDesk:2 //是否包含桌号(0:不包含 1：包含 2：全部)
   },
   loadXFData:function(){
 
+  },
+  //选择是否包含桌位号
+  selectContainDesk:function(e){
+    var that = this;
+    var id = e.currentTarget.dataset.id;
+    that.setData({
+      isContainDesk:id
+    })
   },
   cancelChoose:function(){
     var that = this;
@@ -114,6 +123,7 @@ Page({
         END_DATE: that.data.end_date,
         ORDER_PAY_WAY: JSON.stringify(chooseWayArray),
         FK_SHOP: shopId,
+        IS_CONTAIN_DESK: that.data.isContainDesk
       },
       header: {
         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
@@ -174,7 +184,7 @@ Page({
           orderMap.set("keyName", "");
           orderMap.set("totalMoney", 0);
           orderMap.set("timeWidth", "140rpx");
-          orderMap.set("seatWidth", "100rpx");
+          orderMap.set("seatWidth", "140rpx");
           orderMap.set("partWidth", "140rpx");
           orderMap.set("moneyWidth", "180rpx");
           orderBigList.push(JSON.parse(that.mapToJson(orderMap)));
@@ -357,7 +367,7 @@ Page({
     //当前选择的店铺
     var shopId = app.globalData.shopid;
     var choosePay = '今天';
-    var chooseWayArray = ['现金','微信'];
+    var chooseWayArray = ['31','32'];
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
       method: "post",
@@ -367,6 +377,7 @@ Page({
         END_DATE: that.data.end_date,
         ORDER_PAY_WAY: JSON.stringify(chooseWayArray),
         FK_SHOP: shopId,
+        IS_CONTAIN_DESK:that.data.isContainDesk
       },
       header: {
         'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
@@ -479,14 +490,14 @@ Page({
             } else if (data[j].ORDER_PAY_WAY == 23) {
               data[j].payWay = '银联扫一扫';
             } else if (data[j].ORDER_PAY_WAY == 31) {
-              data[j].payWay = '微信二维码';
-            } else if (data[j].ORDER_PAY_WAY == 31) {
-              data[j].payWay = '支付宝二维码';
+              data[j].payWay = '台码付(微)';
+            } else if (data[j].ORDER_PAY_WAY == 32) {
+              data[j].payWay = '台码付(支)';
             } else {
               data[j].payWay = '未知';
             }
             orderList.push(data[j]);
-            allMoney = allMoney + parseFloat(data[j].TOTAL_MONEY);
+            allMoney = allMoney + (parseFloat(data[j].TOTAL_MONEY)/100);
           }
         }
         orderMap.set(dateStr, null);

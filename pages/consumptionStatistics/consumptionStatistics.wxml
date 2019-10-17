@@ -94,6 +94,21 @@
           <view class="placeholder  user-setting {{wayUser ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='5' catchtap='selectWayBtn'>其他</view>
         </view>
       </view>
+
+      <view class="weui-flex" style='margin-top:20rpx;'>
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:28rpx;color:#666'>订单是否包含桌位号</view>
+        </view>
+      </view>
+
+       <view class="weui-flex  pl5">
+        <view class="weui-flex__item">
+          <view class="placeholder  user-setting {{isContainDesk == 2 ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='2' catchtap='selectContainDesk'>全部</view>
+          <view class="placeholder  user-setting {{isContainDesk == 1 ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='1' catchtap='selectContainDesk'>包含</view>
+           <view class="placeholder  user-setting {{isContainDesk == 0 ? 'select-btn-bg-pink':'select-btn-bg-white' }}" style='width:110rpx;' data-id='0' catchtap='selectContainDesk'>不包含</view>
+        </view>
+      </view>
+
       <view class="weui-flex" style='height:{{takeView}}px'>
         <view class="weui-flex__item">
         </view>
@@ -108,8 +123,8 @@
 <view class='indent-list font-28 c6'>
   <view class='head dp-flex flex-jc-sb'>
     <view>交易日期</view>
-    <view>应付金额</view>
-    <view>优惠</view>
+    <view>桌位号</view>
+    <view>数量</view>
     <view>实付金额</view>
     <view class='{{font_color}}' catchtap="openSelect">
       <text catchtap="openSelect">筛选</text>
@@ -121,14 +136,14 @@
       <text>{{itemName.keyName}}</text>
       <text>总计:{{math.toFix(itemName.totalMoney)}}元</text>
     </view>
-    <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
-      <view class='item dp-flex font-30 c3 pr' bindtap='navTo'>
+    <view class='item-list' wx:for="{{itemName.data}}" wx:key="index" wx:for-item="item">
+      <view class='item dp-flex font-30 c3 pr' bindtap='navTo' style='{{(index+1) == (itemName.data.length) ? "":"border-bottom:1px lightgray solid"}}'>
         <!-- <view class='label pa'>*</view> -->
-        <view class='time' style="width:{{itemName.timeWidth}};display:{{isDataHide?'none':'block'}} ">{{item.SF}}</view>
-        <view class='seat' style="width:{{itemName.seatWidth}};display:{{isDataHide?'none':'block'}}">{{item.ORDER_POSITION}}</view>
-        <view class='part' style="width:{{itemName.partWidth}};display:{{isDataHide?'none':'block'}}">{{item.TOTAL_FS}}份 </view>
-        <view class='money' style="width:{{itemName.moneyWidth}};display:{{isDataHide?'none':'block'}}">{{math.toFix(item.TOTAL_MONEY)}}元</view>
-        <view class='pay-way' style="display:{{isDataHide?'none':'block'}}">{{item.payWay}}</view>
+        <view class='time' style="width:150rpx;display:{{isDataHide?'none':'block'}} ">{{item.SF}}</view>
+        <view class='seat' style="width:150rpx;display:{{isDataHide?'none':'block'}}">{{item.ORDER_POSITION}}</view>
+        <view class='part' style="width:100rpx;display:{{isDataHide?'none':'block'}}">{{item.TOTAL_FS == '0' ? "":item.TOTAL_FS+'份'}} </view>
+        <view class='money' style="width:140rpx;display:{{isDataHide?'none':'block'}}">{{math.toFix(item.TOTAL_MONEY/100)}}元</view>
+        <view class='pay-way' style="width:140rpx;display:{{isDataHide?'none':'block'}}">{{item.payWay}}</view>
          <view class="weui-loadmore weui-loadmore_line font-28"  style="display:{{isDataHide?'block':'none'}}">
           <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
         </view>
