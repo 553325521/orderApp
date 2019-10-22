@@ -1,4 +1,3 @@
-// pages/consumptionStatistics/consumptionStatistics.js
 var app = getApp();
 Page({
   data: {
@@ -7,10 +6,6 @@ Page({
     shopIndex: 0,
     dateArr: ['今天', '昨天', '本周', '本月', '本年'],
     dateIndex: 0,
-    wayArr: [{ 'checked': false, 'name': '微信' },
-    { 'checked': false, 'name': '支付宝' }],
-    wayResultArr: [ { 'checked': false, 'name': '微信' },
-    { 'checked': false, 'name': '支付宝' }],
     wayIndex: 0,
     orderArray: {},
     pageShow: false,
@@ -30,7 +25,9 @@ Page({
     isSelectConfirm: false,
     wayUser: false,
     takeView: 54,
-    isDataHide: false
+    isDataHide: false, //是否显示数据
+    isContainDesk: 2, //是否包含桌号(0:不包含 1：包含 2：全部)
+    payWayParam:"NONE"
   },
   loadXFData: function () {
 
@@ -71,35 +68,18 @@ Page({
     } else {
       choosePay = that.data.dateArr[that.data.select_id];
     }
-    console.info(choosePay);
-    console.info(that.data.start_date);
-    console.info(that.data.end_date);
     var chooseWay = that.data.wayResultArr;
     var chooseWayArray = [];
-    for (var i = 0; i < chooseWay.length; i++) {
-      if (chooseWay[i].checked) {
-        if (chooseWay[i].name == '现金') {
-          chooseWayArray.push('1');
-        } else if (chooseWay[i].name == '微信') {
-          chooseWayArray.push('31');
-        } else if (chooseWay[i].name == '支付宝') {
-          chooseWayArray.push('32');
-        } else if (chooseWay[i].name == 'POS') {
-          chooseWayArray.push('4');
-        } else if (chooseWay[i].name == '储值') {
-          chooseWayArray.push('5');
-        } else if (chooseWay[i].name == '其他') {
-          chooseWayArray.push('6');
-        }
-
-      }
+    var payWayRoute = that.data.payWayParam;
+    if(payWayRoute == 'aliPay'){
+      chooseWayArray = ['32'];
     }
-
-    console.info(JSON.stringify(chooseWayArray));
-
+    if (payWayRoute == 'wxPay') {
+      chooseWayArray = ['31'];
+    }
     var shopId = app.globalData.shopid;
     wx.request({
-      url: app.globalData.basePath + 'json/PaymentRecord_load_loadFixedOrderDataByTimeOrWay.json',
+      url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
       method: "post",
       data: {
         SELECT_PERIOD: choosePay,
@@ -185,26 +165,6 @@ Page({
     that.cancelChoose();
     that.closeSelectArea();
   },
-  selectWayBtn: function (e) {
-    var id = e.currentTarget.dataset.id;
-    var index = parseInt(id);
-    var that = this;
-    if (index == 5) {
-      that.setData({
-        wayUser: true
-      })
-    } else {
-      that.data.wayArr[index].checked = true;
-      var newArray = that.data.wayArr;
-      that.setData({
-        wayArr: newArray
-      })
-    }
-    that.data.wayResultArr[index].checked = true;
-    that.setData({
-      wayResultArr: that.data.wayResultArr
-    })
-  },
   selectBtn: function (e) {
     var id = e.currentTarget.dataset.id;
     console.info(e);
@@ -279,6 +239,9 @@ Page({
 
   onLoad: function (options) {
     var that = this;
+    that.setData({
+      payWayParam:options.payWayParam
+    })
   },
   onReady: function () {
 
@@ -350,9 +313,15 @@ Page({
     //当前选择的店铺
     var shopId = app.globalData.shopid;
     var choosePay = '今天';
-    var chooseWayArray = ['31', '32'];
+    var chooseWayArray = [];
+    if (payWayRoute == 'aliPay') {
+      chooseWayArray = ['32'];
+    }
+    if (payWayRoute == 'wxPay') {
+      chooseWayArray = ['31'];
+    }
     wx.request({
-      url: app.globalData.basePath + 'json/PaymentRecord_load_loadFixedOrderDataByTimeOrWay.json',
+      url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
       method: "post",
       data: {
         SELECT_PERIOD: choosePay,
