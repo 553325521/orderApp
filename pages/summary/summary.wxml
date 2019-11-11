@@ -104,12 +104,12 @@
     <view class='total flex-1 tr'>总金额{{math.toFix(totalOrderMoney)}}元</view>
   </view>
   <view class='consume-dateils'>
-    <view class='item dp-flex' style='color:#EF9BA0;font-size:30rpx' data-url='../payStatistics/payStatistics?payWayParam=aliPay' bindtap='navTo'>
+    <view class='item dp-flex' style='color:#EF9BA0;font-size:30rpx' data-url='../payStatistic/payStatistic?payWayParam=wxPay' bindtap='navTo'>
       <view class='pay-way'>微信支付</view>
       <view class='pay-number tr'>{{wxPayOrderNumber}}笔</view>
       <view class='flex-1 tr'>总额{{math.toFix(wxPayOrderMoney)}}元</view>
     </view>
-    <view class='item dp-flex' style='color:#EF9BA0;font-size:30rpx' data-url='../payStatistics/payStatistics?payWayParam=wxPay'  bindtap='navTo'>
+    <view class='item dp-flex' style='color:#EF9BA0;font-size:30rpx' data-url='../payStatistic/payStatistic?payWayParam=aliPay'  bindtap='navTo'>
       <view class='pay-way'>支付宝支付</view>
       <view class='pay-number tr'>{{aliPayOrderNumber}}笔</view>
       <view class='flex-1 tr'>总额{{math.toFix(aliPayOrderMoney)}}元</view>

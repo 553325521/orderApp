@@ -79,7 +79,7 @@ Page({
     }
     var shopId = app.globalData.shopid;
     wx.request({
-      url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
+      url: app.globalData.basePath + 'json/Order_load_loadPayReportData.json',
       method: "post",
       data: {
         SELECT_PERIOD: choosePay,
@@ -314,6 +314,7 @@ Page({
     var shopId = app.globalData.shopid;
     var choosePay = '今天';
     var chooseWayArray = [];
+    var payWayRoute = that.data.payWayParam;
     if (payWayRoute == 'aliPay') {
       chooseWayArray = ['32'];
     }
@@ -321,7 +322,7 @@ Page({
       chooseWayArray = ['31'];
     }
     wx.request({
-      url: app.globalData.basePath + 'json/Order_load_loadOrderDataByShopOrTimeOrWay.json',
+      url: app.globalData.basePath + 'json/Order_load_loadPayReportData.json',
       method: "post",
       data: {
         SELECT_PERIOD: choosePay,
