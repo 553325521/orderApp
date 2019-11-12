@@ -2,7 +2,7 @@
 var constant = require('utils/constant.js');
 
 // 开发配置
-let local = true;
+let local = false;
 
 var util = require('utils/util.js');
 var basePath = local ? 'http://m.ddera.com/dcxt/' : 'https://m.ddera.com/';
@@ -13,7 +13,7 @@ var webSocketUrl = (local ? 'ws://m.ddera.com/dcxt/' : 'wss://m.ddera.com/') + '
 App({
     data: {
     },
-    /**
+    /** 
     * 生命周期函数--监听小程序初始化
     */
     onLaunch: function (options) {
@@ -24,7 +24,7 @@ App({
         //     //   title: '提示',
         //     //   content: '页面跳转错误，请勿进行操作！',
         //     //   showCancel: false,
-        //     //   confirmText: "知道了",
+        //     //   confi   rmText: "知道了",
         //     //   confirmColor: "#ffbe00",
         //     // })
         //     // TODO 如果没有接收到appid参数提示错误  测试先绑定一个
