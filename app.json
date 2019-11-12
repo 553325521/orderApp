@@ -20,7 +20,8 @@
     "pages/orderDetail/orderDetail",
     "pages/template/selectNumber",
     "pages/payOrders/payOrders",
-    "pages/cashier/cashier"
+    "pages/cashier/cashier",
+    "pages/payStatistic/payStatistic"
   ],
   "window": {
     "backgroundTextStyle": "light",
