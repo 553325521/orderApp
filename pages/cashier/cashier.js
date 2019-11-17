@@ -7,14 +7,14 @@ Page({
     addGlobalClass: true,
   },
   data: {
-    result: '',
+    result: 0,
     process: '',
     newStr: '',
     noYH: true,
     isFocus:false,
     isComputeFocus:true,
     bdsArray:[],
-    operateStr:"",
+    operateStr:0,
     yhMoney:"",
     isFirst:true,
     tempTime:0 //第几次输入数字
@@ -259,7 +259,12 @@ Page({
           that.setData({
             process: process + str
           });
-          operateStr = operateStr + str;
+          if (operateStr == "0"){//如果操作字符串中只有0
+            operateStr = str;
+          }else{
+            operateStr = operateStr + str;
+          }
+          
         }
         
       } 
@@ -273,9 +278,9 @@ Page({
     var that = this;
     that.setData({
       process: '',
-      result: '',
+      result: 0,
       tempTime: 0,
-      operateStr:'',
+      operateStr:0,
       bdsArray:[],
       yhMoney:"",
       noYH:true,
@@ -285,7 +290,6 @@ Page({
     })
   },
   yhMoneyChange:function(e){
-    debugger;
     this.setData({
       yhMoney:e.detail.value
     })
@@ -304,9 +308,21 @@ Page({
     }
     var result = 0;
     if(bdsArray.length != 0){
-      var hz = this.dal2Rpn(bdsArray);
-      result = this.calc(hz);
-      if (that.data.isFirst == true){
+      var tempArray = that.data.bdsArray.join(",").split(",");
+      var finalSinal = tempArray[tempArray.length-1];
+      if (finalSinal == '+'){//如果最后一个运算符为+，又点了=
+        tempArray.splice(tempArray.length - 1, 1);
+        var hz = this.dal2Rpn(tempArray);
+        result = this.calc(hz);
+      }else{
+        if (bdsArray.length == 1 && bdsArray[0] == '0'){
+          result = 0;
+        }else{
+          var hz = this.dal2Rpn(bdsArray);
+          result = this.calc(hz);
+        }
+      }
+      if (that.data.isFirst == true && yhMoney != 0){
         result = result - yhMoney;
         this.setData({
           isFirst:false
@@ -318,8 +334,8 @@ Page({
     that.setData({
       process:'',
       result: result,
-      bdsArray: bdsArray
-     // operateStr:""
+      bdsArray: bdsArray,
+      operateStr: result
     })
   },
   /**
@@ -328,6 +344,10 @@ Page({
   qrCodeCollection: function(e) {
     var that = this
     var money = Math.floor(Number(that.data.result) * 100);
+    if(money == 0){
+      app.hintBox('请输入收款金额', 'none');
+      return;
+    }
     // 生成支付记录表数据
     app.sendRequest({
         url: 'savePaymentRecord',
