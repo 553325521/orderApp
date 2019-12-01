@@ -1,20 +1,26 @@
 var money = 0;
+var app = getApp();
 //用来标记是否第一次进入界面
 var flag;
 Page({
+  data:{
+    orderId: "",//当前处理的订单Id
+    yfMoney:0,//应付金额
+  },
   onLoad: function(options) {
     money = (options.money) / 100;
     flag = 0;
     this.setData({
       money: money,
+      yfMoney:options.money,
       displayValue: money,
-      sc: '0'
+      sc: '0',
+      orderId:options.orderId
     })
   },
 
   onTapDigit: function(event) {
     const key = event.target.dataset.key; // 根据data-key标记按键
-
     if (key == 'key-dot') {
       if (flag == 1) {
         // 按下点号
@@ -37,8 +43,30 @@ Page({
           sc: '0'
         })
         flag = 0;
-      } else if (key == 'key-sum') {
-
+      } else if (key == 'key-sum') {//快结按钮处理
+        var orderId = this.data.orderId;
+        var yfMoney = this.data.yfMoney;
+        app.sendRequest({
+          url: "Order_update_cashPay",
+          method: "post",
+          data: {
+            ORDER_PK: orderId,
+            ORDER_SHOPMONEY:yfMoney,
+            openid: wx.getStorageSync('openid')
+          },
+          success: function (res) {
+            var data = res.data.data;
+            if (res.data.code == '0000') {
+              app.reLaunch('/pages/index/index?page=../indent/indent');//跳转订单界面
+              //app.pageTurns('../index/index?page=../indent/indent');
+            } else {
+              app.toast(res.data.data);
+            }
+          },
+          fail: function (error) {
+            console.info(error);
+          }
+        })
       } else {
         if (key == 'key-100') {
           var diaplayValue = this.data.displayValue;
@@ -101,9 +129,8 @@ Page({
           }
           flag = 1;
         }
-
       }
-
+      
       var displayValue = this.data.displayValue;
       var moneySum = this.data.money;
       var moneySc = 0;

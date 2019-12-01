@@ -11,7 +11,7 @@ page{
   height: 176rpx;
   border: 1px solid #9F9D9B;
   border-radius: 10rpx;
-  margin: 70rpx 0 70rpx 50rpx
+  margin: 50rpx 0 50rpx 50rpx
 }
 .result{
   height: 110rpx;
@@ -60,7 +60,6 @@ page{
 .keyboard{
   padding: 0 50rpx;
   margin-top: 68rpx;
-  border-bottom:1px solid #f6f6f6;
 }
 .keyboard .numeric-key{
   width: 470rpx;
@@ -133,4 +132,44 @@ page{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+ @media (min-height: 700px) {
+   .count-head{
+    width: 628rpx;
+    height: 176rpx;
+    border: 1px solid #9F9D9B;
+    border-radius: 10rpx;
+    margin: 20rpx 0 20rpx 50rpx
+  }
+ .keyboard{
+    padding: 0 50rpx;
+    margin-top: 20rpx;
+  }
+  .keyboard .numeric-key{
+    width: 470rpx;
+    flex-wrap: wrap;
+    height: 100%;
+  }
+  .keyboard .numeric-key>view{
+    width: 108rpx;
+    line-height: 108rpx;
+    border-radius: 50%;
+    border: 1px solid #A09E9C;
+    margin: 0 70rpx 20rpx 0;
+  }
+  .keyboard .oper-key view{
+    width: 108rpx;
+    line-height: 108rpx;
+    border-radius: 108rpx;
+    border: 1px solid #A09E9C;
+    margin-bottom: 20rpx;
+  }
+  .keyboard .oper-key view.equal-to{
+    line-height: 235rpx;
+    border: 1px solid #1F1A17;
+    margin-top: 20rpx
+  }
+  .pr{
+    margin-top: 8rpx;
+  }
 }

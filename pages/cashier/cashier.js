@@ -148,10 +148,23 @@ Page({
     var that = this;
     var currentIndex = e.currentTarget.dataset.index;
     var noYH = currentIndex == 0 ? false : true;
+    var yhMoney = that.data.yhMoney;
+    var result = parseFloat(that.data.result);
+    if(noYH == false && yhMoney != ""){
+      that.setData({
+        result:result-parseFloat(yhMoney),
+        operateStr: result - parseFloat(yhMoney)
+      })
+    }
+    if (noYH == true && yhMoney != "") {
+      that.setData({
+        result: result + parseFloat(yhMoney),
+        operateStr: result + parseFloat(yhMoney)
+      })
+    }
     var isFocus = !noYH;
     that.setData({
       noYH: noYH,
-      yhMoney:"",
       isFocus:isFocus
     })
   },
@@ -246,7 +259,11 @@ Page({
      
       } else {
         var process = that.data.process;
-        if(process == "" && str == "."){//第一次不能输入.
+        if(process == "" && str == "."){//第一次输入.
+          that.setData({
+            process:"0.",
+            operateStr:"0."
+          });
           return;
         }else if(process.indexOf(".") != -1 && str == "."){//包含.不能再次输入.
           return;
@@ -259,9 +276,11 @@ Page({
           that.setData({
             process: process + str
           });
-          if (operateStr == "0"){//如果操作字符串中只有0
+          if (operateStr == "0" && str != "."){//如果操作字符串中只有0,且第二次按的不是点
             operateStr = str;
-          }else{
+          } else if (operateStr == "0" && str == ".") {//如果操作字符串中只有0
+            operateStr = operateStr + str;
+          }else{ 
             operateStr = operateStr + str;
           }
           
@@ -328,6 +347,7 @@ Page({
           isFirst:false
         })
       }
+      result = result.toFixed(2);
       bdsArray = [];
       bdsArray.push(result);
     }
@@ -372,6 +392,10 @@ Page({
   richScan: function() {
     var that = this
     var money = Math.floor(Number(that.data.result) * 100) * 100
+    if (money == 0) {
+      app.hintBox('请输入收款金额', 'none');
+      return;
+    }
     wx.scanCode({
       onlyFromCamera: true,
       scanType: ['qrCode'],

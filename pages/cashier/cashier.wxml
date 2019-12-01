@@ -48,7 +48,7 @@
       <view class='equal-to tc' hover-class='bg-hui' id="{{ide}}" bindtap='calculate'>=</view>
     </view>
   </view>
-   <view class="weui-footer weui-footer_fixed-bottom pay-way dp-flex" style='bottom:.22em;'>
+   <view class="weui-footer weui-footer_fixed-bottom pay-way dp-flex" style='bottom:.22em;border-top:1px solid #f6f6f6;'>
             <view class='scan flex-1 dp-flex' bindtap='qrCodeCollection'>
               <image src='../../images/icon/QR-scan.png'></image>
               <text class='font-32 c6'>二维码收款</text>

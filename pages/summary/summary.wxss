@@ -130,8 +130,8 @@
   overflow-y: auto;
   background: rgba(0, 0, 0, 0.4);
   /* transition: height 0.3s; */
-  border-left: 1px solid #efefef;
-  border-right: 1px solid #efefef;
+  /* border-left: 1px solid #efefef;
+  border-right: 1px solid #efefef; */
   z-index: 999;
 }
 

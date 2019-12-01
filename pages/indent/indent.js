@@ -246,12 +246,21 @@ methods:{
     var orderMap = new Map();
     var orderBigList = [];
     for(var i = 0; i < data.length;i++){
-      dateStr = data[i].CREATE_TIME.substring(0, 10);
+      if(data[i].CREATE_TIME == undefined){
+        dateStr = "数据日期解析异常";
+        continue;
+      }else{
+        dateStr = data[i].CREATE_TIME.substring(0, 10);
+      }
       if(!orderMap.has(dateStr)){
           allMoney = 0;
           orderList = [];
           orderMap.clear();
           for(var j = 0;j < data.length;j++){
+            if (data[j].CREATE_TIME == undefined){
+              //"数据日期解析异常";
+              continue;
+            }
             if (data[j].CREATE_TIME.indexOf(dateStr)!=-1){
               data[j].SF = data[j].CREATE_TIME.substring(11);
               if (data[j].ORDER_PAY_WAY == 1){
