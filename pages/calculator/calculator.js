@@ -20,6 +20,7 @@ Page({
   },
 
   onTapDigit: function(event) {
+    var that = this;
     const key = event.target.dataset.key; // 根据data-key标记按键
     if (key == 'key-dot') {
       if (flag == 1) {
@@ -44,29 +45,30 @@ Page({
         })
         flag = 0;
       } else if (key == 'key-sum') {//快结按钮处理
-        var orderId = this.data.orderId;
-        var yfMoney = this.data.yfMoney;
-        app.sendRequest({
-          url: "Order_update_cashPay",
-          method: "post",
-          data: {
-            ORDER_PK: orderId,
-            ORDER_SHOPMONEY:yfMoney,
-            openid: wx.getStorageSync('openid')
-          },
-          success: function (res) {
-            var data = res.data.data;
-            if (res.data.code == '0000') {
-              app.reLaunch('/pages/index/index?page=../indent/indent');//跳转订单界面
-              //app.pageTurns('../index/index?page=../indent/indent');
-            } else {
-              app.toast(res.data.data);
-            }
-          },
-          fail: function (error) {
-            console.info(error);
-          }
-        })
+          that.sendPay("1")
+        // var orderId = this.data.orderId;
+        // var yfMoney = this.data.yfMoney;
+        // app.sendRequest({
+        //   url: "Order_update_cashPay",
+        //   method: "post",
+        //   data: {
+        //     ORDER_PK: orderId,
+        //     ORDER_SHOPMONEY:yfMoney,
+        //     openid: wx.getStorageSync('openid')
+        //   },
+        //   success: function (res) {
+        //     var data = res.data.data;
+        //     if (res.data.code == '0000') {
+        //       app.reLaunch('/pages/index/index?page=../indent/indent');//跳转订单界面
+        //       //app.pageTurns('../index/index?page=../indent/indent');
+        //     } else {
+        //       app.toast(res.data.data);
+        //     }
+        //   },
+        //   fail: function (error) {
+        //     console.info(error);
+        //   }
+        // })
       } else {
         if (key == 'key-100') {
           var diaplayValue = this.data.displayValue;
@@ -143,5 +145,53 @@ Page({
       })
     }
 
-  }
+    },
+    /**
+   * 发送请求支付
+   */
+    sendPay: function (payWay, fun) {
+        var that = this
+        //请求网络，进行付款成功
+        app.sendRequest({
+            url: 'Order_update_OrderShopSettleAccounts',
+            data: {
+                SHOP_FK: app.globalData.shopid,
+                OPEN_ID: wx.getStorageSync('openid'),
+                ORDER_PK: that.data.orderId,
+                payWay: payWay,
+                trueMoney: money
+            },
+            success: function (res) {
+                if (fun != undefined) {
+                    fun(res)
+                } else {
+                    if (res.data.code == "0000") {
+                        app.hintBox('收款成功', 'success')
+                        // that.vanish()
+                        that.jumpPage()
+
+                    } else {
+                        app.hintBox(res.data.data, 'none')
+                    }
+                }
+            }
+        })
+
+    },
+   /**
+   * 跳转页面
+   */
+  jumpPage: function () {
+        var page = wx.getStorageSync('click_page')
+        if (page == '../founding/founding' && app.globalData.appSetting.CHECK_TDKT == 'true') {
+            //   app.reLaunch('../index/index?page=../founding/founding')
+            app.noFlushBackIndexPage(true)
+        } else if (page == '../indent/indent') {
+            //   app.reLaunch('../index/index?page=../indent/indent')
+            app.noFlushBackIndexPage(false, undefined, page)
+        } else {
+            //   app.reLaunch('../index/index?page='+page)
+            app.noFlushBackIndexPage(false)
+        }
+    },
 })
