@@ -263,7 +263,10 @@ Page({
     console.log(currentTab)
     if (currentTab == undefined){
       app.hintBox('请选择支付方式','none')
-    } else if (currentTab == 3){//如果选的是微信或者支付宝支付
+    } else if (currentTab == 1) {//如果选的是现金支付
+      //that.data.wzShow = true
+      app.pageTurns('../calculator/calculator?money=' + trueMoney);
+    }  else if (currentTab == 3){//如果选的是微信或者支付宝支付
       //that.data.wzShow = true
       app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK + '&orderType=1');
     } else if (currentTab == 2){

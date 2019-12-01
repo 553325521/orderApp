@@ -1,0 +1,39 @@
+<wxs module="math" src="../../utils/math.wxs"></wxs>
+<template name="calculator-key">
+  <button hover-start-time="{{5}}" hover-stay-time="{{100}}" hover-class="calculator-key-hover" data-key="{{className}}" class="calculator-key {{className}}">{{display}}</button>
+</template>
+
+<view class="calculator">
+  <view class="calculator-display">
+  <view class="calculator-display-textPay">应 付 金 额 ： {{math.toFix(money)}}</view>
+  </view>
+  <view class="calculator-display-sur">
+  <view class="calculator-display-textSur">找 零 ： {{math.toFix(sc)}}</view>
+  <view class="calculator-display-text">{{math.toFix(displayValue)}}</view>
+  </view>
+  <view class="calculator-keypad">
+    <view class="input-keys">
+      <view class="digit-keys" catchtap="onTapDigit">
+      
+        <template is="calculator-key" data="{{className: 'key-dot', display: '●'}}"/>
+        <template is="calculator-key" data="{{className: 'key-0', display: '0'}}"/>
+        <template is="calculator-key" data="{{className: 'key-back', display: '←'}}"/>
+        <template is="calculator-key" data="{{className: 'key-sum', display: '快结'}}"/>
+        <template is="calculator-key" data="{{className: 'key-7', display: '7'}}"/>
+        <template is="calculator-key" data="{{className: 'key-8', display: '8'}}"/>
+        <template is="calculator-key" data="{{className: 'key-9', display: '9'}}"/>
+        <template is="calculator-key" data="{{className: 'key-10', display: '10'}}"/>
+        <template is="calculator-key" data="{{className: 'key-4', display: '4'}}"/>
+        <template is="calculator-key" data="{{className: 'key-5', display: '5'}}"/>
+        <template is="calculator-key" data="{{className: 'key-6', display: '6'}}"/>
+        <template is="calculator-key" data="{{className: 'key-50', display: '50'}}"/>
+        <template is="calculator-key" data="{{className: 'key-1', display: '1'}}"/>
+        <template is="calculator-key" data="{{className: 'key-2', display: '2'}}"/>
+        <template is="calculator-key" data="{{className: 'key-3', display: '3'}}"/>
+        <template is="calculator-key" data="{{className: 'key-100', display: '100'}}"/>
+        
+      </view>
+    </view>
+  
+  </view>
+</view>

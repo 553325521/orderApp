@@ -21,7 +21,8 @@
     "pages/template/selectNumber",
     "pages/payOrders/payOrders",
     "pages/cashier/cashier",
-    "pages/payStatistic/payStatistic"
+    "pages/payStatistic/payStatistic",
+    "pages/calculator/calculator"
   ],
   "window": {
     "backgroundTextStyle": "light",

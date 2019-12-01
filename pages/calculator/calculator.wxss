@@ -1,0 +1,200 @@
+page {
+  height:100%;
+}
+
+.calculator {
+  width: 100%;
+  height: 100vh;
+  border:solid 1px;
+  background: #fff;
+  position: relative;
+  box-shadow: 0px 0px 20px 0px #fff;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.calculator-display {     /*显示器背景颜色*/
+  background: #efeff1;
+  height:2%;
+  flex: 1;
+}
+
+.calculator-display-sur {     /*显示器背景颜色*/
+  display: flex;
+  background: #fff;
+  flex: 1;
+}
+
+/*TODO:解决文本垂直居中问题,显示器数字颜色*/
+.calculator-display-textPay {
+  float: left;
+  font-size: 1em;
+  color: #8b878b;
+  text-align: left;
+  background: #efeff1;
+}
+
+/*TODO:解决文本垂直居中问题,显示器数字颜色*/
+.calculator-display-textSur {
+  padding-top:3%;
+  float: left;
+  width:50%;
+  font-size: 1em;
+  color: #8b878b;
+  text-align: left;
+  background: #fff;
+}
+
+/*TODO:解决文本垂直居中问题,显示器数字颜色*/
+.calculator-display-text {
+  float: right;
+  width:10%;
+  font-size: 1.5em;
+  color: #8b878b;
+  text-align: right;
+  background: #fff;
+}
+.calculator-keypad {
+  display: flex;
+
+}
+
+.calculator .function-keys {
+  display: flex;
+  color:#fff;
+
+}
+
+.calculator .digit-keys {
+  width:100%;
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+}
+
+.calculator-key-hover {   /*按钮按下以后的颜色*/
+  box-shadow: inset 0px 0px 25vw 0px hsla(72, 4%, 74%, 0.898);
+}
+
+
+
+.calculator-key {
+  background-color:#fff;
+  display: block;
+  width: 25vw;
+  height: 25vw;
+  line-height: 25vw;
+  border-top: 1px solid rgba(168, 173, 170, 0);
+  border-right: 1px solid rgba(168, 173, 170, 0);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.calculator .function-keys .calculator-key {
+  font-size: 2em;
+
+}
+
+.calculator .digit-keys .calculator-key {
+  font-size: 1em;
+}
+
+.calculator .digit-keys .key-0 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-1 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-2 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-3 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-4 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-5 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-6 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-7 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-8 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+.calculator .digit-keys .key-9 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+
+
+.calculator .digit-keys .key-dot {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+
+.calculator .digit-keys .key-back {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+}
+
+
+.calculator .digit-keys .key-100 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+  background: pink
+}
+.calculator .digit-keys .key-50 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+  background: plum
+}
+.calculator .digit-keys .key-10 {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+  background: cyan
+}
+.calculator .digit-keys .key-sum {
+  width: 25%;
+  font-size: 1em;
+  text-align: center;
+  background: red
+}
+
+.input-keys {
+  width: 100%;
+}
+
+.operator-keys {
+  width: 100%;
+}
