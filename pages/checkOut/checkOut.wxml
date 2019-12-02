@@ -9,8 +9,10 @@
   <view class='pay-money'>
     <view class='reality-pay dp-flex'>
       <text class='font-28 c6'>实收金额</text>
-      <view class='money c2821 font-28'>￥<text class='font-34'>{{math.toFix(trueMoney/100.0)}}</text> <text class='c6'> 元</text> </view>
+      <view class='money c2821 font-28' style='width:27%' bindtap='showUpdateAccount'>￥<text class='font-34'>{{math.toFix(trueMoney/100.0)}}</text> <text class='c6'> 元</text><image style='width:12%;height:40%;margin-left:2%' src='../../images/icon/edit_icon.png'></image>
+      </view>
     </view>
+    
     <view class='should-pay dp-flex'>
       <text class='font-28 c6'>应收金额</text>
       <text class='money c2821 font-26' style='margin-top:2rpx'>￥<text class='font-26'>{{math.toFix(shouldMoney/100.0)}}</text></text>
@@ -157,6 +159,21 @@
         </view>
       </view>
       <view class='yes-btn tc cf font-40' bindtap='vanish'>确定输入</view>
+    </view>
+  </view>
+</view>
+<!-- 修改金额 -->
+<view wx:if="{{isShowUpdateAccount}}" class='member full-fixed' style='width:{{W}};height:{{H}};z-index:999999;'>
+  <view class='footfixed pr'></view>
+  <view class='mian-box pa bg-fff'>
+    <!-- <view style='height:40rpx;background-color:#EF9BA0'></view> -->
+    <view style='padding: 0 0;'>
+      <view style='background:#EF9BA0;height:3.5rem;font-size:1.2rem;color:#FFF;padding:0.88rem'>应收金额:{{math.toFix(shouldMoney/100.0)}}</view>
+      <view class='input font-32 c6 dp-flex' style='margin-top:0;border-top:none;border-radius:0'>
+        <input class='flex-1' type='number' maxlength='11' bindinput="getNewAccount" placeholder='请输入实收金额'></input>
+      </view>
+      <view class='yes-btn tc cf font-40' style='width:30%;float:left;margin:auto 5%' bindtap='closeUpdateAccount'>取消</view>
+      <view class='yes-btn tc cf font-40' style='width:50%;margin-left:10rem' bindtap='confirmNewAccount'>确定金额</view>
     </view>
   </view>
 </view>
