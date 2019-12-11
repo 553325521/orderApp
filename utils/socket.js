@@ -1,9 +1,12 @@
 // websocket连接
-const app = getApp()
+var app = getApp()
 var constant = require('./constant.js');
 
 var websocket_connected_fail_count = 0;
-function connectWebsocket(openid, unionId, webSocketUrl, shopId) {
+function connectWebsocket(openid, unionId, webSocketUrl, shopId, appThat) {
+    if (appThat) {
+        app = appThat;
+    }
     var that = this;
     var userMsg = {
         msgType: 0,
@@ -115,6 +118,7 @@ function playCue (i) {
 
 function handleMess(res){
     var page = getCurrentPages()[0];
+    var that = this;
     var currentRoute = "";
     if (page != undefined) {
         currentRoute = page.route;
@@ -139,7 +143,7 @@ function handleMess(res){
     else if (data.code == "203") { // 美团自动接单
         console.log("语音通知：你有新的美团订单")
 
-        let flag = that.isIndexWhichPage("../takeOut/takeOut");
+        let flag = app.isIndexWhichPage("../takeOut/takeOut");
         if (flag) {
             console.info("是当前页")
             page.flushComponentData("../takeOut/takeOut", null)
@@ -151,32 +155,32 @@ function handleMess(res){
         let localSetting = wx.getStorageSync('setting');
         if (JSON.stringify(setting) !== JSON.stringify(localSetting)) {
             wx.setStorageSync('setting', setting);
-            that.globalData.appSetting = setting;
+            app.globalData.appSetting = setting;
             let update = false;
             // 判断堂点开台更新没
             if (setting.CHECK_TDKT !== localSetting.CHECK_TDKT) {
                 if (setting.CHECK_TDKT == 'false') {
-                    that.globalData.tabBar.list[0].pagePath = "../menu/menu";
-                    that.globalData.tabBar.list[0].text = "菜单";
+                    app.globalData.tabBar.list[0].pagePath = "../menu/menu";
+                    app.globalData.tabBar.list[0].text = "菜单";
                 } else {
-                    that.globalData.tabBar.list[0].pagePath = "../founding/founding";
-                    that.globalData.tabBar.list[0].text = "开台";
+                    app.globalData.tabBar.list[0].pagePath = "../founding/founding";
+                    app.globalData.tabBar.list[0].text = "开台";
                 }
                 update = true;
             }
             if (setting.CHECK_WMDC !== localSetting.CHECK_WMDC) {
                 if (localSetting.CHECK_WMDC === "true") {
-                    that.globalData.tabBar.list[3].show = false;
+                    app.globalData.tabBar.list[3].show = false;
                 } else {
-                    that.globalData.tabBar.list[3].show = true;
+                    app.globalData.tabBar.list[3].show = true;
                 }
                 update = true;
             }
             if (setting.CHECK_DYSYT !== localSetting.CHECK_DYSYT) {
                 if (localSetting.CHECK_DYSYT === "true") {
-                    that.globalData.tabBar.list[4].show = false;
+                    app.globalData.tabBar.list[4].show = false;
                 } else {
-                    that.globalData.tabBar.list[4].show = true;
+                    app.globalData.tabBar.list[4].show = true;
                 }
                 update = true;
             }
@@ -184,8 +188,8 @@ function handleMess(res){
                 update = true;
             }
             if (update) {
-                that.playCue("1")
-                that.reLaunch('/pages/index/index?page=' + that.globalData.tabBar.list[0].pagePath);
+                playCue("1")
+                app.reLaunch('/pages/index/index?page=' + app.globalData.tabBar.list[0].pagePath);
             }
 
         }
@@ -199,27 +203,27 @@ function handleMess(res){
             console.info(data)
             wx.setStorageSync('shopId', shopId);
             wx.setStorageSync('setting', setting);
-            that.globalData.shopId = shopId;
-            that.globalData.shopid = shopId;
-            that.globalData.appSetting = setting;
+            app.globalData.shopId = shopId;
+            app.globalData.shopid = shopId;
+            app.globalData.appSetting = setting;
 
             if (!setting) {
-                that.hintBox('请在公众号设置功能开关', 'none')
+                app.hintBox('请在公众号设置功能开关', 'none')
                 return;
             }
             if (setting.CHECK_TDKT !== localSetting.CHECK_TDKT) {
                 if (setting.CHECK_TDKT == 'false') {
-                    that.globalData.tabBar.list[0].pagePath = "../menu/menu";
-                    that.globalData.tabBar.list[0].text = "菜单";
+                    app.globalData.tabBar.list[0].pagePath = "../menu/menu";
+                    app.globalData.tabBar.list[0].text = "菜单";
                 } else {
-                    that.globalData.tabBar.list[0].pagePath = "../founding/founding";
-                    that.globalData.tabBar.list[0].text = "开台";
+                    app.globalData.tabBar.list[0].pagePath = "../founding/founding";
+                    app.globalData.tabBar.list[0].text = "开台";
                 }
-                that.reLaunch('/pages/index/index?page=' + that.globalData.tabBar.list[0].pagePath);
+                app.reLaunch('/pages/index/index?page=' + app.globalData.tabBar.list[0].pagePath);
             }
         }
     } else {
-        that.hintBox(data && data.data && data.data.data, 'none')
+        app.hintBox(data && data.data && data.data.data, 'none')
         console.info(data && data.data && data.data.data)
         console.info(data)
     }

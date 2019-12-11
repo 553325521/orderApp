@@ -59,7 +59,7 @@ App({
        
         if (userInfo) {
             that.getSetting();
-            socket.getSocket(userInfo["openid"], userInfo["unionId"], webSocketUrl, wx.getStorageInfoSync('shopid'));
+            socket.getSocket(userInfo["openid"], userInfo["unionId"], webSocketUrl, wx.getStorageSync('shopId'), that);
         } else {
             that.wxLogin();
         }
@@ -162,7 +162,7 @@ App({
             success: function (res) {
                 //连接websocket
                 // that.connectWebsocket();
-                socket.getSocket(userInfo["openid"], userInfo["unionId"], webSocketUrl, wx.getStorageInfoSync('shopid'));
+                socket.getSocket(userInfo["openid"], userInfo["unionId"], webSocketUrl, wx.getStorageSync('shopId'), that);
             },
             fail: function (error) {
                 wx.showToast({
@@ -199,7 +199,7 @@ App({
                 wx.setStorageSync("shopId", res.data.data.FK_SHOP);
                 //连接websocket
                 // that.connectWebsocket();
-                socket.getSocket(res.data.data.OPENID, res.data.data.USER_UNIONID, webSocketUrl, res.data.data.FK_SHOP);
+                socket.getSocket(res.data.data.OPENID, res.data.data.USER_UNIONID, webSocketUrl, res.data.data.FK_SHOP, that);
 
 
                 that.globalData.shopid = res.data.data.FK_SHOP;

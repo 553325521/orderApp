@@ -1,10 +1,15 @@
 <view class="greens-item1 {{math.goodsNum(every,shoppingCart.goods) > 0 ? 'greens-item1-on':''}} dp-flex box-s pr" data-index="{{index}}" data-item="{{keys}}"   data-good='{{every}}' data-type="{{math.goodsNum(every,shoppingCart.goods) > 0?'-':'+'}}" catchtap="{{math.isSingleGoods(every)?'addQity':'selectGuige'}}">
+    <view wx:if='{{every.GOODS_NUM == 0}}' style='position:absolute;width:100%;height:100%;background-color:#fff;opacity:0.3;z-index:999;'>
+    <view style='float:right;'>
+        <image style="height:76px;width:176rpx;" class='w100' src='../../images/icon/sell-out.png'></image> 
+    </view>
+</view>
     <view class='info pr'>
      <!-- <view class='c3 font-28 xf-font' style=''>{{every.GOODS_TYPE=='2' ? '规': GOODS_TYPE == '3' ? '套':''}}</view> -->
         <view class='c3 font-28'>{{every.GOODS_NAME}}</view>
        
         <view class='price1 font-28 c2821'>￥{{math.toFix((every.GOODS_TRUE_PRICE == undefined || every.GOODS_TRUE_PRICE == '' ? every.GOODS_PRICE : every.GOODS_TRUE_PRICE) / 100.0)}}/{{every.GOODS_DW}}</view>
-        <view class='sales1 font-26 ca5a4 '>已售 {{every.sales}}</view>
+        <view class='sales1 font-26 ca5a4 '>已售 {{every.GOODS_SALE_NUM}}</view>
         <view class='quantity pa dp-flex'>
             <!-- <block wx:for='{{shoppingCart.goods}}' wx:for-item="good" wx:key wx:if="{{every.GOODS_SPECIFICATION == '[]' && every.GOODS_RECIPE == '[]' && every.GOODS_TASTE == '[]' && good.GOODS_PK == every.GOODS_PK}}"> -->
             <block wx:if='{{math.isSingleGoods(every)}}'>

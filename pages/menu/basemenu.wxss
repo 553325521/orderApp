@@ -104,6 +104,7 @@
   flex-wrap: wrap;
   background-color: #fff;
   display: flex;
+  position: relative;
 }
 .greens-item1{
   width: 272rpx;

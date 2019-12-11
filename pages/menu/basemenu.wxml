@@ -158,7 +158,7 @@
         </block>
     </block>
     <block wx:else>
-        <view style='display:flex;flex-wrap:wrap;padding:10rpx'>
+        <view style='display:flex;flex-wrap:wrap;padding:10rpx;position:relative;'>
             <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
                 <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index' wx:key="keys" wx:if='{{math.goodsContain(every,seachGoods)}}' >  
                     <include wx:if='{{tdytmb}}' src="menupic.wxml"/>
