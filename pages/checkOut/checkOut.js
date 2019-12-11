@@ -65,6 +65,8 @@ Page({
     discountCouponShow: discountCouponShow,
     jfdxShow: jfdxShow,
     czzfShow: czzfShow,
+    isShowUpdateAccount:false,//是否显示修改金额
+    newAccount:0.0,//实收金额
     //优惠规则列表
     ruleList:[],
     //优惠金额
@@ -100,11 +102,19 @@ Page({
     this.loadRuleByShop();
   },
 
+
 //输入会员卡号发生变化
   vipNumberChange:function(e){
     var that = this;
     that.setData({
       vipNumber:e.detail.value
+    });
+  },
+  //输入实收金额发生变化
+  getNewAccount: function (e) {
+    var that = this;
+    that.setData({
+      newAccount: e.detail.value
     });
   },
   //加载优惠规则
@@ -154,13 +164,34 @@ Page({
      console.info(app.globalData.shopid);
   },
   /**
-   * 
+   * 显示会员卡设置区域
    */
   addMember:function(){
     var that = this;
     that.setData({
       memberShow: true
     })
+  },
+  // 显示修改实付金额页面
+  showUpdateAccount:function(){
+    var that = this;
+    that.setData({
+      isShowUpdateAccount: true
+    })
+  },
+  // 隐藏修改实付金额页面
+  closeUpdateAccount: function () {
+    var that = this;
+    that.setData({
+      isShowUpdateAccount: false
+    })
+  },
+  //修改按钮确认
+  confirmNewAccount:function(){
+    this.setData({
+      trueMoney:parseFloat(this.data.newAccount)*100
+    });
+    this.closeUpdateAccount();
   },
    /**
    * 会员扫一扫
