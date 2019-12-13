@@ -143,7 +143,7 @@
         <view class='seat' style="width:150rpx;display:{{isDataHide?'none':'block'}}">{{item.ORDER_POSITION}}</view>
         <view class='part' style="width:100rpx;display:{{isDataHide?'none':'block'}}">{{item.TOTAL_FS == '0' ? "":item.TOTAL_FS+'份'}} </view>
         <view class='money' style="width:140rpx;display:{{isDataHide?'none':'block'}}">{{math.toFix(item.TOTAL_MONEY/100)}}元</view>
-        <view class='pay-way' style="width:140rpx;display:{{isDataHide?'none':'block'}}">{{item.payWay}}</view>
+        <view class='pay-way' style="width:150rpx;display:{{isDataHide?'none':'block'}}">{{item.payWay}}</view>
          <view class="weui-loadmore weui-loadmore_line font-28"  style="display:{{isDataHide?'block':'none'}}">
           <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
         </view>

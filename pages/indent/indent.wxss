@@ -114,3 +114,6 @@
   vertical-align: middle;
   color: #adadae
 }
+.flex-2{
+  flex: 2
+}
