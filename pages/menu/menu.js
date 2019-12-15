@@ -199,6 +199,18 @@ Component({
      */
     clearSearchContent: function () {
         basemenu.clearSearchContent(this);
-    }
+    },
+      /**
+      * 点击了无码商品
+      */
+      clickWMSP: function () {
+          basemenu.clickWMSP(this)
+      },
+      entryMoney: function (){
+          basemenu.entryMoney(this)
+      },
+      noGoodMoney: function (e){
+          basemenu.noGoodMoney(this, e)
+      }
   }
 })

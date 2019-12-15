@@ -22,6 +22,7 @@ var clickcurrentCat = "";//当前点击的商品类别
 var lastTop = 0;
 var onerpx = 1;//1rpx对应多少px
 var goodsInfo = {};
+var noGoodMoney;
 // var _last_type = "";
 // var last_name = "";
 var last_guige_price = 0;
@@ -33,12 +34,13 @@ function onLoad(that) {
     onerpx = app.getSystemInfo().mob_onerpx
     that.setData({
         allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
-        tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
+        tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true",
+        CHECK_WMSP: app.globalData.appSetting.CHECK_WMSP == "true",
     })
 
   wx.showNavigationBarLoading()
   // initData(that)
-  app.updateTitle(pageTitle)
+    app.updateTitle(wx.getStorageSync("shopName") ? wx.getStorageSync("shopName") : "商品")
   // pageInit(that);
   getGoodsInfo(that);
   loadTables(that);
@@ -85,7 +87,8 @@ function initData(that) {
       allowChooseTable: !(app.globalData.appSetting.CHECK_TDKT == "true"),
     basePath: app.globalData.basePath,
     seachGoods:false,
-      tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true"
+      tdytmb: app.globalData.appSetting.CHECK_TDYTMB == "true",
+      CHECK_WMSP: app.globalData.appSetting.CHECK_WMSP == "true",
 
   })
   onerpx = app.getSystemInfo().mob_onerpx
@@ -108,6 +111,10 @@ function pageInit(that) {
   flushStroageData(that)
 
   flushShoppingCart(that)
+
+    wx.setNavigationBarTitle({
+        title: '趣味表情'
+    })
 }
 /**
  * 刷新缓存数据
@@ -370,13 +377,17 @@ function closePop(that) {
     popShow: false,
     reserveShow: reserveShow,
     entryShow: false,
-    quorumShow: false
+    quorumShow: false,
+    wmspShow: false,
   })
 }
 /**
  * 选好了
  */
 function chosen(that) {
+    that.setData({
+        entryShow: false,
+    })
     var ORDER_PK = wx.getStorageSync('ORDER_PK');
     if (menuStatus == 2 && ORDER_PK != undefined && ORDER_PK != '') {
     //加菜
@@ -774,6 +785,8 @@ function createSelectorQuery(that,e){
   
 }
 
+
+
 function flushguadaiData(){
     if (app.globalData.appSetting.CHECK_TDKT=="true"){
     app.flushOtherPage({ 'guadanshuju': app.getShoppingCart('all') })
@@ -797,6 +810,56 @@ function searchGoods(that, e){
 function clearSearchContent (that) {
     that.setData({
         seachGoods: false
+    }) 
+}
+
+/**
+ * 点击右上角无码商品
+ */
+function clickWMSP(that){
+    console.info("点击了无码")
+    that.setData({
+        wmspShow: true
+    }) 
+}
+
+/**
+ * 输入了金额
+ */
+function noGoodMoney(that, e) {
+    console.info(e.detail.value)
+    noGoodMoney = (e.detail.value * 100).toFixed(0);
+}
+
+/**
+ * 确定无码金额
+ */
+function entryMoney(that) {
+    console.info(noGoodMoney)
+    var good = {
+        GOODS_PK: '000',
+        GOODS_NAME: "无码商品",
+        GOODS_PRICE: noGoodMoney,
+        GOODS_DW: "个",
+        GOODS_TYPE: '',
+        GTYPE_NAME: '无码商品',
+        GTYPE_FK: '',
+        GOODS_PRINT_LABEL: ''
+    }
+
+    app.addShoppingCart(good)
+
+    // List[index].FK_SHOP = app.globalData.shopid;
+    // List[index].FK_USER = wx.getStorageSync('openid');
+
+    that.setData({
+        greensList
+    })
+    // 查询购物车
+    getOrdersList(that);
+    flushguadaiData()
+    that.setData({
+        wmspShow: false
     }) 
 }
 
@@ -830,6 +893,9 @@ module.exports = {
     onShow,
     backMainPage,
     searchGoods,
-    clearSearchContent
+    clearSearchContent,
+    clickWMSP,
+    entryMoney,
+    noGoodMoney
 };
 

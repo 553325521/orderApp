@@ -18,8 +18,8 @@ Component({
         title: '待配送',
         orderNumber: 0
       }, {
-        type: 9,
-        title: '已完成',
+        type: null,
+        title: '全部',
         orderNumber: 0
       }
     ],
@@ -27,7 +27,7 @@ Component({
     deliveryType: [
       {
         isIn: false,
-        title: '智慧云',
+        title: '智云',
       }, {
         isIn: false,
         title: '饿了么'
@@ -36,7 +36,7 @@ Component({
         title: '美团外卖'
       }, {
         isIn: false,
-        title: '百度外卖'
+        title: '星选'
       }
     ],
     wmOrderData: [],

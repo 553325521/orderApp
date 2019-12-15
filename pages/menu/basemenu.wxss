@@ -42,6 +42,8 @@
   margin-top: 46rpx;
   transform: translateY(-50%);
   padding:0 64rpx;
+  float:left;
+  margin-left:16rpx;
 }
 .search-box .ss-icon{
   width: 28rpx;
@@ -49,6 +51,14 @@
   top: 52%;
   left: 28rpx;
   z-index: 30
+}
+
+.search-box .ss-icon2{
+    width:43rpx;
+    height:41rpx;
+    top:48%;
+    right:16rpx;
+    z-index:30;
 }
 
 .cat text{
@@ -62,7 +72,7 @@
 
 /* 挂单列表  */
 .entry-orders-list{
-  z-index: 50
+  z-index: 9999
 }
 
 .box-content .head{
@@ -262,4 +272,43 @@ view.on{
     right:10rpx;
 }
 
+.entry-money {
+    background-color:#EF9BA0;
+    width:60%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:58rpx;
+    font-size:26rpx;
+    color:#ffffff;
+    margin-left:37rpx;
+}
 
+.cancel {
+    background-color:#EF9BA0;
+    width:30%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:58rpx;
+    font-size:26rpx;
+    color:#ffffff;
+}
+
+.no-good {
+    display:flex;font-size:26rpx;height:100%;align-items:center;padding-left:10rpx;width:60%
+}
+
+.no-good-close {
+    display:flex;align-items:center;padding-left:5px;width:40%;justify-content: flex-end;
+}
+
+.close-img {
+    display:flex;height:50rpx;width:50rpx;margin-right:12rpx;
+}
+
+.choose-no-good {
+    width:500rpx;height:260rpx;top:30%;right:125rpx;position:absolute;background-color:#ffffff;z-index:10002;
+}

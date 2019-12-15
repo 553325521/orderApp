@@ -28,3 +28,9 @@
 <template name="coupon"> 
   
 </template>
+<template name="chosenPosition"> 
+  <view wx:if="{{true}}"  class='entry-orders-list full-fixed' style='width:{{W}};height:{{H}}'>
+  <view class='footfixed pr' bindtap='vanish'></view>
+ <view>22</view>
+  </view>
+</template>

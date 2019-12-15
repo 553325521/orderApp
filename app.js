@@ -197,6 +197,7 @@ App({
                 wx.setStorageSync("openid", res.data.data.OPENID);
                 wx.setStorageSync("unionId", res.data.data.USER_UNIONID);
                 wx.setStorageSync("shopId", res.data.data.FK_SHOP);
+                wx.setStorageSync("shopName", res.data.data.SHOP_NAME);
                 //连接websocket
                 // that.connectWebsocket();
                 socket.getSocket(res.data.data.OPENID, res.data.data.USER_UNIONID, webSocketUrl, res.data.data.FK_SHOP, that);
@@ -712,7 +713,10 @@ App({
                 var isSameGoods = false;
                 var currentTableShoppingCart = tableShoppingCart.goods
                 currentTableShoppingCart.forEach(function (cart, index) {
-                    if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
+                    if (good.GTYPE_NAME == '无码商品' && good.GOODS_NAME == '无码商品' && good.GOODS_PK == '000' && cart.GOODS_PK == good.GOODS_PK && cart.GTYPE_NAME == good.GTYPE_NAME && cart.GOODS_NAME == good.GOODS_NAME && cart.GOODS_PRICE != good.GOODS_PRICE) {
+                        
+                    } 
+                    else if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
                         cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
                         //判断为同一商品
                         if (good.GOODS_TRUE_PRICE != undefined && good.GOODS_TRUE_PRICE != '') {
@@ -819,6 +823,9 @@ App({
                 var isSameGoods = false;
                 var currentShopShoppingCart = shopShoppingCart.goods
                 currentShopShoppingCart.forEach(function (cart, index) {
+                    if (good.GTYPE_NAME == '无码商品' && good.GOODS_NAME == '无码商品' && good.GOODS_PK == '000' && cart.GOODS_PK == good.GOODS_PK && cart.GTYPE_NAME == good.GTYPE_NAME && cart.GOODS_NAME == good.GOODS_NAME && cart.GOODS_PRICE != good.GOODS_PRICE) {
+
+                    }else
                     if (cart.GOODS_PK == good.GOODS_PK && cart.GOODS_FORMAT == good.GOODS_FORMAT &&
                         cart.GOODS_MAKING == good.GOODS_MAKING && cart.GOODS_TASTE == good.GOODS_TASTE) {
                         //判断为同一商品

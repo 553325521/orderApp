@@ -159,7 +159,7 @@ Page({
                 OPEN_ID: wx.getStorageSync('openid'),
                 ORDER_PK: that.data.orderId,
                 payWay: payWay,
-                trueMoney: money
+                trueMoney: (money * 100).toFixed(0)
             },
             success: function (res) {
                 if (fun != undefined) {

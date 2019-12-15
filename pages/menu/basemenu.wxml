@@ -1,9 +1,9 @@
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 
 <!-- 引用模板  -->
-<import scr="../template/chosenPosition.wxml"/>
+
 <!-- 菜单导航  -->
-<view class='menu-nav bg-f9 br-ec' style='height:{{height}}'>
+<view class='menu-nav bg-f9' style='height:{{height}}'>
   <block wx:for="{{navList}}" wx:for-index='index' wx:key="">
     <view wx:if='{{seachGoods == false}}' class="nav-item font-24 pr c5957 bb-ec tc {{currentCat == item.GTYPE_PK?'menu-on':''}}" data-index='{{index}}' data-id='{{item.GTYPE_PK}}' bindtap='switchNav'>
     {{item.GTYPE_NAME}}
@@ -18,7 +18,8 @@
 <!-- 搜索框  -->
 <view class='search-box' id='search-box'>
   <image class='ss-icon pa tf-y50' src='../../images/icon/ss.png'></image>
-  <input class='box-s bg-fff font-26' type='text' value="{{seachGoods === false ? '':seachGoods}}" bindinput='searchGoods' placeholder='请输入商品名称'></input>
+  <input class='box-s bg-fff font-26' type='text' value="{{seachGoods === false ? '':seachGoods}}" bindinput='searchGoods' placeholder='请输入商品名称' style="{{CHECK_WMSP ? 'width:492rpx' : 'width:542rpx'}}"></input>
+ <image wx:if="{{CHECK_WMSP}}" bindtap='clickWMSP' class="ss-icon2 pa tf-y50" src='../../images/icon/rmb.png'></image> 
   <view style='height:52rpx;width:22px;right:20px;top:20rpx;z-index:30;position:absolute;display:flex;justify-content:center;align-items:center;' bindtap='clearSearchContent'>
   <image wx:if='{{seachGoods}}'  class='pa tf-y50' style="width:28rpx;height:32rpx;top:26rpx;" src='../../images/icon/dele-icon.png'></image>
   </view>
@@ -29,6 +30,34 @@
 	<i class="weui-loading"></i>
 	<span class="weui-loadmore-tips">正在加载菜品</span>
 </view>
+
+
+<!-- 选择无码商品 -->
+<view wx:if="{{wmspShow}}"  class='entry-orders-list full-fixed' style='width:{{W}};height:{{H}};z-index:10001;'>
+  <view class='footfixed pr' bindtap='vanish'></view>
+    <view class="choose-no-good">
+       <view style="width:100%;height:70rpx;background-color:#EF9BA0;display:flex;">
+            <view class='no-good'>无码商品金额录入</view>
+            <view class='no-good-close'>
+            <image class='close-img' bindtap="closePop" src='../../images/icon/close-icon.png'></image>
+            </view>
+        </view>
+        <view style='width:100%;height:120rpx;border-bottom:1px solid #eeeeee;padding:20rpx 40rpx;'>
+        <input placeholder='请输商品金额' style='height:100%;text-align:right;' bindinput='noGoodMoney'></input>
+        </view>
+        
+<view style='width:100%;height:70rpx;padding:10rpx 20rpx;display:flex;'>
+      <view class="cancel" bindtap="closePop">
+  取消
+</view>
+   <view class="entry-money" bindtap="entryMoney">
+  确定金额
+</view>
+        </view>
+
+    </view>
+    
+  </view>
 
 <!-- 购物车  -->
 <view class='cat' bindtap="{{shoppingCart.totalNumber>0?'entryOrders':''}}">
@@ -108,11 +137,8 @@
   </view>
 </view>
 
-
-
-
 <!-- 选好了  -->
-<view class="selected font-28 tc cf {{shoppingCart.totalNumber>0?'on':''}}" bindtap="{{shoppingCart.totalNumber>0?'chosen':''}}">
+<view class="selected font-28 tc cf {{shoppingCart.totalNumber>0?'on':''}}" bindtap="{{shoppingCart.totalNumber>0?'chosen':''}}" style="{{entryShow && shoppingCart.totalNumber>0 ? 'bottom:16rpx;':'z-index:100'}}">
   选好了
 </view>
 <!-- 选择就餐餐位  -->
@@ -140,13 +166,13 @@
     <image class='w100 h100' src='../../images/icon/colse1-icon.png'></image>
   </view>
 </view>
+
 <!-- 展示菜品  -->
 <view class='page'>
     <scroll-view style="height: {{scrollHeight}}px;" class='shou-greens-box bg-fff' scroll-y scroll-into-view="{{'a' + clickcurrentCat}}" bindscroll='doScroll' scroll-with-animation="true" enable-back-to-top>
      <block wx:if='{{seachGoods == false}}'>
         <block wx:for="{{greensList}}" wx:key="keys" wx:for-index='keys'>
                 <view id='a{{item.GTYPE_PK}}' data-id='{{item.GTYPE_PK}}' class='ball'>
-            
                     <view class='classify-title font-26 c7372'>{{item.GTYPE_NAME}}</view>
                     <view class='greens-list'>
                         <block wx:for="{{item.infos}}" wx:for-item="every" wx:for-index='index'  wx:key="keys">         

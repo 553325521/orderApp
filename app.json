@@ -8,7 +8,7 @@
     "pages/menu/menupage",
     "pages/takeOut/takeOut",
     "pages/takeOut/takeOutDateil",
-    "pages/template/chosenPosition",
+
     "pages/summary/summary",
     "pages/consumptionStatistics/consumptionStatistics",
     "pages/fixedScanReport/fixedScanReport",
@@ -18,7 +18,6 @@
     "pages/indent/indentDateil",
     "pages/payMent/payMent",
     "pages/orderDetail/orderDetail",
-    "pages/template/selectNumber",
     "pages/payOrders/payOrders",
     "pages/cashier/cashier",
     "pages/payStatistic/payStatistic",

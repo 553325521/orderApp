@@ -184,7 +184,8 @@ function handleMess(res){
                 }
                 update = true;
             }
-            if (setting.CHECK_TDYTMB !== localSetting.CHECK_TDYTMB) {
+            if (setting.CHECK_TDYTMB !== localSetting.CHECK_TDYTMB ||
+                setting.CHECK_WMSP !== localSetting.CHECK_WMSP) {
                 update = true;
             }
             if (update) {

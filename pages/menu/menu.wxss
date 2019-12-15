@@ -2,7 +2,7 @@
 @import "basemenu.wxss";
 
 .box-content{
-   bottom: 90rpx; left: 0;
+   bottom: 0rpx; left: 0;
    z-index: 60;
 }
 /* 选好了  */
@@ -13,7 +13,7 @@
   line-height: 58rpx;
   border-radius: 58rpx;
   background-color: #DEDEDD;
-  z-index: 60
+  z-index: 10000
 }
 
 /* 购物车、挂单  */

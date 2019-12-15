@@ -23,7 +23,7 @@
   line-height: 58rpx;
   border-radius: 58rpx;
   background-color: #DEDEDD;
-  z-index: 60
+  z-index: 10000;
 }
 
 
