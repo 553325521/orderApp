@@ -4,13 +4,17 @@
 <view class='page w100'> 
   <view class='swiper-tab bg-fff dp-flex'>
       <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
-        <view class="flex-1 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
+        <view class="flex-2 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
           <text>{{item.title}}</text>
           <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
           <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view>
           <view wx:if="{{item.type!=2 && item.type == 1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
         </view>
       </block>
+      <view class="flex-1 font-28 c6 tc pr" catchtap="openSelect">
+            <text catchtap="openSelect">筛选</text>
+            <image class='sx_img' src='../../images/icon/select_down.png'style="width:30%;height:30%" background-size="contain"></image>
+      </view>
   </view>
   
   <!-- 时间段  -->
