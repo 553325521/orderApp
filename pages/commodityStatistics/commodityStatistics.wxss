@@ -25,9 +25,8 @@
 }
 /*  */
 .product-list{
-  margin-top: 22rpx;
   border-top: 1px solid #D4D3D3;
-  padding:34rpx 70rpx 20rpx  
+  padding:34rpx 40rpx 20rpx  
 }
 .product-list{
   background: #fff
@@ -36,7 +35,7 @@
   line-height: 96rpx;
   right: 0
 }
-.item .name{
+/* .item .name{
   width: 222rpx
 }
 .item .part{
@@ -44,10 +43,15 @@
 }
 .item .moeny{
   width: 254rpx
-}
+} */
 /* 筛选样式开始 */
 .select-before-color {
   color: #666;
+}
+
+.sx_img {
+  width: 28rpx;
+  height: 28rpx;
 }
 
 .select-after-color {
@@ -91,7 +95,7 @@
 
 .option_box {
   position: absolute;
-  top: 86rpx;
+  top: 7%;
   width: 100%;
   box-sizing: border-box;
   height: 0;

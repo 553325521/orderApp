@@ -1,36 +1,5 @@
 <!--pages/commodityStatistics/commodityStatistics.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
-<!--<view class='type-parameter dp-flex font-28 c6 bg-fff'>
-  <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{shopIndex}}" range="{{shopArr}}" bindchange="bindShopChange">
-      <view class="picker">
-        {{shopArr[shopIndex]}}
-      </view>
-    </picker>
-    <image src='../../images/icon/down-icon.png'></image>
-  </view>
-  <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{dateIndex}}" range="{{dateArr}}" bindchange="bindDateChange">
-      <view class="picker">
-        {{dateArr[dateIndex]}}
-      </view>
-    </picker>
-    <image src='../../images/icon/down-icon.png'></image>
-  </view>
-  <view class='flex-1 dp-flex'>
-    <picker class='w100 tc' value="{{operatorIndex}}" range="{{operatorArr}}" bindchange="bindOperatorChange">
-      <view class="picker">
-        {{operatorArr[operatorIndex]}}
-      </view>
-    </picker>
-    <image src='../../images/icon/down-icon.png'></image>
-  </view>
-</view> -->
-<view class="type-parameter weui-flex pl5">
-  <view class="weui-flex__item">
-    <view class="shaixuan-btn {{shaiXuanBtnIsActive == true?'shaixuan-btn-after':'shaixuan-btn-before'}}" catchtap="openSelect">筛选</view>
-  </view>
-</view>
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
@@ -89,13 +58,18 @@
     <view>商品名称</view>
     <view>商品数量</view>
     <view>商品金额</view>
+    <view class='{{font_color}}' catchtap="openSelect">
+      <text catchtap="openSelect">筛选</text>
+      <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' background-size="contain"></image>
+    </view>
   </view>
   <scroll-view scroll-y class='list' style='display:{{isExistData?"block":"none"}}'>
     <block wx:for="{{productList}}" wx:key="{{index}}">
-      <view class='item dp-flex font-28 c6 pr' data-index='{{index}}' bindtouchstart="drawStart" bindtouchmove="drawMove" bindtouchend="drawEnd" style="right:{{item.right}}px">
-        <view class='name'>{{item.ORDER_DETAILS_GNAME}}</view>
-        <view class='part tr'>{{item.TOTAL_FS}}份</view>
-        <view class='moeny c2821 tr'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100)}}</view>
+      <view class='item dp-flex flex-jc-sb font-28 c6 pr' data-index='{{index}}'>
+        <view class='name' style='width:25%'>{{item.ORDER_DETAILS_GNAME}}</view>
+        <view class='part' style='width:20%'>{{item.TOTAL_FS}}份</view>
+        <view class='moeny c2821' style='width:35%'>￥{{math.toFix(item.ORDER_DETAILS_GMONEY/100)}}</view>
+        <view></view>
       </view>
     </block>
   </scroll-view>

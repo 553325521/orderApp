@@ -118,7 +118,7 @@ Page({
     var isActive = that.data.shaiXuanBtnIsActive;
     if (!isActive) {
       that.setData({
-        selectShow: 100,
+        selectShow: 93,
         shaiXuanBtnIsActive:true
       })
     } else {

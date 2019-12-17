@@ -19,7 +19,9 @@ Page({
     dateIndex: 0,
     select_id: -1,
     operator_id:-1,
-    takeView:54
+    takeView:54,
+    font_color: "select-before-color",
+    select_img_name: "select_down"
   },
   onLoad: function (options) {
   
@@ -67,8 +69,9 @@ Page({
   closeSelectArea: function () {
     var that = this;
     that.setData({
-      selectShow: 0,
-      shaiXuanBtnIsActive: false
+      font_color: "select-before-color",
+      select_img_name: "select_down",
+      selectShow: 0
     })
   },
   cancelChoose: function () {
@@ -104,16 +107,18 @@ Page({
   //点击筛选
   openSelect: function () {
     var that = this;
-    var isActive = that.data.shaiXuanBtnIsActive;
-    if (!isActive) {
+    var current_font_color = that.data.font_color;
+    if (current_font_color == 'select-before-color') {
       that.setData({
-        selectShow: 100,
-        shaiXuanBtnIsActive: true
+        font_color: "select-after-color",
+        select_img_name: "select_down_red",
+        selectShow: 93
       })
     } else {
       that.setData({
-        selectShow: 0,
-        shaiXuanBtnIsActive: false
+        font_color: "select-before-color",
+        select_img_name: "select_down",
+        selectShow: 0
       })
     }
   },

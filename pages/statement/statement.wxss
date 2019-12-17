@@ -31,7 +31,7 @@
 .statistics-list{
   margin-top: 12rpx;
   padding: 50rpx 0;
-  border-top: 1px solid #CDCDCD
+  /* border-top: 1px solid #CDCDCD */
 }
 .statistics-item image{
   display: block;

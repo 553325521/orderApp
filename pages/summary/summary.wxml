@@ -68,6 +68,8 @@
   </view>
 </view>
 <view class='summary-list font-28 c6' style='display:{{pageShow?"block":"none"}}'>
+  <view class='item dp-flex flex-jc-sb' style='margin-bottom:36rpx'> 
+  </view>
   <view class='item dp-flex flex-jc-sb'>
     <view>新增会员</view>
     <view>{{memberNumber}}个</view>

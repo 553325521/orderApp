@@ -251,7 +251,7 @@ Page({
       that.setData({
         font_color: "select-after-color",
         select_img_name: "select_down_red",
-        selectShow: 100
+        selectShow: 90.6
       })
     } else {
       that.setData({

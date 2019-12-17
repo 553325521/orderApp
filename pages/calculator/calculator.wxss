@@ -15,7 +15,7 @@ page {
 }
 
 .calculator-display {     /*显示器背景颜色*/
-  background: #efeff1;
+  background: #EF9BA0;
   height:2%;
   flex: 1;
 }
@@ -29,29 +29,31 @@ page {
 /*TODO:解决文本垂直居中问题,显示器数字颜色*/
 .calculator-display-textPay {
   float: left;
-  font-size: 1em;
-  color: #8b878b;
+  font-size: 2em;
+  color: #4d4948;
   text-align: left;
-  background: #efeff1;
+  padding-top:8%;
+  /* background: #efeff1; */
 }
 
 /*TODO:解决文本垂直居中问题,显示器数字颜色*/
 .calculator-display-textSur {
-  padding-top:3%;
+  padding-top:8%;
   float: left;
   width:50%;
-  font-size: 1em;
-  color: #8b878b;
+  font-size: 2em;
+  color: #4d4948;
   text-align: left;
   background: #fff;
 }
 
 /*TODO:解决文本垂直居中问题,显示器数字颜色*/
 .calculator-display-text {
+  padding-top:8%;
   float: right;
-  width:10%;
-  font-size: 1.5em;
-  color: #8b878b;
+  width:45%;
+  font-size: 2em;
+  color: #4d4948;
   text-align: right;
   background: #fff;
 }
@@ -90,6 +92,7 @@ page {
   border-right: 1px solid rgba(168, 173, 170, 0);
   text-align: center;
   box-sizing: border-box;
+  border-radius:0
 }
 
 .calculator .function-keys .calculator-key {

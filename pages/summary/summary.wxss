@@ -26,10 +26,10 @@
 }
 .summary-list{
   border-top: 1px solid #D4D3D3;
-  padding:36rpx 50rpx 0  
+  padding:0 50rpx 0  
 }
 .summary-list .item{
-  margin-bottom: 50rpx
+  margin-bottom: 45rpx
 }
 /*  */
 .consume{
@@ -123,7 +123,7 @@
 
 .option_box {
   position: absolute;
-  top: 86rpx;
+  top: 7%;
   width: 100%;
   box-sizing: border-box;
   height: 0;

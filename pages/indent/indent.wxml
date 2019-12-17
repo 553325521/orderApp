@@ -8,7 +8,7 @@
           <text>{{item.title}}</text>
           <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
           <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view>
-          <view wx:if="{{item.type!=2 && item.type == 1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
+          <view wx:if="{{item.type!=2 && item.type == -1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
         </view>
       </block>
       <view class="flex-1 font-28 c6 tc pr" catchtap="openSelect">
