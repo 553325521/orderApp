@@ -27,6 +27,14 @@ Component({
     ],
     currentTab: currentTab,
     date: '',
+    dateArr: ['今天', '昨天', '本周', '本月', '本年'],
+    font_color: "select-before-color",
+    select_img_name: "select_down",
+    selectShow: false, //控制下拉列表的显示隐藏，false隐藏、true显示
+    select_id: -1,
+    start_date: '2019-01-01',
+    end_date: '2019-01-01',
+    dateAreaIsShow: false,
     startIndex: [],
     endIndex: [],
     year: 2015,
@@ -174,6 +182,63 @@ methods:{
       complete:function(){
         that.loadOrderData();
       }
+    })
+  },
+  //关闭筛选
+  closeSelectArea: function () {
+    var that = this;
+    that.setData({
+      font_color: "select-before-color",
+      select_img_name: "select_down",
+      selectShow: 0
+    })
+  },
+  //点击筛选
+  openSelect: function () {
+    this.cancelChoose();
+    var that = this;
+    var current_font_color = that.data.font_color;
+    if (current_font_color == 'select-before-color') {
+      that.setData({
+        font_color: "select-after-color",
+        select_img_name: "select_down_red",
+        selectShow: 91
+      })
+    } else {
+      that.setData({
+        font_color: "select-before-color",
+        select_img_name: "select_down",
+        selectShow: 0
+      })
+    }
+  },
+  selectBtn: function (e) {
+    var id = e.currentTarget.dataset.id;
+    console.info(e);
+    var that = this;
+    if (id == 5) {
+      that.setData({
+        dateAreaIsShow: true,
+        takeView: 0
+      })
+    } else {
+      that.setData({
+        dateAreaIsShow: false,
+        takeView: 54
+      })
+    }
+    that.setData({
+      select_id: id
+    })
+  },
+  bindStartDateChange: function (e) {
+    this.setData({
+      start_date: e.detail.value
+    })
+  },
+  bindEndDateChange: function (e) {
+    this.setData({
+      end_date: e.detail.value
     })
   },
   //加载订单数据
@@ -367,26 +432,34 @@ methods:{
     that.loadOrderData();
   },
   // 
-  bindStartDateChange:function (e) {
-    var that = this;
-    this.setData({
-      startIndex: e.detail.value
-    });
-    wx.setStorageSync("order_current_startIndex",that.data.startIndex);
-    wx.setStorageSync("order_current_endIndex", that.data.endIndex);
-    that.loadOrderData();
-    that.loadOrderNumber();
-  },
-  bindEndDateChange:function (e) {
-    var that = this;
-    this.setData({
-      endIndex: e.detail.value
-    });
-    wx.setStorageSync("order_current_endIndex", that.data.endIndex);
-    that.loadOrderData();
-    that.loadOrderNumber();
-  },
+  // bindStartDateChange:function (e) {
+  //   var that = this;
+  //   this.setData({
+  //     startIndex: e.detail.value
+  //   });
+  //   wx.setStorageSync("order_current_startIndex",that.data.startIndex);
+  //   wx.setStorageSync("order_current_endIndex", that.data.endIndex);
+  //   that.loadOrderData();
+  //   that.loadOrderNumber();
+  // },
+  // bindEndDateChange:function (e) {
+  //   var that = this;
+  //   this.setData({
+  //     endIndex: e.detail.value
+  //   });
+  //   wx.setStorageSync("order_current_endIndex", that.data.endIndex);
+  //   that.loadOrderData();
+  //   that.loadOrderNumber();
+  // },
   // 
+  cancelChoose: function () {
+    var that = this;
+    that.setData({
+      select_id: -1,
+      dateAreaIsShow: false,
+      takeView: 54
+    });
+  },
   bindDateColumnChange:function (e) {
     var that = this;
     var column = e.detail.column;
@@ -492,6 +565,18 @@ methods:{
     this.setData({
       scaleData: animation.export(),
     })
-  }
+  },
+  choose: function () {
+    var that = this;
+    var choosePay = "";
+    if (that.data.select_id == 5) {
+      choosePay = '自定义';
+    } else {
+      choosePay = that.data.dateArr[that.data.select_id];
+    }
+    console.info(choosePay);
+    console.info(that.data.start_date);
+    console.info(that.data.end_date);
+    }
 }
 })
