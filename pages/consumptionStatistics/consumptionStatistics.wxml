@@ -39,18 +39,6 @@
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
-      <!-- <view class='weui-flex select-top-style' style='border-bottom:1px #EAD5D7 solid'>
-        <view class=" pl5" style=''>
-          <view class="placeholder" style='font-size:18px;color:#666'>选择筛选条件 </view>
-        </view>
-        <view class="weui-flex__item"><view class="placeholder"></view></view>
-        <view class="">
-          <view class="placeholder select-btn-before select-btn-bg-white" catchtap='selectCancel' style='margin-top:0px' hover-class='select-btn-bg-pink'>取消</view>
-        </view>
-         <view class="">
-          <view class="placeholder select-btn-before select-btn-bg-white" catchtap='loadXFData' style='margin-top:0px' hover-class='select-btn-bg-pink'>确定</view>
-        </view>
-      </view> -->
       <view class="weui-flex">
         <view class="weui-flex__item pl5">
           <view class="placeholder" style='font-size:28rpx;color:#666'>支付期间</view>

@@ -27,11 +27,11 @@ Component({
     ],
     currentTab: currentTab,
     date: '',
+    select_id: 0,
     dateArr: ['今天', '昨天', '本周', '本月', '本年'],
     font_color: "select-before-color",
     select_img_name: "select_down",
     selectShow: false, //控制下拉列表的显示隐藏，false隐藏、true显示
-    select_id: -1,
     start_date: '2019-01-01',
     end_date: '2019-01-01',
     dateAreaIsShow: false,
@@ -139,15 +139,20 @@ methods:{
   //加载订单数量
   loadOrderNumber: function(){
     let that = this;
-    var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
-    var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
     var payState = currentTab;
+    var choosePay = "";
+    if (that.data.select_id == 5) {
+      choosePay = '自定义';
+    } else {
+      choosePay = that.data.dateArr[that.data.select_id];
+    }
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderNumber.json',
       method: "post",
       data: {
-        CREATE_TIME: startTime,
-        END_TIME: endTime,
+        START_DATE: that.data.start_date,
+        END_DATE: that.data.end_date,
+        DATE_WAY: choosePay,
         FK_SHOP: app.globalData.shopid,
         openid: wx.getStorageSync('openid')
       },
@@ -202,7 +207,7 @@ methods:{
       that.setData({
         font_color: "select-after-color",
         select_img_name: "select_down_red",
-        selectShow: 91
+        selectShow: 95
       })
     } else {
       that.setData({
@@ -245,22 +250,21 @@ methods:{
     loadOrderData:function (way) {
       wx.showNavigationBarLoading()
     var that = this;
-    var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" + that.data.date[7][that.data.startIndex[7]];
-    var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7][that.data.endIndex[7]];
-    if (that.data.date[5][that.data.startIndex[5]] == 24) {
-      startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.startIndex[4]])) + " 00:" + that.data.date[7][that.data.startIndex[7]];
-    }
-    if (that.data.date[5][that.data.endIndex[5]] == 24) {
-      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + (parseInt(that.data.date[4][that.data.endIndex[4]])) + " 00:" + that.data.date[7][that.data.endIndex[7]];
-    }
     var payState = currentTab;
+    var choosePay = "";
+    if (that.data.select_id == 5) {
+        choosePay = '自定义';
+    } else {
+        choosePay = that.data.dateArr[that.data.select_id];
+    }
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadOrderDataByTime.json',
       method: "post",
       data: {
-        CREATE_TIME: startTime,
-        END_TIME:endTime,
+        START_DATE: that.data.start_date,
+        END_DATE: that.data.end_date,
         ORDER_PAY_STATE:payState,
+        DATE_WAY: choosePay,
         FK_SHOP:app.globalData.shopid,
         openid: wx.getStorageSync('openid')
       },
@@ -455,10 +459,13 @@ methods:{
   cancelChoose: function () {
     var that = this;
     that.setData({
-      select_id: -1,
+      select_id: 0,
       dateAreaIsShow: false,
       takeView: 54
     });
+    that.loadOrderData();//加载订单数据
+    that.loadOrderNumber();//加载订单数量
+    that.closeSelectArea();//关闭筛选界面
   },
   bindDateColumnChange:function (e) {
     var that = this;
@@ -568,15 +575,9 @@ methods:{
   },
   choose: function () {
     var that = this;
-    var choosePay = "";
-    if (that.data.select_id == 5) {
-      choosePay = '自定义';
-    } else {
-      choosePay = that.data.dateArr[that.data.select_id];
-    }
-    console.info(choosePay);
-    console.info(that.data.start_date);
-    console.info(that.data.end_date);
+    that.loadOrderData();//加载订单数据
+    that.loadOrderNumber();//加载订单数量
+    that.closeSelectArea();//关闭筛选界面
     }
 }
 })

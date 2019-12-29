@@ -32,7 +32,7 @@ Component({
         isIn: false,
         title: '饿了么'
       }, {
-        isIn: true,
+        isIn: false,
         title: '美团外卖'
       }, {
         isIn: false,
@@ -45,7 +45,17 @@ Component({
     endIndex: [],
     year:2015,
     pageShow:false,
-    isExistData:true
+    isExistData:true,
+    font_color: "select-before-color",
+    select_img_name: "select_down",
+    selectShow: 0,
+    dateArr: ['今天', '昨天', '本周', '本月', '本年'],
+    dateIndex: 0,
+    takeView: 54,
+    dateAreaIsShow: false,
+    start_date: '2019-01-01',
+    end_date: '2019-01-01',
+    select_id: 0,
   },
 
   /**
@@ -122,6 +132,51 @@ Component({
    * 自定义方法
    */
   methods: {
+    selectBtn: function (e) {
+      var id = e.currentTarget.dataset.id;
+      var that = this;
+      if (id == 5) {
+        that.setData({
+          dateAreaIsShow: true,
+          takeView: 0
+        })
+      } else {
+        that.setData({
+          dateAreaIsShow: false,
+          takeView: 54
+        })
+      }
+      that.setData({
+        select_id: id
+      })
+    },
+    //关闭筛选
+    closeSelectArea: function () {
+      var that = this;
+      that.setData({
+        font_color: "select-before-color",
+        select_img_name: "select_down",
+        selectShow: 0
+      })
+    },
+    //点击筛选
+    openSelect: function () {
+      var that = this;
+      var current_font_color = that.data.font_color;
+      if (current_font_color == 'select-before-color') {
+        that.setData({
+          font_color: "select-after-color",
+          select_img_name: "select_down_red",
+          selectShow: 92.7
+        })
+      } else {
+        that.setData({
+          font_color: "select-before-color",
+          select_img_name: "select_down",
+          selectShow: 0
+        })
+      }
+    },
     /**选择状态 */
     swichNav: function (e) {
       var that = this;
@@ -136,22 +191,15 @@ Component({
       })
       this.loadWMData();
     },
-    // 选择时间段
-    bindStartDateChange:function(e){
+    bindStartDateChange: function (e) {
       this.setData({
-        startIndex: e.detail.value,
-        pageShow: false,
-        isExistData: true
-      });
-      this.loadWMData();
+        start_date: e.detail.value
+      })
     },
     bindEndDateChange: function (e) {
       this.setData({
-        endIndex: e.detail.value,
-        pageShow: false,
-        isExistData: true
-      });
-      this.loadWMData();
+        end_date: e.detail.value
+      })
     },
     // 
     bindDateColumnChange:function(e){
@@ -182,6 +230,24 @@ Component({
         date: that.data.date
       })
     },
+    cancelChoose: function () {
+      var that = this;
+      for (var i = 0; i < that.data.deliveryType.length; i++) {
+        that.data.deliveryType[i].isIn = false;
+      }
+      that.setData({
+        select_id: 0,
+        dateAreaIsShow: false,
+        deliveryType: that.data.deliveryType,
+        takeView: 54
+      });
+      this.loadWMData();
+    },
+    choose:function(){
+      var that = this;
+      that.loadWMData();//加载订单数据
+      that.closeSelectArea();//关闭筛选界面
+    },
     /**
      * 选择配送方式
      */
@@ -205,11 +271,6 @@ Component({
       var that = this;
       //选择状态 1:待确定 5：待配送 9:已完成
       var orderState = that.data.currentTab;
-      //选择时间
-      var startTime = that.data.date[0][that.data.startIndex[0]] + "-" + that.data.date[2][that.data.startIndex[2]] + "-" + that.data.date[4][that.data.startIndex[4]] + " " + that.data.date[5][that.data.startIndex[5]] + ":" +
-        that.data.date[7][that.data.startIndex[7]];
-      var endTime = that.data.date[0][that.data.endIndex[0]] + "-" + that.data.date[2][that.data.endIndex[2]] + "-" + that.data.date[4][that.data.endIndex[4]] + " " + that.data.date[5][that.data.endIndex[5]] + ":" + that.data.date[7]
-    [that.data.endIndex[7]];
       //选择外卖来源
       var pt = that.data.deliveryType;
       var selectPt = [];
@@ -221,14 +282,21 @@ Component({
         }
       }
       var selectPtStr = selectPt.join(",");
+      var choosePay = "";
+      if (that.data.select_id == 5) {
+        choosePay = '自定义';
+      } else {
+        choosePay = that.data.dateArr[that.data.select_id];
+      }
       app.sendRequest({
         url: "Order_select_loadWMOrderData",
         method: "post",
         data: {
           FK_SHOP: app.globalData.shopid,
           selectSource: selectPtStr,
-          startTime: startTime,
-          endTime: endTime,
+          START_DATE: that.data.start_date,
+          END_DATE: that.data.end_date,
+          DATE_WAY: choosePay,
           orderStatus: that.data.currentTab
         },
         success: function (res) {

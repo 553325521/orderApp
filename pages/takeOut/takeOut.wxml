@@ -1,17 +1,73 @@
 <!--pages/takeOut/takeOut.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
+<view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
+  <view class='select-area' catchtap='aaa()'>
+    <view class="page__bd page__bd_spacing select-content-padding">
+      <view class="weui-flex">
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:28rpx;color:#666'>支付期间</view>
+        </view>
+      </view>
+      <view class="weui-flex pl5">
+        <view class="weui-flex__item" wx:for='{{dateArr}}' wx:key='this'>
+          <view class="placeholder  select-btn-before {{select_id == index ? 'select-btn-bg-pink':'select-btn-bg-white' }} " data-id='{{index}}' catchtap='selectBtn'>{{item}}</view>
+        </view>
+      </view>
+       <view class="weui-flex pl5">
+        <view class="weui-flex__item">
+          <view class="placeholder user-setting {{select_id == 5 ? 'select-btn-bg-pink':'select-btn-bg-white' }}"  data-id='5' catchtap='selectBtn'>自定义</view></view></view>
+
+      <view class="weui-flex pl5" style='display:{{dateAreaIsShow?"flex":"none"}}'>
+        <view class="weui-flex__item">
+          <picker mode="date" value="{{start_date}}" class='select-area-date' bindchange="bindStartDateChange">
+            <view class="weui-input" style='float:left'>{{start_date}}</view>
+            <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker>
+          <text class='select-date-separator'>—</text>
+          <picker mode="date" value="{{end_date}}" class='select-area-date' bindchange="bindEndDateChange">
+            <view class="weui-input" style='float:left'>{{end_date}}</view>
+            <image class='sx_img select-date-img' src='../../images/icon/select_icon.png' background-size="contain"></image>
+          </picker>
+        </view>
+      </view>
+
+       <view class="weui-flex" style='margin-top:20rpx;'>
+        <view class="weui-flex__item pl5">
+          <view class="placeholder" style='font-size:28rpx;color:#666'>外卖来源</view>
+        </view>
+      </view>
+      <view class="weui-flex pl5">
+        <view class="weui-flex__item" wx:for='{{deliveryType}}' wx:key='this' style='padding-left:{{item.title == "星选"?2:0}}%'>
+          <view class="placeholder  select-btn-before {{item.isIn ? 'select-btn-bg-white':'select-btn-bg-pink' }}" style='text-align:center;width:{{item.title.length ==4 ? 105:item.title.length == 2?80:90}}%' data-index='{{index}}' catchtap='selectDistributionMode'>{{item.title}}</view>
+        </view>
+      </view>
+      <view class="weui-flex" style='height:{{takeView}}px'>
+        <view class="weui-flex__item">
+        </view>
+      </view>
+      <view class="weui-flex weui-dialog__ft">
+           <view class="weui-flex__item weui-dialog__btn font-28" style='color:#666' catchtap="cancelChoose">取消</view>
+           <view class="weui-flex__item weui-dialog__btn font-28" catchtap="choose">确定</view>
+      </view>
+    </view>
+  </view>
+</view>
 <view class='takeOut-page'>
 <view class='header bg-fff w100'>
   <view class='swiper-tab dp-flex'>
     <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
-      <view class="flex-1 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
+      <view class="flex-2 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
         <text>{{item.title}}</text>
         <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
         <view wx:if="{{item.type!=2}}" class='num circle cf tc pa bg-d137'>{{item.orderNumber}}</view>
       </view>
     </block>
+     <view class="flex-1 font-28 c6 tc pr {{font_color}}" catchtap="openSelect">
+            <text catchtap="openSelect">筛选</text>
+            <image  src='../../images/icon/{{select_img_name}}.png'style="width:30%;height:30%" background-size="contain"></image>
+      </view>
   </view>
-  <view class='time-sec dp-flex font-26 c6'>
+  <!-- <view class='time-sec dp-flex font-26 c6'>
     <text>时间：</text>
     <view class='sele-time dp-flex flex-1 '>
       <picker class='end bg-fff ' mode="multiSelector" bindchange="bindStartDateChange" bindcolumnchange="bindDateColumnChange" value="{{startIndex}}" range="{{date}}">
@@ -28,7 +84,7 @@
       </picker>
       <image src='../../images/icon/down-icon.png' ></image>
     </view>
-  </view>
+  </view> -->
   <view class='delivery-type dp-flex font-26 c6'>
     <text>全部：</text>
     <view class='delivery-list flex-1 dp-flex'>

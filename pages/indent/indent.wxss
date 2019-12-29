@@ -149,6 +149,19 @@
   flex: 2;
 }
 
+
+.select-btn-bg-white {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: #666;
+}
+
+.select-btn-bg-pink {
+  background: #ef9ba0;
+  border: 1px solid rgba(0, 0, 0, 0);
+  color: white;
+}
+
 .select-before-color {
   color: #666;
 }
@@ -386,3 +399,4 @@
   width: 28rpx;
   height: 28rpx;
 }
+
