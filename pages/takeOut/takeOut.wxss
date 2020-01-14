@@ -4,6 +4,9 @@
   background-color: #fff;
   padding-top: 186rpx
 }
+page{
+  overflow-y: hidden
+}
 .header{
   position: fixed;
   top: 0;left: 0;

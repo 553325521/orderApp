@@ -2,6 +2,9 @@
 /* page{
   padding-top: 100rpx
 } */
+page{
+  overflow-y: hidden
+}
 .type-parameter{
   position: relative;
   top: 0;left: 0;

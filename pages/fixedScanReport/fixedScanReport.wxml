@@ -36,6 +36,7 @@
     <image src='../../images/icon/down-icon.png'></image> 
   </view>
 </view>-->
+<view style='overflow-y:{{isScroll}}'>
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
@@ -143,4 +144,4 @@
   <view class="weui-loadmore weui-loadmore_line" style='display:{{isExistData?"none":"block"}}'>
     <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
   </view>
-</view>
+</view></view>

@@ -4,6 +4,9 @@
 /* page{
   padding-top: 100rpx
 } */
+page{
+  overflow-y: hidden
+}
 
 .select-before-color {
   color: #666;

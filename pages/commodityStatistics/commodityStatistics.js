@@ -21,7 +21,8 @@ Page({
     operator_id:-1,
     takeView:54,
     font_color: "select-before-color",
-    select_img_name: "select_down"
+    select_img_name: "select_down",
+    isScroll: 'scroll' //界面是否出现滚动条
   },
   onLoad: function (options) {
   
@@ -71,7 +72,8 @@ Page({
     that.setData({
       font_color: "select-before-color",
       select_img_name: "select_down",
-      selectShow: 0
+      selectShow: 0,
+      isScroll: 'scroll'
     })
   },
   cancelChoose: function () {
@@ -112,13 +114,15 @@ Page({
       that.setData({
         font_color: "select-after-color",
         select_img_name: "select_down_red",
-        selectShow: 93
+        selectShow: 93,
+        isScroll: 'hidden'
       })
     } else {
       that.setData({
         font_color: "select-before-color",
         select_img_name: "select_down",
-        selectShow: 0
+        selectShow: 0,
+        isScroll: 'scroll'
       })
     }
   },

@@ -4,6 +4,9 @@
   background-color: #fff;
 }
 
+page{
+  overflow-y: hidden
+}
 .page {
   position: fixed;
   top: 0;

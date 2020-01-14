@@ -56,6 +56,7 @@ Component({
     start_date: '2019-01-01',
     end_date: '2019-01-01',
     select_id: 0,
+    isScroll: 'scroll' //界面是否出现滚动条
   },
 
   /**
@@ -156,7 +157,8 @@ Component({
       that.setData({
         font_color: "select-before-color",
         select_img_name: "select_down",
-        selectShow: 0
+        selectShow: 0,
+        isScroll: 'scroll'
       })
     },
     //点击筛选
@@ -167,13 +169,15 @@ Component({
         that.setData({
           font_color: "select-after-color",
           select_img_name: "select_down_red",
-          selectShow: 92.7
+          selectShow: 92.7,
+          isScroll: 'hidden'
         })
       } else {
         that.setData({
           font_color: "select-before-color",
           select_img_name: "select_down",
-          selectShow: 0
+          selectShow: 0,
+          isScroll: 'scroll'
         })
       }
     },

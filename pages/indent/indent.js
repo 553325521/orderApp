@@ -47,7 +47,8 @@ Component({
     touch:0,
     noDataIsShow:false,
     windowHeight: '',
-    windowWidth: ''
+    windowWidth: '',
+    isScroll:'scroll' //界面是否出现滚动条
   },
 /**
  * 声明周期函数
@@ -195,25 +196,28 @@ methods:{
     that.setData({
       font_color: "select-before-color",
       select_img_name: "select_down",
-      selectShow: 0
+      selectShow: 0,
+      isScroll:'scroll'
     })
   },
   //点击筛选
   openSelect: function () {
-    this.cancelChoose();
+    //this.cancelChoose();
     var that = this;
     var current_font_color = that.data.font_color;
     if (current_font_color == 'select-before-color') {
       that.setData({
         font_color: "select-after-color",
         select_img_name: "select_down_red",
-        selectShow: 95
+        selectShow: 95,
+        isScroll:'hidden'
       })
     } else {
       that.setData({
         font_color: "select-before-color",
         select_img_name: "select_down",
-        selectShow: 0
+        selectShow: 0,
+        isScroll:'scroll'
       })
     }
   },

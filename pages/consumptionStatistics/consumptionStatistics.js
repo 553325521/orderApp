@@ -38,7 +38,8 @@ Page({
     wayUser:false,
     takeView:54,
     isDataHide:false, //是否显示数据
-    isContainDesk:2 //是否包含桌号(0:不包含 1：包含 2：全部)
+    isContainDesk:2, //是否包含桌号(0:不包含 1：包含 2：全部)
+    isScroll: 'scroll' //界面是否出现滚动条
   },
   loadXFData:function(){
 
@@ -257,7 +258,8 @@ Page({
     that.setData({
       font_color: "select-before-color",
       select_img_name: "select_down",
-      selectShow: 0
+      selectShow: 0,
+      isScroll: 'scroll'
     })
   },
   //点击筛选
@@ -268,13 +270,15 @@ Page({
       that.setData({
         font_color: "select-after-color",
         select_img_name: "select_down_red",
-        selectShow: 91
+        selectShow: 91,
+        isScroll: 'hidden'
       })
     } else {
       that.setData({
         font_color: "select-before-color",
         select_img_name: "select_down",
-        selectShow: 0
+        selectShow: 0,
+        isScroll: 'scroll'
       })
     }
   },

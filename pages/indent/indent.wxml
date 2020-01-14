@@ -1,7 +1,7 @@
 <!--pages/indent/indent.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
 
-
+<view style='overflow-y:{{isScroll}}'>
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
@@ -48,8 +48,9 @@
       <view class="flex-2 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
         <text>{{item.title}}</text>
         <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
-        <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view>
-        <view wx:if="{{item.type!=2 && item.type == -1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view>
+        <view wx:if="{{item.type!=2 && item.type == 0}}" style='margin-bottom:1.2rem' class='weui-badge'>{{orderCount.first}}</view>
+        <!-- <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view> -->     <view wx:if="{{item.type!=2 && item.type == -1}}" class='weui-badge'>{{orderCount.second}}</view>
+        <!-- <view wx:if="{{item.type!=2 && item.type == -1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view> -->
       </view>
     </block>
     <view class="flex-1 font-28 c6 tc pr {{font_color}}" catchtap="openSelect">
@@ -118,4 +119,5 @@
       <!-- <button id="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">123</button> -->
     </view>
   </view>
+</view>
 </view>

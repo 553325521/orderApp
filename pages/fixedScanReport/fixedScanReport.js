@@ -30,7 +30,8 @@ Page({
     isSelectConfirm: false,
     wayUser: false,
     takeView: 54,
-    isDataHide: false
+    isDataHide: false,
+    isScroll: 'scroll' //界面是否出现滚动条
   },
   loadXFData: function () {
 
@@ -240,7 +241,8 @@ Page({
     that.setData({
       font_color: "select-before-color",
       select_img_name: "select_down",
-      selectShow: 0
+      selectShow: 0,
+      isScroll: 'scroll'
     })
   },
   //点击筛选
@@ -251,13 +253,15 @@ Page({
       that.setData({
         font_color: "select-after-color",
         select_img_name: "select_down_red",
-        selectShow: 90.6
+        selectShow: 90.6,
+        isScroll: 'hidden'
       })
     } else {
       that.setData({
         font_color: "select-before-color",
         select_img_name: "select_down",
-        selectShow: 0
+        selectShow: 0,
+        isScroll: 'scroll'
       })
     }
   },
