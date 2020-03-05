@@ -37,7 +37,6 @@ Page({
                 this.menu.setOptions(options);
             }
         } else {
-
             // app.getFoundingSwitch();
             if (app.globalData.appSetting.CHECK_TDKT != undefined && app.globalData.appSetting.CHECK_TDKT != "") {
                 this.setShow()

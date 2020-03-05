@@ -50,7 +50,6 @@ Page({
 
   },
   changeComputeFocus:function(){
-    debugger;
     this.setData({
       isComputeFocus:true,
       isFocus:false

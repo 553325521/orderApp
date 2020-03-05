@@ -135,7 +135,6 @@ function handleMess(res){
     }
     else if (data.code == "202") { // 美团自动接单
         console.log("语音通知：智慧云为你自动接到美团新订单")
-        debugger
         if (currentRoute == "pages/takeOut/takeOut") {
             // page.
         }

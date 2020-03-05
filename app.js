@@ -231,7 +231,6 @@ App({
             wx.authorize({
                 scope: 'scope.userInfo',
                 success: function (res) {
-                    debugger
                     if (wx.showLoading) {
                         wx.showLoading({
                             title: '加载中',
@@ -624,6 +623,7 @@ App({
                     if (JSON.stringify(setting) != JSON.stringify(res.data.data)) {
                         wx.setStorageSync("setting", res.data.data)
                         that.globalData.appSetting = res.data.data
+                      
                         if (that.globalData.appSetting.CHECK_DYSYT == 'false') {
                             that.globalData.tabBar.list[4].show = false;
                         }
@@ -648,7 +648,14 @@ App({
         var that = this;
         let setting = wx.getStorageSync('setting');
         if (setting) {
-            that.globalData.appSetting = setting;     
+            that.globalData.appSetting = setting;    
+            if (that.globalData.appSetting.CHECK_DYSYT == 'false') {
+              that.globalData.tabBar.list[4].show = false;
+            }
+
+            if (that.globalData.appSetting.CHECK_WMDC == 'false') {
+              that.globalData.tabBar.list[3].show = false;
+            }
             that.showIndexPage();
             that.hideLoading();
         } else {
@@ -1117,7 +1124,6 @@ App({
         }
 
         return shopShoppingCart
-
     },
     /**
      * 购物车添加当前桌位或者人数信息
