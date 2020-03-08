@@ -107,6 +107,13 @@ page{
 
 .head {
   padding: 50rpx 26rpx 20rpx 50rpx;
+  position: fixed;
+  height: 120rpx;
+  z-index: 999;
+  color:#666;
+  width: 100%;
+  border-bottom:1px #ead5d7 solid;
+  background-color:#fff;
 }
 
 .indent-list {

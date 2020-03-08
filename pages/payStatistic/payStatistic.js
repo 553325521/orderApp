@@ -78,6 +78,12 @@ Page({
     if (payWayRoute == 'wxPay') {
       chooseWayArray = ['31'];
     }
+    if (payWayRoute == 'CASH') {
+      chooseWayArray = ['1'];
+    }
+    if (payWayRoute == 'POS') {
+      chooseWayArray = ['4'];
+    }
     var shopId = app.globalData.shopid;
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadPayReportData.json',
@@ -324,6 +330,12 @@ Page({
     }
     if (payWayRoute == 'wxPay') {
       chooseWayArray = ['31'];
+    }
+    if (payWayRoute == 'CASH') {
+      chooseWayArray = ['1'];
+    }
+    if (payWayRoute == 'POS') {
+      chooseWayArray = ['4'];
     }
     wx.request({
       url: app.globalData.basePath + 'json/Order_load_loadPayReportData.json',

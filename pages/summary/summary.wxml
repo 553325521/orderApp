@@ -116,12 +116,14 @@
       <view class='pay-number tr'>{{aliPayOrderNumber}}笔</view>
       <view class='flex-1 tr'>总额{{math.toFix(aliPayOrderMoney)}}元</view>
     </view>
-    <view class='item dp-flex'>
+    <view class='item dp-flex' style='color:#EF9BA0;font-size:30rpx'
+    data-url='../payStatistic/payStatistic?payWayParam=POS'  bindtap='navTo'>
       <view class='pay-way'>POS支付</view>
       <view class='pay-number tr'>{{posPayOrderNumber}}笔</view>
       <view class='flex-1 tr'>总额{{math.toFix(posPayOrderMoney)}}元</view>
     </view>
-    <view class='item dp-flex'>
+    <view class='item dp-flex'  style='color:#EF9BA0;font-size:30rpx'
+    data-url='../payStatistic/payStatistic?payWayParam=CASH'  bindtap='navTo'>
       <view class='pay-way'>现金支付</view>
       <view class='pay-number tr'>{{cashPayOrderNumber}}笔</view>
       <view class='flex-1 tr'>总额{{math.toFix(cashPayOrdeMoney)}}元</view>
