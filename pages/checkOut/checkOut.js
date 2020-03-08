@@ -297,7 +297,14 @@ Page({
     } else if (currentTab == 1) {//如果选的是现金支付
       //that.data.wzShow = true
       var tempMoney = that.data.trueMoney;
-      app.pageTurns('../calculator/calculator?money=' + tempMoney + '&orderId=' + ORDER_PK);
+      //获取店员开关的配置
+      let setting = wx.getStorageSync('setting');
+      if (setting.CHECK_XJSYT == 'true'){
+        app.pageTurns('../calculator/calculator?money=' + tempMoney + '&orderId=' + ORDER_PK);
+      }else{
+        that.sendPay("1");
+      }
+      
     }  else if (currentTab == 3){//如果选的是微信或者支付宝支付
       //that.data.wzShow = true
       app.pageTurns('../payMent/payMent?money=' + trueMoney + '&orderId=' + ORDER_PK + '&orderType=1');
