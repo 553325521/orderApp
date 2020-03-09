@@ -36,7 +36,7 @@
     <image src='../../images/icon/down-icon.png'></image> 
   </view>
 </view>-->
-<view style='overflow-y:{{isScroll}}'>
+<view style='background-color:#fff;overflow-y:{{isScroll}}'>
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
@@ -107,8 +107,7 @@
     </view>
   </view>
 </view>
-<view class='indent-list font-28 c6'>
-  <view class='head dp-flex flex-jc-sb'>
+<view class='head dp-flex flex-jc-sb'>
     <view>交易日期</view>
     <view>应付金额</view>
     <view>优惠</view>
@@ -118,6 +117,8 @@
       <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' background-size="contain"></image>
     </view>
   </view>
+<view class='indent-list font-28 c6' style='height:100vh;padding-top:120rpx'>
+  
   <view class='indent-item' wx:for="{{orderArray}}" wx:key="keys" wx:for-item="itemName" style='display:{{pageShow?"block":"none"}}'>
     <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
       <text>{{itemName.keyName}}</text>
