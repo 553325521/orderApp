@@ -658,10 +658,10 @@ App({
             }
             that.showIndexPage();
             that.hideLoading();
-        } else {
-            let shopId = wx.getStorageSync('shopId');
-            that.getServerSetting(shopId);
         }
+        let shopId = wx.getStorageSync('shopId');
+        that.getServerSetting(shopId);
+      
     },
     /**
      * 刷新其他页面参数
