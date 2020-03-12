@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "订单",
-  "component": true
+  "component": true,
+  "usingComponents": {
+    "x-scroll-view": "../x-component/x-scroll-view"
+  }
 }

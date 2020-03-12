@@ -1,17 +1,46 @@
-/* pages/indent/indent.wxss */
-
-.indent-page {
-  background-color: #fff;
+/* pages/demo/x-scroll-view.wxss */
+page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #F8F8F8;
+  font-size: 16px;
+  font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+  cursor:default;
+  -webkit-user-select:none;
+  user-select:none;
+  width:100%;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:none;
+  text-size-adjust:none;
 }
 
-page{
-  overflow-y: hidden
+x-scroll-view {
+  height: calc(100% - 51px);
 }
-.page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
+
+.header {
+  /* height: 60px; */
+  line-height: 50px;
+  text-align: center;
+  background: #fff;
+  border-bottom: solid 1px #f4f4f4;
+}
+
+.view {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+
+.select-before-color {
+  color: #666;
+}
+
+.sx_img {
+  width: 28rpx;
+  height: 28rpx;
 }
 
 .swiper-tab {
@@ -34,45 +63,6 @@ page{
   border-color: transparent transparent #da2725; /*透明 透明  灰*/
 }
 
-.swiper-tab .num {
-  top: 10rpx;
-  right: 0;
-  width: 70rpx;
-  line-height: 40rpx;
-}
-
-.time-slot {
-  padding: 13rpx 30rpx 18rpx 30rpx;
-}
-
-.time-slot .icon {
-  width: 44rpx;
-  height: 50rpx;
-  margin-right: 11rpx;
-}
-
-.sele-time {
-  border-radius: 50rpx;
-  line-height: 50rpx;
-  overflow: hidden;
-  background-color: #dededd;
-}
-
-.sele-time view {
-  padding-left: 16rpx;
-}
-
-.sele-time view image {
-  width: 25rpx;
-  height: 20rpx;
-}
-
-.begin {
-  margin-right: 42rpx;
-}
-
-/*  */
-
 .item-head {
   border-top: 1px #ead5d7 solid;
   border-bottom: 1px #ead5d7 solid;
@@ -91,28 +81,6 @@ page{
   padding: 0 26rpx 0 46rpx;
 }
 
-.item:last-child {
-  border-bottom: none;
-}
-
-/* .item .time{
-  width: 180rpx;
-}
-.item .seat{
-  width: 180rpx;
-}
-.item .part{
-  width: 180rpx;
-}
-.item .money{
-  width: auto;
-} */
-
-.item .label {
-  top: -1rpx;
-  left: 30rpx;
-}
-
 /* //删除线样式 */
 
 .delete-line {
@@ -127,31 +95,6 @@ page{
 .delete-color {
   color: #ffdadd;
 }
-
-/*  加载更多   */
-
-.weui-loading-success {
-  margin: 0 5px;
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.weui-loadmore__tips {
-  color: #adadae;
-}
-
-.weui-loadsuccess__tips {
-  display: inline-block;
-  vertical-align: middle;
-  color: #adadae;
-}
-
-.flex-2 {
-  flex: 2;
-}
-
 
 .select-btn-bg-white {
   background: white;
@@ -175,7 +118,7 @@ page{
 
 .option_box {
   position: absolute;
-  top: 5%;
+  top: 7.3%;
   width: 100%;
   box-sizing: border-box;
   height: 0;
@@ -396,10 +339,5 @@ page{
     transform-origin: 0 0;
     -webkit-transform: scaleX(0.5);
     transform: scaleX(0.5);
-}
-
-.sx_img {
-  width: 28rpx;
-  height: 28rpx;
 }
 

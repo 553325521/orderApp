@@ -35,7 +35,7 @@ Component({
     hide: function () { },
     resize: function () { },
   },
-
+  
   /**
    * 自定义方法
    */

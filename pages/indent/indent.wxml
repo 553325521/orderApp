@@ -1,7 +1,5 @@
 <!--pages/indent/indent.wxml-->
 <wxs module="math" src="../../utils/math.wxs"></wxs>
-
-<view style='overflow-y:{{isScroll}}'>
 <view class='option_box' style='height:{{selectShow}}%;' bindtap="closeSelectArea">
   <view class='select-area' catchtap='aaa()'>
     <view class="page__bd page__bd_spacing select-content-padding">
@@ -41,16 +39,13 @@
     </view>
   </view>
 </view>
-
-<view class='page w100'>
-  <view class='swiper-tab bg-fff dp-flex'>
+<view class="header">
+<view class='swiper-tab bg-fff dp-flex'>
     <block wx:for="{{nav}}" data-index="{{index}}" wx:key="keys">
       <view class="flex-2 font-28 c6 tc pr {{item.type==currentTab?'on':''}}" data-type='{{item.type}}' bindtap='swichNav'>
         <text>{{item.title}}</text>
         <view class='icon pa' wx:if="{{item.type==currentTab}}"></view>
-        <view wx:if="{{item.type!=2 && item.type == 0}}" style='margin-bottom:1.2rem' class='weui-badge'>{{orderCount.first}}</view>
-        <!-- <view wx:if="{{item.type!=2 && item.type == 0}}" class='num circle cf tc pa bg-d137'>{{orderCount.first}}</view> -->     <view wx:if="{{item.type!=2 && item.type == -1}}" class='weui-badge'>{{orderCount.second}}</view>
-        <!-- <view wx:if="{{item.type!=2 && item.type == -1}}" class='num circle cf tc pa bg-d137'>{{orderCount.second}}</view> -->
+        <view wx:if="{{item.type!=2 && item.type == 0}}" style='margin-bottom:1.2rem' class='weui-badge'>{{noPayNumber}}</view>
       </view>
     </block>
     <view class="flex-1 font-28 c6 tc pr {{font_color}}" catchtap="openSelect">
@@ -58,66 +53,38 @@
       <image class='sx_img' src='../../images/icon/{{select_img_name}}.png' style="width:30%;height:30%" background-size="contain"></image>
     </view>
   </view>
-
-  <!-- 时间段  -->
-  <!-- <view class='time-slot dp-flex dp-flex bg-fff w100'>
-    <image class='icon' src='../../images/icon/rq-icon.png'></image>
-    <view class='sele-time dp-flex flex-1 bc'>
-      <picker class='end bg-fff flex-1' mode="multiSelector" bindchange="bindStartDateChange" bindcolumnchange="bindDateColumnChange" value="{{startIndex}}" range="{{date}}">
-        <view class="picker c6 font-26 ls4">
-          {{date[0][startIndex[0]]}}-{{date[2][startIndex[2]]}}-{{date[4][startIndex[4]]}}  {{date[5][startIndex[5]]}}:{{date[7][startIndex[7]]}}
-          <image src='../../images/icon/down-icon.png' ></image>
-        </view>
-      </picker>
-      <picker style='margin-left:40rpx' class='end bg-fff flex-1' mode="multiSelector" bindchange="bindEndDateChange" bindcolumnchange="bindDateColumnChange" value="{{endIndex}}" range="{{date}}">
-        <view class="picker c6 font-26 ls4">
-          {{date[0][endIndex[0]]}}-{{date[2][endIndex[2]]}}-{{date[4][endIndex[4]]}}  {{date[5][endIndex[5]]}}:{{date[7][endIndex[7]]}}
-          <image src='../../images/icon/down-icon.png' ></image>
-        </view>
-      </picker>
-    </view>
-  </view> -->
 </view>
-<view style='width:100%;height:50px;background:#fff;position:absolute;top:50px;z-index:-1;'>
-  <view class="weui-loadmore" style="margin-top:0;padding-top:0.5em">
-    <view class="weui-loading" style='display:{{refreshFinishIsShow?"none":"inline-block"}}'></view>
-    <view class="weui-loadmore__tips" style='display:{{refreshFinishIsShow?"none":"inline-block"}}'>{{flushMessage}}</view>
-    <view class="weui-loading-success" style='display:{{refreshFinishIsShow?"inline-block":"none"}}'>
-      <icon type="success_circle" size="15" style="margin-top:5rpx" color="#adadae" />
-    </view>
-  </view>
-</view>
-<view style='width:100%;height:{{touchHeigh}}px;' animation="{{scaleData}}"></view>
-<view class='indent-page' style='height:100vh' bindtouchstart='moveStart' bindtouchmove='move' bindtouchend='moveStop'>
-  <view class='indent-list' style='border-top:1px #EAD5D7 solid;'>
-    <view class="weui-loadmore weui-loadmore_line" id="{{noDataIsShow?'flag':''}}" style='display:{{noDataIsShow?"block":"none"}}'>
-      <view class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无数据</view>
-    </view>
-    <view class='indent-item' id="{{index == 0?'flag':''}}" wx:for="{{orderArray}}" wx:key="keys" wx:for-item="itemName">
+<x-scroll-view id='x-scroll-view'  nomore="{{nomore}}" bindrefreshPullData="_onRefreshPullData"   bindloadmore="_onLoadmore" >
+  <block wx:for="{{orderData}}" wx:key="index">
+     <view class='indent-item'>
       <view class='item-head dp-flex font-24 c3 flex-jc-sb'>
-        <text>{{itemName.keyName}}</text>
-        <text>总计:{{math.toFix(itemName.totalMoney)}}元</text>
+        <text>{{item.CREATE_TIME}}</text>
+        <text>总计:{{math.toFix(item.DAY_TOTAL_MONEY)}}元</text>
       </view>
-      <!-- bindtouchmove='move' -->
-      <view class='item-list' wx:for="{{itemName.data}}" wx:key="keys" wx:for-item="item">
-        <view class='item dp-flex font-30 c3 pr  {{item.ORDER_STATE == "1" ? "delete-color":""}}' style='border-bottom:1rpx solid rgba(0, 0, 0, 0.1);' bindtap='navTo' data-id='{{item.ORDER_PK}}' data-status='{{item.ORDER_PAY_STATE}}'>
-          <block wx:if="{{item.ORDER_DIVISION == '2'}}">
-            <view class='label pa'>*</view>
-          </block>
-          <view class='time' style="width:{{itemName.timeWidth}}">{{item.SF}}</view>
-          <view class='seat' style="width:{{itemName.seatWidth}}">{{item.ORDER_POSITION}}</view>
-          <view class='part' style="width:{{itemName.partWidth}}">{{item.TOTAL_FS}}份</view>
-          <view class='money' style="width:{{itemName.moneyWidth}}">{{math.toFix(item.TOTAL_MONEY)}}元</view>
-          <view class='pay-way' wx:if="{{currentTab == 1 || currentTab == 2}}">{{math.payWay(item.ORDER_PAY_WAY)}}</view>
-          <!-- <view class='pay-way' wx:if="{{currentTab == 1}}">{{item.payWay}}</view> 
-        <view class='pay-way' wx:if="{{currentTab == 0}}">{{item.payWay}}</view>         -->
-          <view class='delete-line' wx:if='{{item.ORDER_STATE == "1"}}'></view>
+      <view class='item-list'>
+        <block  wx:for="{{item.data}}" wx:for-index="index" wx:key="index" wx:for-item="item2">
+        <view class='item dp-flex font-30 c3 pr' style='border-bottom:1rpx solid rgba(0, 0, 0, 0.1);' bindtap='navTo' data-id='0' data-status='1'>
+          <view class='time' style="width:140rpx">{{item2.HHMMSS}}</view>
+          <view class='seat' style="width:140rpx">{{item2.ORDER_POSITION}}</view>
+          <view class='part' style="width:140rpx">{{item2.TOTAL_FS}}份</view>
+          <view class='money' style="width:140rpx">{{math.toFix(item2.TOTAL_MONEY)}}元</view>
+          <view class='pay-way' wx:if="{{currentTab == 1 || currentTab == 2}}">
+            <block wx:if="{{item2.ORDER_PAY_WAY == '1'}}">
+              现金
+            </block>
+             <block wx:if="{{item2.ORDER_PAY_WAY == '4'}}">
+              POS
+            </block>
+             <block wx:if="{{item2.ORDER_PAY_WAY == '31' || item2.ORDER_PAY_WAY == '21'}}">
+              微信
+            </block>
+            <block wx:if="{{item2.ORDER_PAY_WAY == '32' || item2.ORDER_PAY_WAY == '22'}}">
+              支付宝
+            </block>
+          </view>
         </view>
+        </block>
       </view>
-    </view>
-    <view>
-      <!-- <button id="getPhone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">123</button> -->
-    </view>
-  </view>
-</view>
-</view>
+      </view>
+  </block>
+</x-scroll-view>
