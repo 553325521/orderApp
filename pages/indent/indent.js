@@ -293,6 +293,12 @@ methods:{
     //console.log(e);
   },
 
+  navTo: function (e) {
+    var orderPK = e.currentTarget.dataset.id;
+    var payStatus = e.currentTarget.dataset.status;
+    app.pageTurns(`../indent/indentDateil?type=${payStatus}&ORDER_PK=${orderPK}`)
+  },
+  
 resetSearch(){
   var that = this;
   var scrollViewObj = this.selectComponent("#x-scroll-view");
