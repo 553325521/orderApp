@@ -18,7 +18,7 @@ Component({
     },
     finishText: {
       type: String,
-      value: '',
+      value: '刷新成功',
     },
     loadmoreText: {
       type: String,
@@ -121,14 +121,14 @@ Component({
     },
     //滑动结束
     touchend(e) {
-      //加载刷新数据
-      setTimeout(() => {
-        this.triggerEvent('refreshPullData');
-        console.info("123");
-        this.setData({
-          pullDownStatus: 4
-        })
-      }, 1500);
+      //如果下拉状态为3，才刷新数据
+      if(this.data.pullDownStatus == 3){
+        //加载刷新数据
+        setTimeout(() => {
+          this.triggerEvent('refreshPullData');
+        }, 1500);
+      }
+      
     },
     _onTouchEnd: function (e) {
       console.info(wx.createSelectorQuery().select('#top-item'));
@@ -174,7 +174,7 @@ Component({
         }, res => {
           console.info(res);
           console.info(this.data.lastScrollEnd);
-          if (Math.abs(res.scrollTop - this.data.lastScrollEnd) > res.height/20) {
+          if (Math.abs(res.scrollTop - this.data.lastScrollEnd) > res.height) {
             this.setData({
               lastScrollEnd: res.scrollTop,
             })

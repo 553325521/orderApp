@@ -8,7 +8,7 @@ var lastClientY = 0;//上一次点击的位置
 var flush = false;
 var currentPage = 0;//当前第多少页
 var offset = 0;//当前位置
-var limit = 20;//每页多少条
+var limit = 10;//每页多少条
 var totalPage = 0;//总共多少页
 var totalNum = 0;//总共多少条
 var common = require('../../utils/common.js');
@@ -194,7 +194,7 @@ methods:{
       end_date: e.detail.value
     })
   },
-  loadOrderData: function (type){   
+  loadOrderData: function (type,totalP,currentP){   
     var that = this;
     var choosePay = "";
     if (that.data.select_id == 5) {
@@ -230,10 +230,25 @@ methods:{
               nomore: true
             })
           }
+          if(type == 'NONE' && totalP == currentP){
+            that.setData({
+              nomore: true
+            })
+          }
+          //如果为下拉刷新先清空原有数据，再加载新数据
+          if (type == 'PULL_TYPE') {
+            that.data.orderData = [];
+          }
           that.data.orderData = that.data.orderData.concat(res.data.data.orderData);
           that.setData({
             orderData: that.data.orderData
-          })
+          });
+          if (type == 'PULL_TYPE') {
+            var scrollViewObj = that.selectComponent("#x-scroll-view");
+            scrollViewObj.setData({
+              pullDownStatus: 4
+            });
+          }
         }
       },
       fail: function (error) {
@@ -242,12 +257,6 @@ methods:{
         })
       },
       complete: function () {
-        if(type == 'PULL_TYPE'){
-          var scrollViewObj = that.selectComponent("#x-scroll-view");
-          scrollViewObj.setData({
-            pullDownStatus: 4
-          });
-        }
         that.loadOrderNumber();
       }
     })
@@ -273,7 +282,16 @@ methods:{
 
   _onRefreshPullData:function(){
     console.info("我被调用到了");
-    this.resetSearch();
+    var that = this;
+    var scrollViewObj = this.selectComponent("#x-scroll-view");
+    scrollViewObj.setData({
+      scrollTop: 0,//滚动条位置
+      lastScrollEnd: 0
+    });
+    currentPage = 0;
+    that.setData({
+      nomore: false
+    });
     this.loadOrderData("PULL_TYPE");
   },
   //加载更多监听函数
@@ -284,7 +302,11 @@ methods:{
       } else {
         //页码+1
         currentPage = currentPage+1;
-        this.loadOrderData();
+        this.loadOrderData("NONE",totalPage,currentPage);
+        //如果当前页等于总页码数
+        // if (totalPage == currentPage) {
+        //   this.setData({ nomore: true })
+        // }
       }
     }, 1000);
   },
@@ -298,6 +320,7 @@ methods:{
     var payStatus = e.currentTarget.dataset.status;
     app.pageTurns(`../indent/indentDateil?type=${payStatus}&ORDER_PK=${orderPK}`)
   },
+ 
   
 resetSearch(){
   var that = this;

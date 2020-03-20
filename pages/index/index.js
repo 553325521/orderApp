@@ -156,6 +156,8 @@ Page({
             this.menu.setOptions(params);
         } else if (page == '../indent/indent'){
             this.menu = this.selectComponent("#indent");
+            this.menu.resetSearch();
+            this.menu.loadOrderData();
             // this.menu.init();
         } else if (page == '../takeOut/takeOut') {
             this.menu = this.selectComponent("#takeOut");

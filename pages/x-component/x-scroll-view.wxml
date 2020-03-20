@@ -12,7 +12,7 @@
     </block>
     <block wx:if="{{pullDownStatus === 4}}">
     <!-- icon-complete -->
-      <text class="iconfont" space="nbsp"></text><text> {{finishText}}</text>
+      <text class="iconfont icon-complete" space="nbsp"></text><text> {{finishText}}</text>
     </block>
   </view>
   <slot></slot>
